@@ -1,32 +1,31 @@
-import type { Reducer } from "@castore/core";
-import { DocumentAggregate } from "./document-aggregate";
-import { DocumentCreatedEventTypeDetail } from "./document-uploaded-event";
+import type { Reducer } from '@castore/core'
 
-type DocumentEventDetails = DocumentCreatedEventTypeDetail;
+import { DocumentAggregate } from './document-aggregate'
+import { DocumentCreatedEventTypeDetail } from './document-created-event'
 
-export const documentReducer: Reducer<
-  DocumentAggregate,
-  DocumentEventDetails
-> = (documentAggregate, newEvent: DocumentEventDetails) => {
-  const { aggregateId, version, timestamp } = newEvent;
+type DocumentEventDetails = DocumentCreatedEventTypeDetail
 
-  switch (newEvent.type) {
-    case "DOCUMENTS:DOCUMENT_UPLOADED": {
-      const { name, url } = newEvent.payload;
+export const documentReducer: Reducer<DocumentAggregate, DocumentEventDetails> = (
+    documentAggregate,
+    newEvent: DocumentEventDetails
+) => {
+    const { aggregateId, version, timestamp } = newEvent
 
-      // 👇 Return the next version of the aggregate
-      return {
-        aggregateId,
-        version,
-        name,
-        url,
-        createdAt: timestamp,
-        status: "CREATED",
-      };
+    switch (newEvent.type) {
+        case 'DOCUMENTS:DOCUMENT_CREATED': {
+            const { name, url } = newEvent.payload
+
+            return {
+                aggregateId,
+                version,
+                name,
+                url,
+                createdAt: timestamp,
+                status: 'CREATED',
+            }
+        }
+
+        default:
+            return documentAggregate
     }
-    // case "USER_REMOVED":
-    //   return { ...userAggregate, version, status: "REMOVED" };
-    default:
-      return documentAggregate;
-  }
-};
+}

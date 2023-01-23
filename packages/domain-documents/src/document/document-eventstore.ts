@@ -1,10 +1,10 @@
 import { EventStore } from '@castore/core'
 
-import { documentUploadedEventType } from './document-uploaded-event'
+import { documentCreatedEventType } from './document-created-event'
 import { documentReducer } from './document-reducer'
 
 export const documentEventStore = new EventStore({
     eventStoreId: 'DOCUMENTS',
-    eventStoreEvents: [documentUploadedEventType],
+    eventStoreEvents: [documentCreatedEventType],
     reduce: documentReducer,
 })
