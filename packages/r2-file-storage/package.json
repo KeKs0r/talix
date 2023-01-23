@@ -1,5 +1,5 @@
 {
-    "name": "pipeline-run",
+    "name": "r2-file-storage",
     "version": "0.0.0",
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20221111.1",
@@ -11,6 +11,7 @@
         "vite-node": "^0.27.0",
         "vitest": "^0.25.6"
     },
+    "main": "./src/index.ts",
     "private": true,
     "engines": {
         "node": "18"

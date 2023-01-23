@@ -3,7 +3,7 @@ import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { ulid } from 'ulid'
 
 import { documentEventStore } from './document/document-eventstore'
-import { uploadDocumentCommand, UploadDocumentInput } from './document/document-create-command'
+import { createDocumentCommand, CreateDocumentInput } from './document/document-create-command'
 
 type ServiceOptions = {
     storageAdapter?: StorageAdapter
@@ -19,8 +19,8 @@ export function createDocumentService(opts: ServiceOptions = { generateUuid: uli
     }
 
     return {
-        uploadDocument: (cmd: UploadDocumentInput) =>
-            uploadDocumentCommand.handler(cmd, [documentEventStore], { generateUuid }),
+        createDocument: (cmd: CreateDocumentInput) =>
+            createDocumentCommand.handler(cmd, [documentEventStore], { generateUuid }),
     }
 }
 

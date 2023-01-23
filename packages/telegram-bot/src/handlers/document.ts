@@ -10,7 +10,7 @@ export function registerDocumentHandler(
         const document = ctx.update.message.document
 
         const url = await ctx.telegram.getFileLink(document.file_id)
-        await documentService.uploadDocument({
+        await documentService.createDocument({
             name: document.file_name,
             url: url.href,
         })

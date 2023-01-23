@@ -61,8 +61,10 @@ importers:
       '@castore/test-tools': ^1.9.0
       '@castore/zod-event': ^1.9.0
       '@types/node': ^18.11.18
+      castore-extended: workspace:*
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
+      r2-file-storage: workspace:*
       tsconfig: workspace:*
       typescript: ^4.9.4
       ulid: ^2.3.0
@@ -71,6 +73,8 @@ importers:
     dependencies:
       '@castore/core': 1.9.0
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
+      castore-extended: link:../castore-extended
+      r2-file-storage: link:../r2-file-storage
       ulid: 2.3.0
       zod: 3.20.2
     devDependencies:
@@ -99,6 +103,26 @@ importers:
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.9.4
+
+  packages/r2-file-storage:
+    specifiers:
+      '@cloudflare/workers-types': ^4.20221111.1
+      '@types/node': ^18.11.18
+      eslint-config-custom: workspace:*
+      tsconfig: workspace:*
+      typescript: ^4.9.4
+      vite: ^3.2.4
+      vite-node: ^0.27.0
+      vitest: ^0.25.6
+    devDependencies:
+      '@cloudflare/workers-types': 4.20221111.1
+      '@types/node': 18.11.18
+      eslint-config-custom: link:../eslint-config-custom
+      tsconfig: link:../tsconfig
+      typescript: 4.9.4
+      vite: 3.2.5_@types+node@18.11.18
+      vite-node: 0.27.3_@types+node@18.11.18
+      vitest: 0.25.8
 
   packages/telegram-bot:
     specifiers:
@@ -200,6 +224,10 @@ packages:
       '@castore/core': 1.9.0
       zod: 3.20.2
     dev: false
+
+  /@cloudflare/workers-types/4.20221111.1:
+    resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}
+    dev: true
 
   /@esbuild/android-arm/0.15.18:
     resolution: {integrity: sha512-5GT+kcs2WVGjVs7+boataCkO5Fg0y4kCjzkB5bAip7H4jfnOS3dA6KPiww9W1OEKTKeAcUVhdZGvgI65OXmUnw==}

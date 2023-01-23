@@ -9,11 +9,12 @@ import { DocumentCreatedEventTypeDetail } from './document-created-event'
 
 const createDocumentCommandInputSchema = z.object({
     name: z.string().optional(),
-    url: z.string(),
+    key: z.string(),
+    documentId: z.string().optional(),
 })
 export type CreateDocumentInput = z.infer<typeof createDocumentCommandInputSchema>
 type Output = { documentId: string }
-type Context = { generateUuid: () => string }
+type Context = { generateId: () => string }
 
 export const createDocumentCommand = new Command({
     commandId: 'DOCUMENTS:CREATE_DOCUMENT',
@@ -21,22 +22,21 @@ export const createDocumentCommand = new Command({
     handler: async (
         commandInput: CreateDocumentInput,
         [documentEventStore],
-        { generateUuid }: Context
+        { generateId }: Context
     ): Promise<Output> => {
-        const { url, name } = createDocumentCommandInputSchema.parse(commandInput)
+        const {
+            key,
+            name,
+            documentId: inputDocumentId,
+        } = createDocumentCommandInputSchema.parse(commandInput)
 
-        const res = await fetch(url)
-        if (res.status !== 200) {
-            throw new Error('Document is not accessible')
-        }
-
-        const documentId = generateUuid()
+        const documentId = inputDocumentId || generateId()
 
         const event: DocumentCreatedEventTypeDetail = {
             aggregateId: documentId,
             version: 1,
             type: 'DOCUMENTS:DOCUMENT_CREATED',
-            payload: { name: name || basename(url), url },
+            payload: { name: name, key },
         }
 
         await documentEventStore.pushEvent(event)

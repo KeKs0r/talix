@@ -13,13 +13,12 @@ export const documentReducer: Reducer<DocumentAggregate, DocumentEventDetails> =
 
     switch (newEvent.type) {
         case 'DOCUMENTS:DOCUMENT_CREATED': {
-            const { name, url } = newEvent.payload
-
+            const { name, key } = newEvent.payload
             return {
                 aggregateId,
                 version,
                 name,
-                url,
+                key,
                 createdAt: timestamp,
                 status: 'CREATED',
             }
