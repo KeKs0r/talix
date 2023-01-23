@@ -7,11 +7,11 @@ import { createDocumentCommand, CreateDocumentInput } from './document/document-
 
 type ServiceOptions = {
     storageAdapter?: StorageAdapter
-    generateUuid: () => string
+    generateId: () => string
 }
 
-export function createDocumentService(opts: ServiceOptions = { generateUuid: ulid }) {
-    const { storageAdapter, generateUuid } = opts || {}
+export function createDocumentService(opts: ServiceOptions = { generateId: ulid }) {
+    const { storageAdapter, generateId } = opts || {}
     if (storageAdapter) {
         documentEventStore.storageAdapter = storageAdapter
     } else {
@@ -20,8 +20,10 @@ export function createDocumentService(opts: ServiceOptions = { generateUuid: uli
 
     return {
         createDocument: (cmd: CreateDocumentInput) =>
-            createDocumentCommand.handler(cmd, [documentEventStore], { generateUuid }),
+            createDocumentCommand.handler(cmd, [documentEventStore], { generateId }),
     }
 }
 
 export type DocumentService = ReturnType<typeof createDocumentService>
+
+export { documentEventStore }

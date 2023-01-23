@@ -1,11 +1,8 @@
-/// <reference lib="dom" />
-import { basename } from 'path'
-
 import z from 'zod'
 import { Command, tuple } from '@castore/core'
 
 import { documentEventStore } from './document-eventstore'
-import { DocumentCreatedEventTypeDetail } from './document-created-event'
+import { DocumentCreatedEventTypeDetail, documentCreatedEventType } from './document-created-event'
 
 const createDocumentCommandInputSchema = z.object({
     name: z.string().optional(),
@@ -35,8 +32,8 @@ export const createDocumentCommand = new Command({
         const event: DocumentCreatedEventTypeDetail = {
             aggregateId: documentId,
             version: 1,
-            type: 'DOCUMENTS:DOCUMENT_CREATED',
-            payload: { name: name, key },
+            type: documentCreatedEventType.type,
+            payload: documentCreatedEventType.payloadSchema.parse({ name: name, key }),
         }
 
         await documentEventStore.pushEvent(event)

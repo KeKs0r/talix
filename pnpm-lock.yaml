@@ -95,6 +95,41 @@ importers:
       typescript: 4.9.4
       vitest: 0.25.8
 
+  packages/domain-receipts:
+    specifiers:
+      '@castore/core': ^1.9.0
+      '@castore/inmemory-event-storage-adapter': ^1.9.0
+      '@castore/test-tools': ^1.9.0
+      '@castore/zod-event': ^1.9.0
+      '@types/node': ^18.11.18
+      castore-extended: workspace:*
+      domain-documents: workspace:*
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      r2-file-storage: workspace:*
+      tsconfig: workspace:*
+      typescript: ^4.9.4
+      ulid: ^2.3.0
+      vitest: ^0.25.6
+      zod: ^3.20.2
+    dependencies:
+      '@castore/core': 1.9.0
+      '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
+      castore-extended: link:../castore-extended
+      domain-documents: link:../domain-documents
+      r2-file-storage: link:../r2-file-storage
+      ulid: 2.3.0
+      zod: 3.20.2
+    devDependencies:
+      '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
+      '@castore/test-tools': 1.9.0_@castore+core@1.9.0
+      '@types/node': 18.11.18
+      eslint: 7.32.0
+      eslint-config-custom: link:../eslint-config-custom
+      tsconfig: link:../tsconfig
+      typescript: 4.9.4
+      vitest: 0.25.8
+
   packages/eslint-config-custom:
     specifiers:
       eslint: ^7.23.0
