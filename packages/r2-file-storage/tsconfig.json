@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {},
+    "extends": "tsconfig/worker.json",
+    "exclude": ["node_modules", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+    "files": [],
+    "include": ["src", "repl"],
+    "references": [
+        {
+            "path": "./tsconfig.spec.json"
+        }
+    ]
+}

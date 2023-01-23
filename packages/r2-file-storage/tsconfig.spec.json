@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "out",
+        "module": "commonjs",
+        "types": [],
+        "composite": true
+    },
+    "include": ["vitest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
+}
