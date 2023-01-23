@@ -1,4 +1,4 @@
-import type { Command } from '@castore/core'
+import type { Command, EventType } from '@castore/core'
 
 export type GetCommandInput<Cmd> = Cmd extends Command<any, any, any, infer Input> ? Input : never
 export type GetCommandOutput<Cmd> = Cmd extends Command<any, any, any, any, infer Output>

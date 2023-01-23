@@ -22,7 +22,7 @@ describe('Worker', () => {
         expect(text).toMatchInlineSnapshot(`"Hello World!"`)
     })
 
-    it.only('Can access r2', async () => {
+    it('Can access r2', async () => {
         const resp = await worker.fetch('/r2')
         const text = await resp.text()
         console.log(text)

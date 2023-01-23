@@ -45,6 +45,7 @@ importers:
     specifiers:
       '@castore/core': ^1.9.0
       '@types/node': ^18.11.18
+      emittery: ^1.0.1
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       tsconfig: workspace:*
@@ -52,6 +53,7 @@ importers:
       vitest: ^0.25.6
     dependencies:
       '@castore/core': 1.9.0
+      emittery: 1.0.1
     devDependencies:
       '@types/node': 18.11.18
       eslint: 7.32.0
@@ -1221,6 +1223,11 @@ packages:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /emittery/1.0.1:
+    resolution: {integrity: sha512-2ID6FdrMD9KDLldGesP6317G78K7km/kMcwItRtVFva7I/cSEOIaLpewaUb+YLXVwdAp3Ctfxh/V5zIl1sj7dQ==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /emoji-regex/8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
