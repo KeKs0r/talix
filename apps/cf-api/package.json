@@ -1,23 +1,23 @@
 {
-    "name": "pipeline-run",
+    "name": "cf-api",
     "version": "0.0.0",
     "devDependencies": {
+        "@cloudflare/workers-types": "^4.20221111.1",
         "@types/node": "^18.11.18",
         "eslint-config-custom": "workspace:*",
         "tsconfig": "workspace:*",
         "typescript": "^4.9.4",
         "vite": "^3.2.4",
         "vite-node": "^0.27.0",
-        "vitest": "^0.25.6"
+        "vitest": "^0.25.8",
+        "wrangler": "^2.8.0"
     },
     "private": true,
     "engines": {
         "node": "18"
     },
     "scripts": {
-        "type-check": "pnpm run type-check:app && pnpm run type-check:test",
-        "type-check:app": "tsc --noEmit",
-        "type-check:test": "tsc --noEmit --project ./tsconfig.spec.json",
+        "type-check": "tsc --noEmit",
         "dev": "vite-node src/dev.ts",
         "dev:env": "doppler run -- vite-node src/dev.ts",
         "lint": "eslint",
@@ -29,7 +29,8 @@
         "repl:env": "doppler run -- vite-node"
     },
     "dependencies": {
-        "telegraf": "^4.11.2",
-        "domain-documents": "workspace:*"
+        "domain-documents": "workspace:*",
+        "hono": "^2.7.4",
+        "telegraf": "^4.11.2"
     }
 }

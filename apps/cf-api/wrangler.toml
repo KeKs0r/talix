@@ -1,0 +1,12 @@
+name = "talix-api"
+main = "src/index.ts"
+compatibility_date = "2023-01-23"
+
+account_id = "8f677fd195b2d505617e10661bc8e59d"
+
+workers_dev = true
+
+[[r2_buckets]]
+binding = 'DOCUMENTS' # <~ valid JavaScript variable name
+bucket_name = 'talix-documents'
+preview_bucket_name = 'talix-documents-preview'
