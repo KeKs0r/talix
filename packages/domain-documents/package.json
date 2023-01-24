@@ -25,7 +25,7 @@
         "@castore/core": "^1.9.0",
         "@castore/zod-event": "^1.9.0",
         "castore-extended": "workspace:*",
-        "r2-file-storage": "workspace:*",
+        "cf-r2-file-storage": "workspace:*",
         "ulid": "^2.3.0",
         "zod": "^3.20.2"
     }

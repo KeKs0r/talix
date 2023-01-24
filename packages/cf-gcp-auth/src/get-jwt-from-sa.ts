@@ -5,7 +5,7 @@ import { Base64 } from 'js-base64'
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 const extractable = process.env.NODE_ENV === 'test'
 
-type ServiceAccount = {
+export type ServiceAccount = {
     private_key_id: string
     private_key: string
     client_email: string

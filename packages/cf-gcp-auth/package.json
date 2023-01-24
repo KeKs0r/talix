@@ -8,12 +8,9 @@
         "lint": "eslint",
         "test": "vitest run",
         "test:watch": "vitest",
-        "type-check": "tsc --noEmit",
-        "repl": "node -r ts-node/register"
+        "type-check": "tsc --noEmit"
     },
     "devDependencies": {
-        "@castore/inmemory-event-storage-adapter": "^1.9.0",
-        "@castore/test-tools": "^1.9.0",
         "@types/node": "^18.11.18",
         "eslint": "^7.32.0",
         "eslint-config-custom": "workspace:*",
@@ -22,12 +19,6 @@
         "vitest": "^0.25.6"
     },
     "dependencies": {
-        "@castore/core": "^1.9.0",
-        "@castore/zod-event": "^1.9.0",
-        "castore-extended": "workspace:*",
-        "js-base64": "^3.7.4",
-        "r2-file-storage": "workspace:*",
-        "ulid": "^2.3.0",
-        "zod": "^3.20.2"
+        "js-base64": "^3.7.4"
     }
 }
