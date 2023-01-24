@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Repl Document.ai",
+            "autoAttachChildProcesses": true,
+            "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+            "runtimeExecutable": "vite-node",
+            "program": "repl/document-ai.ts",
+            "cwd": "${workspaceRoot}/apps/gcp-api",
+            "smartStep": true,
+            "console": "integratedTerminal",
+            "env": {
+                "GOOGLE_APPLICATION_CREDENTIALS": "env/service-account.json"
+            }
+        }
+    ]
+}
