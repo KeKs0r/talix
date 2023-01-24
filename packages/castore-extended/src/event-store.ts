@@ -6,10 +6,8 @@ import type {
     EventType,
     EventTypesDetails,
     Reducer,
-    StorageAdapter,
 } from '@castore/core'
 import { EventStore as BaseEventStore } from '@castore/core'
-import { EventPusher } from '@castore/core/dist/types/eventStore'
 
 export class EventStore<
     I extends string = string,
@@ -23,23 +21,11 @@ export class EventStore<
     $A extends Aggregate = $Contravariant<A, Aggregate>
 > extends BaseEventStore<I, E, D, $D, R, A, $A> {
     emitter: Emittery
-    constructor(args: {
-        eventStoreId: I
-        /**
-         * @debt v2 "rename as eventTypes"
-         */
-        eventStoreEvents: E
-        /**
-         * @debt v2 "rename as reducer"
-         */
-        reduce: R
-        simulateSideEffect?: SideEffectsSimulator<D, $D>
-        storageAdapter?: StorageAdapter
-    }) {
-        super(args)
+    constructor(...args: ConstructorParameters<typeof BaseEventStore<I, E, D, $D, R, A, $A>>) {
+        super(...args)
         this.emitter = new Emittery()
 
-        const originalPushEvent: EventPusher<$D> = this.pushEvent
+        const originalPushEvent = this.pushEvent
         this.pushEvent = async (event: $D) => {
             await originalPushEvent(event)
             await this.emit(event)
@@ -58,14 +44,3 @@ export class EventStore<
         return this.emitter.emit(event.type, event)
     }
 }
-
-/**
- * @dept: Export from @castore/core
- */
-type SideEffectsSimulator<
-    D extends EventDetail,
-    $D extends EventDetail = $Contravariant<D, EventDetail>
-> = (
-    indexedEvents: Record<string, Omit<$D, 'version'>>,
-    event: $D
-) => Record<string, Omit<D, 'version'>>
