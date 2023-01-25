@@ -1,4 +1,4 @@
-import { R2Bucket } from '@cloudflare/workers-types'
+import { R2Bucket, ReadableStream } from '@cloudflare/workers-types'
 
 export type FileStorage = ReturnType<typeof createFileStorage>
 

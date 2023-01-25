@@ -1,4 +1,6 @@
-import { DocumentService } from 'domain-documents'
+import { assert } from 'console'
+
+import { DocumentService } from 'domain-core'
 import { Telegraf, Markup } from 'telegraf'
 import { message } from 'telegraf/filters'
 
@@ -8,11 +10,15 @@ export function registerDocumentHandler(
 ) {
     bot.on(message('document'), async (ctx) => {
         const document = ctx.update.message.document
-
+        const fileName = document.file_name
+        assert(fileName)
         const url = await ctx.telegram.getFileLink(document.file_id)
+        const link = url.href
+        assert(link)
+        assert(false, '@TODO FIX THIS')
         await documentService.createDocument({
-            name: document.file_name,
-            url: url.href,
+            name: fileName,
+            key: 'CHANGE ME',
         })
 
         ctx.reply(

@@ -3,7 +3,7 @@ import { basename } from 'path'
 
 import type { CommandHandler } from 'castore-extended'
 import { z } from 'zod'
-import type { FileStorage } from 'r2-file-storage'
+import type { FileStorage } from 'cf-r2-file-storage'
 
 import { createDocumentCommand } from './document-create-command'
 

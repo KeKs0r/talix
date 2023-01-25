@@ -6,10 +6,5 @@
     },
     "exclude": ["node_modules"],
     "files": [],
-    "include": ["src"],
-    "references": [
-        {
-            "path": "./tsconfig.spec.json"
-        }
-    ]
+    "include": ["src", "repl"]
 }

@@ -1,6 +1,7 @@
 import z from 'zod'
 import { Command, tuple } from '@castore/core'
-import { documentEventStore } from 'domain-documents'
+
+import { documentEventStore } from '../document'
 
 import { receiptEventStore } from './receipt-eventstore'
 import { ReceiptCreatedEventTypeDetail, receiptCreatedEventType } from './receipt-created-event'
@@ -31,7 +32,7 @@ export const createReceiptCommand = new Command({
             aggregateId: receiptId,
             version: 1,
             type: receiptCreatedEventType.type,
-            payload: receiptCreatedEventType.payloadSchema.parse({ documentId }),
+            payload: receiptCreatedEventType.payloadSchema!.parse({ documentId }),
         }
 
         await receiptEventStore.pushEvent(event)

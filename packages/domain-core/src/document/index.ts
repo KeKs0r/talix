@@ -2,8 +2,8 @@ import type { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { ulid } from 'ulid'
 
-import { documentEventStore } from './document/document-eventstore'
-import { createDocumentCommand, CreateDocumentInput } from './document/document-create-command'
+import { createDocumentCommand, CreateDocumentInput } from './document-create-command'
+import { documentEventStore } from './document-eventstore'
 
 type ServiceOptions = {
     storageAdapter?: StorageAdapter

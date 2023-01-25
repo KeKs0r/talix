@@ -33,7 +33,7 @@ export const createDocumentCommand = new Command({
             aggregateId: documentId,
             version: 1,
             type: documentCreatedEventType.type,
-            payload: documentCreatedEventType.payloadSchema.parse({ name: name, key }),
+            payload: documentCreatedEventType.payloadSchema!.parse({ name: name, key }),
         }
 
         await documentEventStore.pushEvent(event)

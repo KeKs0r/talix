@@ -1,11 +1,13 @@
 import { Telegraf } from 'telegraf'
-import { TELEGRAM_BOT_TOKEN } from './env'
-import { registerDocumentHandler } from '../handlers/document'
-import { App, createApp } from './app'
 
-export function createBot(): { bot: Telegraf; app: App } {
+import { registerDocumentHandler } from '../handlers/document'
+
+import { App } from './app'
+import { TELEGRAM_BOT_TOKEN } from './env'
+
+export function createBot(app: App): { bot: Telegraf } {
     const bot = new Telegraf(TELEGRAM_BOT_TOKEN)
-    const app = createApp()
+
     registerDocumentHandler(bot, app)
-    return { bot, app }
+    return { bot }
 }

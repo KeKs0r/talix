@@ -1,12 +1,7 @@
 {
     "compilerOptions": {},
     "extends": "tsconfig/node.json",
-    "exclude": ["node_modules", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+    "exclude": ["node_modules"],
     "files": [],
-    "include": ["src", "repl"],
-    "references": [
-        {
-            "path": "./tsconfig.spec.json"
-        }
-    ]
+    "include": ["src", "repl"]
 }

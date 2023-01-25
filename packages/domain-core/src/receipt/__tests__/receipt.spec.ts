@@ -1,7 +1,7 @@
 import { describe, beforeEach, it, expect } from 'vitest'
 import { mockEventStore } from '@castore/test-tools'
-import { documentEventStore } from 'domain-documents'
 
+import { documentEventStore } from '../../document'
 import { receiptEventStore } from '../receipt-eventstore'
 import { createReceiptCommand, CreateReceiptInput } from '../receipt-create-command'
 
