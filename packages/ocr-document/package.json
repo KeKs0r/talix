@@ -1,0 +1,26 @@
+{
+    "name": "ocr-document",
+    "version": "0.0.0",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "type-check": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "^18.11.18",
+        "eslint": "^7.32.0",
+        "eslint-config-custom": "workspace:*",
+        "tsconfig": "workspace:*",
+        "typescript": "^4.9.4",
+        "vitest": "^0.25.6"
+    },
+    "dependencies": {
+        "js-base64": "^3.7.4",
+        "p-retry": "^5.1.2",
+        "cf-gcp-auth": "workspace:*"
+    }
+}
