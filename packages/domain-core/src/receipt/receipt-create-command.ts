@@ -32,7 +32,7 @@ export const createReceiptCommand = new Command({
             aggregateId: receiptId,
             version: 1,
             type: receiptCreatedEventType.type,
-            payload: receiptCreatedEventType.payloadSchema.parse({ documentId }),
+            payload: receiptCreatedEventType.payloadSchema!.parse({ documentId }),
         }
 
         await receiptEventStore.pushEvent(event)

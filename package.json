@@ -11,6 +11,7 @@
         "dev": "turbo run dev --parallel",
         "lint": "turbo run lint",
         "test": "turbo run test",
+        "type-check": "turbo run type-check",
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",
         "sync:deps": "npx syncpack fix-mismatches"
     },

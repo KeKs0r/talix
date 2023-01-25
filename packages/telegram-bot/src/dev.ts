@@ -1,7 +1,7 @@
 import { createBot } from './app/bot'
 
 async function main() {
-    const { bot } = createBot()
+    const { bot } = createBot({} as any)
 
     bot.launch()
 
