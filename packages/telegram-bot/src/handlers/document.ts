@@ -1,5 +1,4 @@
-import { DocumentService } from 'domain'
-
+import { DocumentService } from 'domain-core'
 import { Telegraf, Markup } from 'telegraf'
 import { message } from 'telegraf/filters'
 

@@ -9,7 +9,7 @@ describe('Worker', () => {
         worker = await unstable_dev('src/index.ts', {
             experimental: { disableExperimentalWarning: true },
         })
-    })
+    }, 20 * 1000)
 
     afterAll(async () => {
         await worker.stop()

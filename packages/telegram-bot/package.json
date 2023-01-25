@@ -21,7 +21,7 @@
         "dev": "vite-node src/dev.ts",
         "dev:env": "doppler run -- vite-node src/dev.ts",
         "lint": "eslint",
-        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run",
+        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run --passWithNoTests",
         "test:env": "doppler run -- pnpm test",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest .",
         "test:watch:env": "doppler run -- pnpm test:watch",

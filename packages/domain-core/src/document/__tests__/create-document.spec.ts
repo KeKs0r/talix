@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest'
 import { mockEventStore } from '@castore/test-tools'
-import { getMockStorage } from 'r2-file-storage'
+import { getMockStorage } from 'cf-r2-file-storage'
 
 import { documentEventStore } from '../document-eventstore'
 import { createDocumentCommand } from '../document-create-command'

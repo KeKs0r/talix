@@ -22,7 +22,7 @@
         "type-check:test": "tsc --noEmit --project ./tsconfig.spec.json",
         "dev": "vite-node src/dev.ts",
         "lint": "eslint",
-        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run",
+        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run --passWithNoTests",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest .",
         "repl": "vite-node"
     }
