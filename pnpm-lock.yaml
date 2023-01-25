@@ -17,7 +17,7 @@ importers:
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
       cf-gcp-auth: workspace:*
-      domain-documents: workspace:*
+      domain-core: workspace:*
       eslint-config-custom: workspace:*
       hono: ^2.7.4
       p-retry: ^5.1.2
@@ -30,7 +30,7 @@ importers:
       wrangler: ^2.8.0
     dependencies:
       cf-gcp-auth: link:../../packages/cf-gcp-auth
-      domain-documents: link:../../packages/domain-documents
+      domain-core: link:../../packages/domain-core
       hono: 2.7.4
       p-retry: 5.1.2
       telegraf: 4.11.2
@@ -105,7 +105,7 @@ importers:
       vite-node: 0.27.3_@types+node@18.11.18
       vitest: 0.25.8
 
-  packages/domain-documents:
+  packages/domain-core:
     specifiers:
       '@castore/core': ^1.9.0
       '@castore/inmemory-event-storage-adapter': ^1.9.0
@@ -126,39 +126,6 @@ importers:
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
       castore-extended: link:../castore-extended
       cf-r2-file-storage: link:../cf-r2-file-storage
-      ulid: 2.3.0
-      zod: 3.20.2
-    devDependencies:
-      '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
-      '@castore/test-tools': 1.9.0_@castore+core@1.9.0
-      '@types/node': 18.11.18
-      eslint: 7.32.0
-      eslint-config-custom: link:../eslint-config-custom
-      tsconfig: link:../tsconfig
-      typescript: 4.9.4
-      vitest: 0.25.8
-
-  packages/domain-receipts:
-    specifiers:
-      '@castore/core': ^1.9.0
-      '@castore/inmemory-event-storage-adapter': ^1.9.0
-      '@castore/test-tools': ^1.9.0
-      '@castore/zod-event': ^1.9.0
-      '@types/node': ^18.11.18
-      castore-extended: workspace:*
-      domain-documents: workspace:*
-      eslint: ^7.32.0
-      eslint-config-custom: workspace:*
-      tsconfig: workspace:*
-      typescript: ^4.9.4
-      ulid: ^2.3.0
-      vitest: ^0.25.6
-      zod: ^3.20.2
-    dependencies:
-      '@castore/core': 1.9.0
-      '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
-      castore-extended: link:../castore-extended
-      domain-documents: link:../domain-documents
       ulid: 2.3.0
       zod: 3.20.2
     devDependencies:
@@ -214,7 +181,7 @@ importers:
   packages/telegram-bot:
     specifiers:
       '@types/node': ^18.11.18
-      domain-documents: workspace:*
+      domain-core: workspace:*
       eslint-config-custom: workspace:*
       telegraf: ^4.11.2
       tsconfig: workspace:*
@@ -223,7 +190,7 @@ importers:
       vite-node: ^0.27.0
       vitest: ^0.25.6
     dependencies:
-      domain-documents: link:../domain-documents
+      domain-core: link:../domain-core
       telegraf: 4.11.2
     devDependencies:
       '@types/node': 18.11.18

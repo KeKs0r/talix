@@ -30,6 +30,6 @@
     },
     "dependencies": {
         "telegraf": "^4.11.2",
-        "domain": "workspace:*"
+        "domain-core": "workspace:*"
     }
 }
