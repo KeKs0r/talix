@@ -1,0 +1,54 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    CI:
+        runs-on: ubuntu-latest
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+            TURBO_REMOTE_ONLY: true
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: 18
+                cache: 'pnpm'
+
+            - run: pnpm turbo run lint test type-check build --output-logs full
+
+    deploy:
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name  == 'push' }}
+        needs: [CI]
+        environment:
+            name: deploy
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+            TURBO_REMOTE_ONLY: true
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: 18
+                cache: 'pnpm'
+
+            - name: Deploy
+              run: pnpm run deploy
+
+
+
