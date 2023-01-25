@@ -30,7 +30,7 @@
     },
     "dependencies": {
         "cf-gcp-auth": "workspace:*",
-        "domain-documents": "workspace:*",
+        "domain": "workspace:*",
         "hono": "^2.7.4",
         "p-retry": "^5.1.2",
         "telegraf": "^4.11.2"
