@@ -1,3 +1,5 @@
+import assert from 'assert'
+
 import { EventDetail } from '@castore/core'
 
 export class EventAction<
@@ -7,7 +9,11 @@ export class EventAction<
 > {
     readonly actionId: Id
     readonly trigger: Event['type']
-    handler: (event: Event, deps: Context) => Promise<void>
+    handler: (event: Event, deps: Context) => Promise<void> | void
+    deps?: Context
+    _types?: {
+        Event: Event
+    }
     constructor({
         actionId,
         trigger,
@@ -15,10 +21,19 @@ export class EventAction<
     }: {
         actionId: Id
         trigger: Event['type']
-        handler: (event: Event, deps: Context) => Promise<void>
+        handler: (event: Event, deps: Context) => Promise<void> | void
     }) {
         this.actionId = actionId
         this.trigger = trigger
         this.handler = handler
+        this.run = this.run.bind(this)
+        this.register = this.register.bind(this)
+    }
+    run(event: Event) {
+        assert(this.deps, 'Can only call run after registering the action dependencies')
+        return this.handler(event, this.deps)
+    }
+    register(deps: Context) {
+        this.deps = deps
     }
 }

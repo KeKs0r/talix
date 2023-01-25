@@ -34,7 +34,7 @@ export class EventStore<
 
     on<EventType extends E[number]>(
         eventName: EventType['type'],
-        listener: (event: EventDetail<EventType>) => Promise<void>
+        listener: (event: EventDetail<EventType>) => Promise<void> | void
     ) {
         this.emitter.on(eventName, listener)
         return () => this.emitter.off(eventName, listener)

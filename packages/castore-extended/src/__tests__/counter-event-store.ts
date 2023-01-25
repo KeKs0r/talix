@@ -2,6 +2,7 @@ import { vi } from 'vitest'
 import { EventType, EventTypeDetail, StorageAdapter } from '@castore/core'
 
 import { EventStore } from '../event-store'
+import { EventAction } from '../event-action'
 
 export const pushEventMock = vi.fn()
 export const getEventsMock = vi.fn()
@@ -19,16 +20,19 @@ export const mockStorageAdapter: StorageAdapter = {
     listSnapshots: listSnapshotsMock,
 }
 
-export const counterCreatedEvent = new EventType<'COUNTER_CREATED', { initialCount?: number }>({
-    type: 'COUNTER_CREATED',
+export const counterCreatedEvent = new EventType<
+    'COUNTER:COUNTER_CREATED',
+    { initialCount?: number }
+>({
+    type: 'COUNTER:COUNTER_CREATED',
 })
 
-export const counterIncrementedEvent = new EventType<'COUNTER_INCREMENTED'>({
-    type: 'COUNTER_INCREMENTED',
+export const counterIncrementedEvent = new EventType<'COUNTER:COUNTER_INCREMENTED'>({
+    type: 'COUNTER:COUNTER_INCREMENTED',
 })
 
-export const counterDeletedEvent = new EventType<'COUNTER_DELETED'>({
-    type: 'COUNTER_DELETED',
+export const counterDeletedEvent = new EventType<'COUNTER:COUNTER_DELETED'>({
+    type: 'COUNTER:COUNTER_DELETED',
 })
 
 export type CounterEventsDetails =
@@ -47,14 +51,14 @@ export const counterIdMock = 'counterId'
 export const counterCreatedEventMock: CounterEventsDetails = {
     aggregateId: counterIdMock,
     version: 1,
-    type: 'COUNTER_CREATED',
+    type: 'COUNTER:COUNTER_CREATED',
     timestamp: '2022',
     payload: {},
 }
 export const counterIncrementedEventMock: CounterEventsDetails = {
     aggregateId: counterIdMock,
     version: 2,
-    type: 'COUNTER_INCREMENTED',
+    type: 'COUNTER:COUNTER_INCREMENTED',
     timestamp: '2023',
 }
 export const counterEventsMocks: [CounterEventsDetails, CounterEventsDetails] = [
@@ -97,8 +101,16 @@ export const countersReducer = (
     }
 }
 
+export const counterCreatedAction = new EventAction({
+    actionId: 'COUNTER_CREATED_ACTION',
+    trigger: 'COUNTER:COUNTER_CREATED',
+    handler(event: typeof counterCreatedEvent, deps: (e: typeof counterCreatedEvent) => void) {
+        deps(event)
+    },
+})
+
 export const counterEventStore = new EventStore({
-    eventStoreId: 'Counters',
+    eventStoreId: 'COUNTER',
     eventStoreEvents: [counterCreatedEvent, counterIncrementedEvent, counterDeletedEvent],
     reduce: countersReducer,
     storageAdapter: mockStorageAdapter,
