@@ -4,6 +4,7 @@ import { mockEventStore } from 'castore-extended'
 import { documentEventStore } from '../../document'
 import { voucherEventStore } from '../voucher-eventstore'
 import { createVoucherCommand, CreateVoucherInput } from '../voucher-create-command'
+import { createDateString } from '../../shared/date.types'
 
 describe.concurrent('Upload Document', () => {
     const mockedVoucherEventStore = mockEventStore(voucherEventStore, [])
@@ -29,7 +30,7 @@ describe.concurrent('Upload Document', () => {
             documentId: 'i-exist',
             creditOrDebit: 'DEBIT',
             vatTaxType: 'EU',
-            voucherDate: new Date().toISOString(),
+            voucherDate: createDateString(2023, 1, 15),
         })
 
         const { events } = await mockedVoucherEventStore.getEvents(voucherId)
@@ -61,7 +62,7 @@ describe.concurrent('Upload Document', () => {
                 documentId: 'dont-exist',
                 creditOrDebit: 'DEBIT',
                 vatTaxType: 'EU',
-                voucherDate: new Date().toISOString(),
+                voucherDate: createDateString(2023, 1, 15),
             })
         ).rejects.toThrow('Unable to find aggregate dont-exist in event store DOCUMENTS.')
     })

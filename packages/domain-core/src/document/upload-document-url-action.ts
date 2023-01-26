@@ -39,7 +39,7 @@ export const uploadDocumentFromUrlAction = new Action({
         }
         const bodyStream = response.body
         assert(bodyStream, `Bodystream not available for ${url}`)
-        const fileUrl = await fileStorage.put(key, bodyStream)
+        const fileUrl = await fileStorage.put(key, bodyStream as any)
 
         const { documentId } = await createDocument({
             documentId: id,
