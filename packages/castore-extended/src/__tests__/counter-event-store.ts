@@ -1,5 +1,6 @@
 import { vi } from 'vitest'
 import { EventType, EventTypeDetail, StorageAdapter } from '@castore/core'
+import Emittery from 'emittery'
 
 import { EventStore } from '../event-store'
 import { EventAction } from '../event-action'
@@ -10,6 +11,8 @@ export const listAggregateIdsMock = vi.fn()
 export const putSnapshotMock = vi.fn()
 export const getLastSnapshotMock = vi.fn()
 export const listSnapshotsMock = vi.fn()
+
+export const emitter = new Emittery()
 
 export const mockStorageAdapter: StorageAdapter = {
     pushEvent: pushEventMock,
@@ -114,4 +117,5 @@ export const counterEventStore = new EventStore({
     eventStoreEvents: [counterCreatedEvent, counterIncrementedEvent, counterDeletedEvent],
     reduce: countersReducer,
     storageAdapter: mockStorageAdapter,
+    emitter,
 })

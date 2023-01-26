@@ -13,8 +13,13 @@ describe('Service Wiring', () => {
         const spy = vi.fn()
         counterCreatedAction.register(spy)
         const service: Service = {
-            stores: [counterEventStore],
-            actions: [counterCreatedAction],
+            name: 'mockService',
+            stores: {
+                [counterEventStore.eventStoreId]: counterEventStore,
+            },
+            actions: {
+                counterCreatedAction,
+            },
         }
 
         connectServicesActions([service])
