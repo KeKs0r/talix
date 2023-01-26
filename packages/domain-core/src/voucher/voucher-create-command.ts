@@ -4,10 +4,18 @@ import { Command, tuple } from '@castore/core'
 import { documentEventStore } from '../document'
 
 import { voucherEventStore } from './voucher-eventstore'
-import { VoucherCreatedEventTypeDetail, voucherCreatedEventType } from './voucher-created-event'
+import {
+    voucherCreatedEventType,
+    VoucherCreatedEventTypeDetail,
+    VoucherCreatedPayload,
+    voucherCreatedPayloadSchema,
+} from './voucher-created-event'
 
-const createVoucherCommandInputSchema = z.object({
-    documentId: z.string(),
+const createVoucherCommandInputSchema = voucherCreatedPayloadSchema.pick({
+    creditOrDebit: true,
+    documentId: true,
+    vatTaxType: true,
+    voucherDate: true,
 })
 export type CreateVoucherInput = z.infer<typeof createVoucherCommandInputSchema>
 type Output = { voucherId: string }
@@ -21,18 +29,25 @@ export const createVoucherCommand = new Command({
         [voucherEventStore, documentEventStore],
         { generateId }: Context
     ): Promise<Output> => {
-        const { documentId } = createVoucherCommandInputSchema.parse(commandInput)
+        const { documentId, creditOrDebit, vatTaxType, voucherDate } =
+            createVoucherCommandInputSchema.parse(commandInput)
 
         // Just to check that the document exists
         await documentEventStore.getExistingAggregate(documentId)
 
         const voucherId = generateId()
+        const payload: VoucherCreatedPayload = {
+            documentId,
+            creditOrDebit,
+            vatTaxType,
+            voucherDate,
+        }
 
         const event: VoucherCreatedEventTypeDetail = {
             aggregateId: voucherId,
             version: 1,
             type: voucherCreatedEventType.type,
-            payload: voucherCreatedEventType.payloadSchema!.parse({ documentId }),
+            payload,
         }
 
         await voucherEventStore.pushEvent(event)

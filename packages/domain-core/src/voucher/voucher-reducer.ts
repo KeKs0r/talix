@@ -1,25 +1,29 @@
-import type { Reducer } from '@castore/core'
+import type { Reducer, EventDetail, $Contravariant } from '@castore/core'
 
 import { VoucherAggregate } from './voucher-aggregate'
-import { VoucherCreatedEventTypeDetail, voucherCreatedEventType } from './voucher-created-event'
+import { voucherCreatedEventType, VoucherCreatedPayload } from './voucher-created-event'
 
-type VoucherEventDetails = VoucherCreatedEventTypeDetail
+type VoucherEventDetails = EventDetail<typeof voucherCreatedEventType>
 
 export const voucherReducer: Reducer<VoucherAggregate, VoucherEventDetails> = (
     voucherAggregate,
-    newEvent: VoucherEventDetails
+    newEvent
 ) => {
     const { aggregateId, version, timestamp } = newEvent
 
     switch (newEvent.type) {
         case voucherCreatedEventType.type: {
-            const { documentId } = newEvent.payload
+            const { documentId, creditOrDebit, vatTaxType, voucherDate } =
+                newEvent.payload as VoucherCreatedPayload
             const voucher: VoucherAggregate = {
                 aggregateId,
                 version,
                 createdAt: timestamp,
                 status: 'DRAFT',
                 documentId,
+                creditOrDebit,
+                vatTaxType,
+                voucherDate,
                 items: [],
             }
             return voucher

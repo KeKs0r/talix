@@ -25,7 +25,12 @@ describe.concurrent('Upload Document', () => {
         })
 
     it('Upload Document Command', async () => {
-        const { voucherId } = await createVoucher({ documentId: 'i-exist' })
+        const { voucherId } = await createVoucher({
+            documentId: 'i-exist',
+            creditOrDebit: 'DEBIT',
+            vatTaxType: 'EU',
+            voucherDate: new Date().toISOString(),
+        })
 
         const { events } = await mockedVoucherEventStore.getEvents(voucherId)
 
@@ -50,9 +55,14 @@ describe.concurrent('Upload Document', () => {
         expect(aggregate.createdAt).toBeTruthy()
     })
 
-    it('Create Voucher from non existing Document', async () => {
-        expect(createVoucher({ documentId: 'dont-exist' })).rejects.toThrow(
-            'Unable to find aggregate dont-exist in event store DOCUMENTS.'
-        )
+    it('Create Voucher from non existing Document fails', async () => {
+        expect(
+            createVoucher({
+                documentId: 'dont-exist',
+                creditOrDebit: 'DEBIT',
+                vatTaxType: 'EU',
+                voucherDate: new Date().toISOString(),
+            })
+        ).rejects.toThrow('Unable to find aggregate dont-exist in event store DOCUMENTS.')
     })
 })
