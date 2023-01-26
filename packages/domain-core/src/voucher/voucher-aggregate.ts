@@ -16,8 +16,8 @@ export interface VoucherAggregate extends Aggregate {
     createdAt: DateTimeString
     updatedAt?: DateTimeString
 
-    vatTaxType: VatTaxType
-    voucherDate: DateTimeString
+    vatTaxType?: VatTaxType
+    voucherDate?: DateTimeString
     deliveryDate?: DateTimeString
     creditOrDebit: CreditOrDebit
     supplierName?: string

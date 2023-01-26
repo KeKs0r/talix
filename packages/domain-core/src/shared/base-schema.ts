@@ -11,6 +11,21 @@ export const DateTimeStringSchema = z
             message: 'Invalid datetime',
         }
     )
-    .brand('DateTime')
+    .brand('DateTimeString')
 
 export type DateTimeString = z.infer<typeof DateTimeStringSchema>
+
+export const DateStringSchema = z
+    .string()
+    .refine(
+        (val: string) => {
+            const d = new Date(val)
+            return d.toString() !== 'Invalid Date'
+        },
+        {
+            message: 'Invalid datetime',
+        }
+    )
+    .brand('DateString')
+
+export type DateString = z.infer<typeof DateStringSchema>

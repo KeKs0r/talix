@@ -36,5 +36,6 @@ export function createVoucherService(opts: ServiceDeps) {
             [voucherEventStore.eventStoreId]: voucherEventStore,
         },
     } satisfies Service
+    return service
 }
 export type VoucherService = ReturnType<typeof createVoucherService>

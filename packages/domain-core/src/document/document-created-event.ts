@@ -20,4 +20,5 @@ export const documentCreatedEventType = new ZodEventType<
     metadataSchema: documentCreatedMetadataSchema,
 })
 
+export type DocumentCreatedPayload = z.infer<typeof documentCreatedPayloadSchema>
 export type DocumentCreatedEventTypeDetail = EventTypeDetail<typeof documentCreatedEventType>
