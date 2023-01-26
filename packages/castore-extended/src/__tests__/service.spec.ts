@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 
-import { connectServicesActions } from '../service'
+import { connectServicesActions, Service } from '../service'
 
 import {
     counterEventStore,
@@ -11,11 +11,12 @@ import {
 describe('Service Wiring', () => {
     it('Can wire services and connection actions', async () => {
         const spy = vi.fn()
-        const service = {
+        counterCreatedAction.register(spy)
+        const service: Service = {
             stores: [counterEventStore],
             actions: [counterCreatedAction],
         }
-        counterCreatedAction.register(spy)
+
         connectServicesActions([service])
         await counterEventStore.pushEvent(counterCreatedEventMock)
         expect(spy).toHaveBeenCalled()

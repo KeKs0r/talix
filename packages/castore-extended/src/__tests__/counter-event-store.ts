@@ -110,7 +110,7 @@ export const counterCreatedAction = new EventAction({
 })
 
 export const counterEventStore = new EventStore({
-    eventStoreId: 'COUNTER',
+    eventStoreId: 'Counters',
     eventStoreEvents: [counterCreatedEvent, counterIncrementedEvent, counterDeletedEvent],
     reduce: countersReducer,
     storageAdapter: mockStorageAdapter,

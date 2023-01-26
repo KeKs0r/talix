@@ -1,5 +1,6 @@
 import type { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
+import { Service } from 'castore-extended'
 import { FileStorage } from 'cf-r2-file-storage'
 import { ulid } from 'ulid'
 
@@ -13,7 +14,9 @@ type ServiceOptions = {
     fileStorage: FileStorage
 }
 
-export function createDocumentService(opts: ServiceOptions) {
+export function createDocumentService<ResultingService extends Service>(
+    opts: ServiceOptions
+): ResultingService {
     const {
         storageAdapter = new InMemoryStorageAdapter(),
         generateId = ulid,
@@ -32,7 +35,7 @@ export function createDocumentService(opts: ServiceOptions) {
 
     return {
         createDocument,
-        uploadDocumentUrlAction,
+        actions: [uploadDocumentUrlAction],
     }
 }
 

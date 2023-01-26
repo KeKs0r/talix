@@ -1,4 +1,5 @@
 export type { CommandHandler, GetCommandInput, GetCommandOutput } from './type-util'
 export type { Service } from './service'
 export { connectServicesActions } from './service'
+export { Action } from './action'
 export { EventAction } from './event-action'
