@@ -32,7 +32,7 @@ describe.concurrent(
         })
 
         it('Can Upload File', async () => {
-            const key = `test-${Date.now()}.json`
+            const key = `ci/test-${Date.now()}.json`
             await storage.put(key, JSON.stringify({ hello: 'world' }), {
                 contentType: 'application/json',
             })
