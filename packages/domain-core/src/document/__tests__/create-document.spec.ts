@@ -6,7 +6,7 @@ import { documentEventStore } from '../document-eventstore'
 import { createDocumentCommand } from '../document-create-command'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
 
-describe.concurrent('Upload Document', () => {
+describe.concurrent('Upload Document From Url', () => {
     const fileStorage = getMockStorage()
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [])
 

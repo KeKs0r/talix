@@ -162,7 +162,10 @@ importers:
   packages/ocr-document:
     specifiers:
       '@types/node': ^18.11.18
+      castore-extended: workspace:*
       cf-gcp-auth: workspace:*
+      cf-r2-file-storage: workspace:*
+      domain-core: workspace:*
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       js-base64: ^3.7.4
@@ -171,7 +174,10 @@ importers:
       typescript: ^4.9.4
       vitest: ^0.25.6
     dependencies:
+      castore-extended: link:../castore-extended
       cf-gcp-auth: link:../cf-gcp-auth
+      cf-r2-file-storage: link:../cf-r2-file-storage
+      domain-core: link:../domain-core
       js-base64: 3.7.4
       p-retry: 5.1.2
     devDependencies:

@@ -1,3 +1,5 @@
+import { ExpenseResponse } from './document.types'
+
 type FieldNames = ExpenseFieldNames
 
 export type ExpenseFieldNames =
@@ -46,8 +48,9 @@ export interface Entity<
     normalizedValue: Value
 }
 
-type DateEntity = Entity<
-    'receipt_date' | 'end_date' | 'start_date',
+export type DateFields = 'receipt_date' | 'end_date' | 'start_date'
+export type DateEntity = Entity<
+    DateFields,
     {
         text: string
         dateValue: {
@@ -57,10 +60,14 @@ type DateEntity = Entity<
         }
     }
 >
+export function getDateEntity(entities: ExpenseEntities[], fieldName: DateFields) {
+    return entities.find((a) => a.type === fieldName) as DateEntity | undefined
+}
 
-type TextEntity = Entity<'supplier_name' | 'supplier_address' | 'supplier_city'>
+export type TextEntity = Entity<'supplier_name' | 'supplier_address' | 'supplier_city'>
 
-type TimeEntity = Entity<
+export type TimeFields = 'purchase_time'
+export type TimeEntity = Entity<
     'purchase_time',
     {
         text: string
@@ -71,6 +78,9 @@ type TimeEntity = Entity<
         }
     }
 >
+export function getTimeEntity(entities: ExpenseEntities[], fieldName: TimeFields) {
+    return entities.find((a) => a.type === fieldName) as TimeEntity | undefined
+}
 
 type CurrencyUnitEntity = Entity<
     'currency',

@@ -21,6 +21,9 @@
     "dependencies": {
         "js-base64": "^3.7.4",
         "p-retry": "^5.1.2",
-        "cf-gcp-auth": "workspace:*"
+        "cf-gcp-auth": "workspace:*",
+        "castore-extended": "workspace:*",
+        "domain-core": "workspace:*",
+        "cf-r2-file-storage": "workspace:*"
     }
 }
