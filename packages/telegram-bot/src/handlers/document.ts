@@ -16,7 +16,7 @@ export function registerDocumentHandler(
         const link = url.href
         assert(link)
         assert(false, '@TODO FIX THIS')
-        await documentService.createDocument({
+        await documentService.commands.createDocument.run({
             name: fileName,
             key: 'CHANGE ME',
         })
