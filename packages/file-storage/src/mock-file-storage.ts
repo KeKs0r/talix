@@ -1,4 +1,4 @@
-import type { FileStorage } from './r2-file-storage'
+import type { FileStorage } from './worker-r2-file-storage'
 export function getMockStorage(): FileStorage {
     const data: Record<string, any> = {}
     return {

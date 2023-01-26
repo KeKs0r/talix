@@ -13,11 +13,9 @@ interface PartialBlob {
     arrayBuffer(): Promise<ArrayBuffer>
 }
 
-export async function parseResponse(res: { blob(): Promise<PartialBlob> }) {
-    const b = await res.blob()
-
-    const type = b.type
-    const buffer = await b.arrayBuffer()
+export async function parseResponse(blob: PartialBlob) {
+    const type = blob.type
+    const buffer = await blob.arrayBuffer()
     const base64 = Buffer.from(buffer).toString('base64')
     return { type, base64 }
 }

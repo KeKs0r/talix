@@ -87,26 +87,6 @@ importers:
       typescript: 4.9.4
       vitest: 0.25.8
 
-  packages/cf-r2-file-storage:
-    specifiers:
-      '@cloudflare/workers-types': ^4.20221111.1
-      '@types/node': ^18.11.18
-      eslint-config-custom: workspace:*
-      tsconfig: workspace:*
-      typescript: ^4.9.4
-      vite: ^3.2.4
-      vite-node: ^0.27.0
-      vitest: ^0.25.6
-    devDependencies:
-      '@cloudflare/workers-types': 4.20221111.1
-      '@types/node': 18.11.18
-      eslint-config-custom: link:../eslint-config-custom
-      tsconfig: link:../tsconfig
-      typescript: 4.9.4
-      vite: 3.2.5_@types+node@18.11.18
-      vite-node: 0.27.3_@types+node@18.11.18
-      vitest: 0.25.8
-
   packages/domain-core:
     specifiers:
       '@castore/core': ^1.9.0
@@ -115,10 +95,10 @@ importers:
       '@castore/zod-event': ^1.9.0
       '@types/node': ^18.11.18
       castore-extended: workspace:*
-      cf-r2-file-storage: workspace:*
       emittery: ^1.0.1
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
+      file-storage: workspace:*
       tsconfig: workspace:*
       typescript: ^4.9.4
       ulid: ^2.3.0
@@ -128,8 +108,8 @@ importers:
       '@castore/core': 1.9.0
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
       castore-extended: link:../castore-extended
-      cf-r2-file-storage: link:../cf-r2-file-storage
       emittery: 1.0.1
+      file-storage: link:../file-storage
       ulid: 2.3.0
       zod: 3.20.2
     devDependencies:
@@ -159,15 +139,38 @@ importers:
     devDependencies:
       typescript: 4.9.4
 
+  packages/file-storage:
+    specifiers:
+      '@cloudflare/workers-types': ^4.20221111.1
+      '@types/node': ^18.11.18
+      aws4fetch: ^1.0.17
+      eslint-config-custom: workspace:*
+      tsconfig: workspace:*
+      typescript: ^4.9.4
+      vite: ^3.2.4
+      vite-node: ^0.27.0
+      vitest: ^0.25.6
+    dependencies:
+      aws4fetch: 1.0.17
+    devDependencies:
+      '@cloudflare/workers-types': 4.20221111.1
+      '@types/node': 18.11.18
+      eslint-config-custom: link:../eslint-config-custom
+      tsconfig: link:../tsconfig
+      typescript: 4.9.4
+      vite: 3.2.5_@types+node@18.11.18
+      vite-node: 0.27.3_@types+node@18.11.18
+      vitest: 0.25.8
+
   packages/ocr-document:
     specifiers:
       '@types/node': ^18.11.18
       castore-extended: workspace:*
       cf-gcp-auth: workspace:*
-      cf-r2-file-storage: workspace:*
       domain-core: workspace:*
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
+      file-storage: workspace:*
       js-base64: ^3.7.4
       p-retry: ^5.1.2
       tsconfig: workspace:*
@@ -176,8 +179,8 @@ importers:
     dependencies:
       castore-extended: link:../castore-extended
       cf-gcp-auth: link:../cf-gcp-auth
-      cf-r2-file-storage: link:../cf-r2-file-storage
       domain-core: link:../domain-core
+      file-storage: link:../file-storage
       js-base64: 3.7.4
       p-retry: 5.1.2
     devDependencies:
@@ -1020,6 +1023,10 @@ packages:
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
+    dev: false
+
+  /aws4fetch/1.0.17:
+    resolution: {integrity: sha512-4IbOvsxqxeOSxI4oA+8xEO8SzBMVlzbSTgGy/EF83rHnQ/aKtP6Sc6YV/k0oiW0mqrcxuThlbDosnvetGOuO+g==}
     dev: false
 
   /axe-core/4.6.2:

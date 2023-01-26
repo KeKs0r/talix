@@ -10,7 +10,7 @@ import {
     DateString,
     createDateString,
 } from 'domain-core'
-import type { FileStorage } from 'cf-r2-file-storage'
+import type { FileStorage } from 'file-storage'
 
 import { DocummentAnalyzer } from '../document-ai/analyze-document'
 import { parseResponse } from '../document-ai/fetch-file'

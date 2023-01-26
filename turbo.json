@@ -12,6 +12,11 @@
             "inputs": ["vitest.config.ts", "src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"],
             "outputs": []
         },
+        "file-storage#test": {
+            "inputs": ["vitest.config.ts", "src/**/*.ts", "test/**/*.ts"],
+            "outputs": [],
+            "env": ["CF_R2_ACCESS_KEY_ID", "CF_R2_SECRET_ACCESS_KEY", "CF_ACCOUNT_ID"]
+        },
         "dev": {
             "cache": false
         },

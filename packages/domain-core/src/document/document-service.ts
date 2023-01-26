@@ -1,7 +1,7 @@
 import type { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { Service } from 'castore-extended'
-import type { FileStorage } from 'cf-r2-file-storage'
+import type { FileStorage } from 'file-storage'
 import { ulid } from 'ulid'
 
 import { createDocumentCommand } from './document-create-command'

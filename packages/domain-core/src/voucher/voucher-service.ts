@@ -1,6 +1,6 @@
 import { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
-import { FileStorage } from 'cf-r2-file-storage'
+import { FileStorage } from 'file-storage'
 import { ulid } from 'ulid'
 import { Service } from 'castore-extended'
 
