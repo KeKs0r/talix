@@ -48,6 +48,7 @@ importers:
   packages/castore-extended:
     specifiers:
       '@castore/core': ^1.9.0
+      '@castore/inmemory-event-storage-adapter': ^1.9.0
       '@types/node': ^18.11.18
       emittery: ^1.0.1
       eslint: ^7.32.0
@@ -59,6 +60,7 @@ importers:
       '@castore/core': 1.9.0
       emittery: 1.0.1
     devDependencies:
+      '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
       '@types/node': 18.11.18
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
@@ -114,6 +116,7 @@ importers:
       '@types/node': ^18.11.18
       castore-extended: workspace:*
       cf-r2-file-storage: workspace:*
+      emittery: ^1.0.1
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       tsconfig: workspace:*
@@ -126,6 +129,7 @@ importers:
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
       castore-extended: link:../castore-extended
       cf-r2-file-storage: link:../cf-r2-file-storage
+      emittery: 1.0.1
       ulid: 2.3.0
       zod: 3.20.2
     devDependencies:
