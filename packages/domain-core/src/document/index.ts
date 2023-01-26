@@ -1,12 +1,12 @@
 import type { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { Service } from 'castore-extended'
-import { FileStorage } from 'cf-r2-file-storage'
+import type { FileStorage } from 'cf-r2-file-storage'
 import { ulid } from 'ulid'
 
-import { createDocumentCommand, CreateDocumentInput } from './document-create-command'
+import { createDocumentCommand } from './document-create-command'
 import { documentEventStore } from './document-eventstore'
-import { createUploadDocumentFromUrlAction } from './upload-document-url-action'
+import { uploadDocumentFromUrlAction } from './upload-document-url-action'
 
 type ServiceOptions = {
     storageAdapter?: StorageAdapter
@@ -14,9 +14,7 @@ type ServiceOptions = {
     fileStorage: FileStorage
 }
 
-export function createDocumentService<ResultingService extends Service>(
-    opts: ServiceOptions
-): ResultingService {
+export function createDocumentService(opts: ServiceOptions) {
     const {
         storageAdapter = new InMemoryStorageAdapter(),
         generateId = ulid,
@@ -24,19 +22,26 @@ export function createDocumentService<ResultingService extends Service>(
     } = opts || {}
     documentEventStore.storageAdapter = storageAdapter
 
-    const createDocument = (cmd: CreateDocumentInput) =>
-        createDocumentCommand.handler(cmd, [documentEventStore], { generateId })
+    const createDocument = createDocumentCommand.register([documentEventStore], { generateId })
 
-    const uploadDocumentUrlAction = createUploadDocumentFromUrlAction({
-        createDocument,
+    uploadDocumentFromUrlAction.register({
+        createDocument: createDocument.run,
         fileStorage,
         generateId,
     })
-
-    return {
-        createDocument,
-        actions: [uploadDocumentUrlAction],
-    }
+    const service = {
+        name: 'document',
+        commands: {
+            createDocument,
+        },
+        actions: {
+            uploadDocumentFromUrlAction,
+        },
+        stores: {
+            [documentEventStore.eventStoreId]: documentEventStore,
+        },
+    } satisfies Service
+    return service
 }
 
 export type DocumentService = ReturnType<typeof createDocumentService>

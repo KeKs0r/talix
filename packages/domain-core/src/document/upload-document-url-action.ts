@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { basename } from 'path'
 
-import type { CommandHandler } from 'castore-extended'
+import { CommandHandler, Command, Action } from 'castore-extended'
 import { z } from 'zod'
 import type { FileStorage } from 'cf-r2-file-storage'
 
@@ -20,13 +20,12 @@ const uploadDocumentFromUrlActionSchema = z.object({
 
 type UploadDocumentActionInput = z.infer<typeof uploadDocumentFromUrlActionSchema>
 
-/**
- * @dept: there is not yet an API for Actions, will evolve later
- */
-export function createUploadDocumentFromUrlAction(deps: UploadDocumentActionDependencies) {
-    const { createDocument, fileStorage, generateId } = deps
-
-    return async function uploadDocumentFromUrlAction(input: UploadDocumentActionInput) {
+export const createUploadDocumentFromUrlAction = new Action({
+    actionId: 'DOCUMENTS:UPLOAD_DOCUMENT_FROM_URL_ACTION',
+    async handler(
+        input: UploadDocumentActionInput,
+        { createDocument, fileStorage, generateId }: UploadDocumentActionDependencies
+    ) {
         const { fileName, url } = uploadDocumentFromUrlActionSchema.parse(input)
 
         const name = fileName || basename(url)
@@ -49,8 +48,8 @@ export function createUploadDocumentFromUrlAction(deps: UploadDocumentActionDepe
         })
 
         return { documentId, key: fileUrl.key }
-    }
-}
+    },
+})
 
 class DocumentNotFoundError extends Error {
     url: string

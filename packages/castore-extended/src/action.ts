@@ -22,5 +22,6 @@ export class Action<Id extends string = string, Input = any, Output = any, Conte
     }
     register(deps: Context) {
         this.deps = deps
+        return this
     }
 }

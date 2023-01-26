@@ -1,4 +1,4 @@
-import { EventStore } from '@castore/core'
+import { EventStore } from 'castore-extended'
 
 import { documentCreatedEventType } from './document-created-event'
 import { documentReducer } from './document-reducer'
