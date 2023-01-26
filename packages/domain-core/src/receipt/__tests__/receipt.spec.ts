@@ -1,5 +1,5 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { mockEventStore } from '@castore/test-tools'
+import { mockEventStore } from 'castore-extended'
 
 import { documentEventStore } from '../../document'
 import { receiptEventStore } from '../receipt-eventstore'

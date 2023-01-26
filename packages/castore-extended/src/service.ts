@@ -1,7 +1,7 @@
 import assert from 'assert'
 
 import { EventStore } from './event-store'
-import { EventAction } from './event-action'
+import { EventAction, isEventAction } from './event-action'
 import { Command } from './command'
 import { Action } from './action'
 
@@ -20,7 +20,7 @@ export function connectServicesActions(services: Service[]) {
         }
     }, {})
     services.forEach((service) =>
-        Object.values(service.actions).forEach((action) => {
+        Object.values(service.actions || {}).forEach((action) => {
             if (isEventAction(action)) {
                 const eventTrigger = action.trigger
                 const [storeName] = eventTrigger.split(':')

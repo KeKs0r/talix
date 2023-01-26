@@ -1,4 +1,4 @@
-import type { R2Bucket, ReadableStream } from '@cloudflare/workers-types'
+import type { R2Bucket, ReadableStream, R2ObjectBody } from '@cloudflare/workers-types'
 
 export type FileStorage = {
     put: (key: string, value: ReadableStream<any> | string | Blob) => Promise<{ key: string }>

@@ -20,7 +20,7 @@ const uploadDocumentFromUrlActionSchema = z.object({
 
 type UploadDocumentActionInput = z.infer<typeof uploadDocumentFromUrlActionSchema>
 
-export const createUploadDocumentFromUrlAction = new Action({
+export const uploadDocumentFromUrlAction = new Action({
     actionId: 'DOCUMENTS:UPLOAD_DOCUMENT_FROM_URL_ACTION',
     async handler(
         input: UploadDocumentActionInput,

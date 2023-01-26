@@ -1,10 +1,10 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { mockEventStore } from '@castore/test-tools'
 import { getMockStorage } from 'cf-r2-file-storage'
+import { mockEventStore } from 'castore-extended'
 
 import { documentEventStore } from '../document-eventstore'
 import { createDocumentCommand } from '../document-create-command'
-import { createUploadDocumentFromUrlAction } from '../upload-document-url-action'
+import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
 
 describe.concurrent('Upload Document', () => {
     const fileStorage = getMockStorage()
@@ -14,17 +14,20 @@ describe.concurrent('Upload Document', () => {
         mockedDocumentEventStore.reset()
     })
 
-    const uploadFromUrl = createUploadDocumentFromUrlAction({
+    createDocumentCommand.register([mockedDocumentEventStore], {
+        generateId: () => '1',
+    })
+
+    const uploadFromUrl = uploadDocumentFromUrlAction.register({
         fileStorage,
-        createDocument: (input) =>
-            createDocumentCommand.handler(input, [mockedDocumentEventStore], {
-                generateId: () => '1',
-            }),
+        createDocument: createDocumentCommand.run,
         generateId: () => '1',
     })
 
     it('Upload Document Command', async () => {
-        const { documentId } = await uploadFromUrl({ url: 'https://www.laserfocus.io/bitcoin.pdf' })
+        const { documentId } = await uploadFromUrl.run({
+            url: 'https://www.laserfocus.io/bitcoin.pdf',
+        })
 
         const { events } = await mockedDocumentEventStore.getEvents(documentId)
 
@@ -52,8 +55,8 @@ describe.concurrent('Upload Document', () => {
     })
 
     it('Upload Document Command fails, if the url is not accessible', async () => {
-        expect(uploadFromUrl({ url: 'https://www.google.com/i-dont-exist.pdf' })).rejects.toThrow(
-            'Document could not be fetched'
-        )
+        expect(
+            uploadFromUrl.run({ url: 'https://www.google.com/i-dont-exist.pdf' })
+        ).rejects.toThrow('Document could not be fetched')
     })
 })

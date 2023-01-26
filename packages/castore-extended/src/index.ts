@@ -6,3 +6,5 @@ export { Action } from './action'
 export { EventAction } from './event-action'
 
 export { EventStore } from './event-store'
+
+export { mockEventStore } from './test-utils/mockEventStore'

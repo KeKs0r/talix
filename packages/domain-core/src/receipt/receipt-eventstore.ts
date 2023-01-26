@@ -1,4 +1,4 @@
-import { EventStore } from '@castore/core'
+import { EventStore } from 'castore-extended'
 
 import { receiptCreatedEventType } from './receipt-created-event'
 import { receiptReducer } from './receipt-reducer'
