@@ -1,2 +1,2 @@
-export { createDocumentService, documentEventStore } from './document'
-export type { DocumentService } from './document'
+export * from './document'
+export * from './voucher'

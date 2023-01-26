@@ -1,5 +1,6 @@
 import z from 'zod'
-import { Command, tuple } from '@castore/core'
+import { tuple } from '@castore/core'
+import { Command } from 'castore-extended'
 
 import { documentEventStore } from '../document'
 

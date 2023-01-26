@@ -1,4 +1,4 @@
-import type { Reducer, EventDetail, $Contravariant } from '@castore/core'
+import type { Reducer, EventDetail } from '@castore/core'
 
 import { VoucherAggregate } from './voucher-aggregate'
 import { voucherCreatedEventType, VoucherCreatedPayload } from './voucher-created-event'

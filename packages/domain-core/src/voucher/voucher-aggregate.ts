@@ -3,7 +3,6 @@ import type { Aggregate } from '@castore/core'
 
 type DateTimeString = string
 export const vatTaxTypeSchema = z.enum(['EU', 'NON_EU'])
-
 export const voucherStatusSchema = z.enum(['DRAFT', 'UNPAID', 'PAID'])
 export const creditOrDebitSchema = z.enum(['CREDIT', 'DEBIT'])
 
