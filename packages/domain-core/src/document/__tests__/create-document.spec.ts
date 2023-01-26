@@ -1,5 +1,5 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { getMockStorage } from 'cf-r2-file-storage'
+import { getMockStorage } from 'file-storage'
 import { mockEventStore } from 'castore-extended'
 
 import { documentEventStore } from '../document-eventstore'

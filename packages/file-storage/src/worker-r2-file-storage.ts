@@ -1,8 +1,10 @@
-import type { R2Bucket, ReadableStream, R2ObjectBody } from '@cloudflare/workers-types'
+import assert from 'assert'
+
+import type { R2Bucket, ReadableStream } from '@cloudflare/workers-types'
 
 export type FileStorage = {
     put: (key: string, value: ReadableStream<any> | string | Blob) => Promise<{ key: string }>
-    get: (key: string) => Promise<R2ObjectBody | null>
+    get: (key: string) => Promise<Blob | null>
 }
 
 export function createFileStorage(bucket: R2Bucket) {
@@ -13,6 +15,10 @@ export function createFileStorage(bucket: R2Bucket) {
                 key: file.key,
             }
         },
-        get: async (key: string) => bucket.get(key),
+        get: async (key: string) => {
+            const response = await bucket.get(key)
+            assert(response, `Response not available for ${key}`)
+            return response.blob()
+        },
     }
 }

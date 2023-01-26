@@ -1,5 +1,5 @@
 {
-    "name": "cf-r2-file-storage",
+    "name": "file-storage",
     "version": "0.0.0",
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20221111.1",
@@ -21,7 +21,12 @@
         "dev": "vite-node src/dev.ts",
         "lint": "eslint",
         "test": "NODE_OPTIONS=--experimental-vm-modules vitest run --passWithNoTests",
+        "test:env": "doppler run -- pnpm test",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest .",
+        "test:watch:env": "doppler run -- pnpm test:watch",
         "repl": "vite-node"
+    },
+    "dependencies": {
+        "aws4fetch": "^1.0.17"
     }
 }
