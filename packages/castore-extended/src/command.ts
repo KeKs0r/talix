@@ -35,11 +35,16 @@ export class Command<
             onEventAlreadyExists,
             handler,
         })
+        this.run = this.run.bind(this)
+        this.register = this.register.bind(this)
     }
     deps?: T
     eventStores?: $E
     run(input: I) {
-        assert(this.deps, 'Can only call run after registering the action dependencies')
+        assert(
+            this.deps,
+            `Can only call run after registering the action dependencies in ${this.commandId}`
+        )
         assert(this.eventStores, 'Can only call run after registering the event stores')
         return this.handler(input, this.eventStores, ...this.deps)
     }
