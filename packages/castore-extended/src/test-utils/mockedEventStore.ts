@@ -7,6 +7,7 @@ import {
     $Contravariant,
 } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
+import Emittery from 'emittery'
 
 import { EventStore } from '../event-store'
 
@@ -24,9 +25,11 @@ export class MockedEventStore<
     constructor({
         eventStore,
         initialEvents = [],
+        emitter,
     }: {
         eventStore: EventStore<I, E, D, $D, R, A>
         initialEvents?: D[]
+        emitter?: Emittery
     }) {
         super({
             eventStoreId: eventStore.eventStoreId,
@@ -34,6 +37,7 @@ export class MockedEventStore<
             reduce: eventStore.reduce,
             simulateSideEffect: eventStore.simulateSideEffect,
             storageAdapter: new InMemoryStorageAdapter({ initialEvents }),
+            emitter: emitter || new Emittery(),
         })
 
         this.initialEvents = initialEvents

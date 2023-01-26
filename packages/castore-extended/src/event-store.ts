@@ -1,4 +1,6 @@
-import Emittery from 'emittery'
+import assert from 'assert'
+
+import type Emittery from 'emittery'
 import type {
     $Contravariant,
     Aggregate,
@@ -21,9 +23,13 @@ export class EventStore<
     $A extends Aggregate = $Contravariant<A, Aggregate>
 > extends BaseEventStore<I, E, D, $D, R, A, $A> {
     emitter: Emittery
-    constructor(...args: ConstructorParameters<typeof BaseEventStore<I, E, D, $D, R, A, $A>>) {
-        super(...args)
-        this.emitter = new Emittery()
+    constructor(
+        options: ConstructorParameters<typeof BaseEventStore<I, E, D, $D, R, A, $A>>[0] & {
+            emitter: Emittery
+        }
+    ) {
+        super(options)
+        this.emitter = options.emitter
 
         const originalPushEvent = this.pushEvent
         this.pushEvent = async (event: $D) => {
