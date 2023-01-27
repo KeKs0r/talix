@@ -36,7 +36,7 @@ describe.concurrent('Upload Document From Url', () => {
             version: 1,
             type: 'DOCUMENTS:DOCUMENT_CREATED',
             payload: {
-                key: '1-bitcoin.pdf',
+                key: 'documents/1-bitcoin.pdf',
                 name: 'bitcoin.pdf',
             },
         })
@@ -46,7 +46,7 @@ describe.concurrent('Upload Document From Url', () => {
         expect(aggregate).toMatchObject({
             aggregateId: '1',
             version: 1,
-            key: '1-bitcoin.pdf',
+            key: 'documents/1-bitcoin.pdf',
             status: 'CREATED',
         })
         // expect(aggregate.createdAt).toBeTruthy()
