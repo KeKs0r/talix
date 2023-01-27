@@ -1,5 +1,4 @@
-import assert from 'assert'
-
+import { ok } from 'common'
 import type { R2Bucket, ReadableStream } from '@cloudflare/workers-types'
 
 export type FileStorage = {
@@ -17,7 +16,7 @@ export function createFileStorage(bucket: R2Bucket) {
         },
         get: async (key: string) => {
             const response = await bucket.get(key)
-            assert(response, `Response not available for ${key}`)
+            ok(response, `Response not available for ${key}`)
             return response.blob()
         },
     }

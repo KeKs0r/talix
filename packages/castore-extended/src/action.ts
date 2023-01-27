@@ -1,5 +1,4 @@
-import assert from 'assert'
-
+import { ok } from 'common'
 export class Action<Id extends string = string, Input = any, Output = any, Context = any> {
     readonly actionId: Id
     handler: (input: Input, deps: Context) => Output
@@ -17,7 +16,7 @@ export class Action<Id extends string = string, Input = any, Output = any, Conte
         this.register = this.register.bind(this)
     }
     run(input: Input) {
-        assert(this.deps, 'Can only call run after registering the action dependencies')
+        ok(this.deps, 'Can only call run after registering the action dependencies')
         return this.handler(input, this.deps)
     }
     register(deps: Context) {

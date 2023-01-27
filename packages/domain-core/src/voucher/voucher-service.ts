@@ -1,8 +1,6 @@
 import { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { FileStorage } from 'file-storage'
-import { ulid } from 'ulid'
-import { Service } from 'castore-extended'
 
 import { documentEventStore } from '../document'
 
@@ -15,11 +13,7 @@ type ServiceDeps = {
     fileStorage: FileStorage
 }
 export function createVoucherService(opts: ServiceDeps) {
-    const {
-        storageAdapter = new InMemoryStorageAdapter(),
-        generateId = ulid,
-        fileStorage,
-    } = opts || {}
+    const { storageAdapter = new InMemoryStorageAdapter(), generateId, fileStorage } = opts || {}
     voucherEventStore.storageAdapter = storageAdapter
     documentEventStore.storageAdapter = storageAdapter
 
@@ -35,7 +29,7 @@ export function createVoucherService(opts: ServiceDeps) {
         stores: {
             [voucherEventStore.eventStoreId]: voucherEventStore,
         },
-    } satisfies Service
+    } // satisfies Service // this does not work with wrangler
     return service
 }
 export type VoucherService = ReturnType<typeof createVoucherService>

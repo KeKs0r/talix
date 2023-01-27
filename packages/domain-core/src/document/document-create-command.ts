@@ -8,27 +8,26 @@ import { DocumentCreatedEventTypeDetail, documentCreatedEventType } from './docu
 const createDocumentCommandInputSchema = z.object({
     name: z.string().optional(),
     key: z.string(),
-    documentId: z.string().optional(),
+    documentId: z.string(),
 })
 export type CreateDocumentInput = z.infer<typeof createDocumentCommandInputSchema>
-type Output = { documentId: string }
-type Context = { generateId: () => string }
+export type CreateDocumentOutput = { documentId: string }
 
 export const createDocumentCommand = new Command({
     commandId: 'DOCUMENTS:CREATE_DOCUMENT',
     requiredEventStores: tuple(documentEventStore),
     handler: async (
         commandInput: CreateDocumentInput,
-        [documentEventStore],
-        { generateId }: Context
-    ): Promise<Output> => {
+        [documentEventStore]
+    ): Promise<CreateDocumentOutput> => {
+        console.log('createDocumentCommand.handler', commandInput)
         const {
             key,
             name,
             documentId: inputDocumentId,
         } = createDocumentCommandInputSchema.parse(commandInput)
 
-        const documentId = inputDocumentId || generateId()
+        const documentId = inputDocumentId
 
         const event: DocumentCreatedEventTypeDetail = {
             aggregateId: documentId,
@@ -37,6 +36,7 @@ export const createDocumentCommand = new Command({
             payload: documentCreatedEventType.payloadSchema!.parse({ name: name, key }),
         }
 
+        console.log('Event', JSON.stringify(event, null, 4))
         await documentEventStore.pushEvent(event)
 
         return { documentId }

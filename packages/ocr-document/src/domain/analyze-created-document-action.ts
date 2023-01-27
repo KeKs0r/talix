@@ -1,5 +1,4 @@
-import assert from 'assert'
-
+import { ok } from 'common'
 import { EventAction } from 'castore-extended'
 import {
     documentCreatedEventType,
@@ -33,7 +32,7 @@ export const analyzeCreatedDocumentAction = new EventAction({
         const documentId = event.aggregateId
         const { key } = event.payload as DocumentCreatedPayload
         const file = await fileStorage.get(key)
-        assert(file, `Could not find file with key ${key}`)
+        ok(file, `Could not find file with key ${key}`)
         const fileInput = await parseResponse(file)
 
         const prediction = await documentAnalyzer.analyzeExpense(fileInput)
