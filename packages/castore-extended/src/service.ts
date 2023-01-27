@@ -1,4 +1,4 @@
-import assert from 'assert'
+import { ok } from 'common'
 
 import { EventStore } from './event-store'
 import { EventAction, isEventAction } from './event-action'
@@ -25,7 +25,7 @@ export function connectServicesActions(services: Service[]) {
                 const eventTrigger = action.trigger
                 const [storeName] = eventTrigger.split(':')
                 const store = storesByName[storeName]
-                assert(
+                ok(
                     store,
                     `EventStore ${storeName} not found. Got only ${Object.keys(storesByName).join(
                         ','

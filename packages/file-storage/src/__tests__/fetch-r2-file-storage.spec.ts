@@ -1,10 +1,7 @@
-import assert from 'assert'
 import crypto from 'crypto'
-import fs from 'node:fs/promises'
-import { Blob } from 'buffer'
-import { join } from 'path'
 
 import { describe, it, expect } from 'vitest'
+import { ok } from 'common'
 
 import { createFileStorage } from '../fetch-r2-file-storage'
 
@@ -12,11 +9,11 @@ describe.concurrent(
     'Fetch R2 File Storage',
     () => {
         const accessKeyId = process.env.CF_R2_ACCESS_KEY_ID
-        assert(accessKeyId, 'CF_R2_ACCESS_KEY_ID is not set')
+        ok(accessKeyId, 'CF_R2_ACCESS_KEY_ID is not set')
         const secretAccessKey = process.env.CF_R2_SECRET_ACCESS_KEY
-        assert(secretAccessKey, 'CF_R2_SECRET_ACCESS_KEY is not set')
+        ok(secretAccessKey, 'CF_R2_SECRET_ACCESS_KEY is not set')
         const accountId = process.env.CF_ACCOUNT_ID
-        assert(accountId, 'CF_ACCOUNT_ID is not set')
+        ok(accountId, 'CF_ACCOUNT_ID is not set')
 
         const storage = createFileStorage({
             accessKeyId,

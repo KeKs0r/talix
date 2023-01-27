@@ -1,5 +1,4 @@
-import assert from 'assert'
-
+import { ok } from 'common'
 import { EventDetail } from '@castore/core'
 
 import { Action } from './action'
@@ -32,7 +31,7 @@ export class EventAction<
         this.register = this.register.bind(this)
     }
     run(event: Event) {
-        assert(this.deps, 'Can only call run after registering the action dependencies')
+        ok(this.deps, 'Can only call run after registering the action dependencies')
         return this.handler(event, this.deps)
     }
     register(deps: Context) {

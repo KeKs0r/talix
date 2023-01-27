@@ -25,9 +25,10 @@
         "@castore/core": "^1.9.0",
         "@castore/zod-event": "^1.9.0",
         "castore-extended": "workspace:*",
-        "file-storage": "workspace:*",
+        "common": "workspace:*",
         "emittery": "^1.0.1",
-        "ulid": "^2.3.0",
+        "file-storage": "workspace:*",
+        "ulid-workers": "^2.1.0",
         "zod": "^3.20.2"
     }
 }

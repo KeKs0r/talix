@@ -7,6 +7,16 @@ account_id = "8f677fd195b2d505617e10661bc8e59d"
 workers_dev = true
 
 [[r2_buckets]]
-binding = 'DOCUMENTS' # <~ valid JavaScript variable name
+binding = 'DOCUMENTS_BUCKET' # <~ valid JavaScript variable name
 bucket_name = 'talix-documents'
 preview_bucket_name = 'talix-documents-preview'
+
+
+[durable_objects]
+bindings = [
+  { name = "DOCUMENT_ENTITY", class_name = "DocumentEntity" } # Binding to our DurableObjectExample class
+]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["DocumentEntity"]

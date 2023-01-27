@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "telegraf": "^4.11.2",
-        "domain-core": "workspace:*"
+        "domain-core": "workspace:*",
+        "common": "workspace:*"
     }
 }

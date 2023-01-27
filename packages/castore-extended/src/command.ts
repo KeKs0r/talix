@@ -1,11 +1,10 @@
-import assert from 'assert'
-
 import {
     $Contravariant,
     Command as BaseCommand,
     EventStore,
     OnEventAlreadyExistsCallback,
 } from '@castore/core'
+import { ok } from 'common'
 
 export class Command<
     C extends string = string,
@@ -41,11 +40,11 @@ export class Command<
     deps?: T
     eventStores?: $E
     run(input: I) {
-        assert(
+        ok(
             this.deps,
             `Can only call run after registering the action dependencies in ${this.commandId}`
         )
-        assert(this.eventStores, 'Can only call run after registering the event stores')
+        ok(this.eventStores, 'Can only call run after registering the event stores')
         return this.handler(input, this.eventStores, ...this.deps)
     }
     register(eventStores: $E, ...deps: T) {

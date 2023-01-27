@@ -24,6 +24,7 @@
         "cf-gcp-auth": "workspace:*",
         "castore-extended": "workspace:*",
         "domain-core": "workspace:*",
-        "file-storage": "workspace:*"
+        "file-storage": "workspace:*",
+        "common": "workspace:*"
     }
 }
