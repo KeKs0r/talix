@@ -32,29 +32,29 @@ jobs:
 
             - run: pnpm turbo run lint test type-check build --output-logs full
 
-    deploy:
-        runs-on: ubuntu-latest
-        if: ${{ github.event_name  == 'push' }}
-        needs: [CI]
-        environment:
-            name: deploy
-        env:
-            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-            TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-            TURBO_REMOTE_ONLY: true
+    # deploy:
+    #     runs-on: ubuntu-latest
+    #     if: ${{ github.event_name  == 'push' }}
+    #     needs: [CI]
+    #     environment:
+    #         name: deploy
+    #     env:
+    #         TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #         TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    #         TURBO_REMOTE_ONLY: true
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+    #     steps:
+    #         - name: Checkout
+    #           uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 6.32.9
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: '18'
-                  cache: 'pnpm'
-            - run: pnpm install --frozen-lockfile
+    #         - uses: pnpm/action-setup@v2
+    #           with:
+    #               version: 6.32.9
+    #         - uses: actions/setup-node@v3
+    #           with:
+    #               node-version: '18'
+    #               cache: 'pnpm'
+    #         - run: pnpm install --frozen-lockfile
 
-            - name: Deploy
-              run: pnpm run deploy
+    #         - name: Deploy
+    #           run: pnpm run deploy
