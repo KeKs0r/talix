@@ -18,6 +18,7 @@ export function registerDocumentHandler(
         await documentService.commands.createDocument.run({
             name: fileName,
             key: 'CHANGE ME',
+            documentId: 'CHANGE ME',
         })
 
         ctx.reply(
