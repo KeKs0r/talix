@@ -1,16 +1,14 @@
 import { basename, ok } from 'common'
-import { ulidFactory } from 'ulid-workers'
 import { CommandHandler, Action } from 'castore-extended'
 import { z } from 'zod'
 import type { FileStorage } from 'file-storage'
 
 import { createDocumentCommand } from './document-create-command'
 
-const ulid = ulidFactory()
-
 type UploadDocumentActionDependencies = {
     fileStorage: FileStorage
     createDocument: CommandHandler<typeof createDocumentCommand>
+    generateId: () => string
 }
 
 const uploadDocumentFromUrlActionSchema = z.object({
@@ -24,12 +22,12 @@ export const uploadDocumentFromUrlAction = new Action({
     actionId: 'DOCUMENTS:UPLOAD_DOCUMENT_FROM_URL_ACTION',
     async handler(
         input: UploadDocumentActionInput | unknown,
-        { createDocument, fileStorage }: UploadDocumentActionDependencies
+        { createDocument, fileStorage, generateId }: UploadDocumentActionDependencies
     ) {
         const { fileName, url } = uploadDocumentFromUrlActionSchema.parse(input)
 
         const name = fileName || basename(url)
-        const id = ulid()
+        const id = generateId()
         // @TODO: [multitenant] add path prefix
         const key = `documents/${id}-${name}`
 

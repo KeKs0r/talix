@@ -126,7 +126,6 @@ importers:
       file-storage: workspace:*
       tsconfig: workspace:*
       typescript: ^4.9.4
-      ulid-workers: ^2.1.0
       vitest: ^0.25.6
       zod: ^3.20.2
     dependencies:
@@ -136,7 +135,6 @@ importers:
       common: link:../common
       emittery: 1.0.1
       file-storage: link:../file-storage
-      ulid-workers: 2.1.0
       zod: 3.20.2
     devDependencies:
       '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
@@ -3587,10 +3585,6 @@ packages:
   /ufo/1.0.1:
     resolution: {integrity: sha512-boAm74ubXHY7KJQZLlXrtMz52qFvpsbOxDcZOnw/Wf+LS4Mmyu7JxmzD4tDLtUQtmZECypJ0FrCz4QIe6dvKRA==}
     dev: true
-
-  /ulid-workers/2.1.0:
-    resolution: {integrity: sha512-D4+5fwPt5FEoGdMQtx5YwRHUZ4SDWSypraDZiXT3Y8U7T0C6h99dXhpWJQScNckoVRU+zi+BDuoBKHAffrn9vg==}
-    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

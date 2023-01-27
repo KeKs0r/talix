@@ -1,14 +1,11 @@
 import { StorageAdapter } from '@castore/core'
 import { InMemoryStorageAdapter } from '@castore/inmemory-event-storage-adapter'
 import { FileStorage } from 'file-storage'
-import { ulidFactory } from 'ulid-workers'
 
 import { documentEventStore } from '../document'
 
 import { voucherEventStore } from './voucher-eventstore'
 import { createVoucherCommand } from './voucher-create-command'
-
-const ulid = ulidFactory()
 
 type ServiceDeps = {
     storageAdapter?: StorageAdapter
@@ -16,11 +13,7 @@ type ServiceDeps = {
     fileStorage: FileStorage
 }
 export function createVoucherService(opts: ServiceDeps) {
-    const {
-        storageAdapter = new InMemoryStorageAdapter(),
-        generateId = ulid,
-        fileStorage,
-    } = opts || {}
+    const { storageAdapter = new InMemoryStorageAdapter(), generateId, fileStorage } = opts || {}
     voucherEventStore.storageAdapter = storageAdapter
     documentEventStore.storageAdapter = storageAdapter
 

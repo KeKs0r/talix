@@ -14,9 +14,7 @@ describe.concurrent('Upload Document From Url', () => {
         mockedDocumentEventStore.reset()
     })
 
-    createDocumentCommand.register([mockedDocumentEventStore], {
-        generateId: () => '1',
-    })
+    createDocumentCommand.register([mockedDocumentEventStore])
 
     const uploadFromUrl = uploadDocumentFromUrlAction.register({
         fileStorage,

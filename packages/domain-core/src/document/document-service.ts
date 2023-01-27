@@ -9,10 +9,11 @@ import { uploadDocumentFromUrlAction } from './upload-document-url-action'
 type ServiceDeps = {
     storageAdapter?: StorageAdapter
     fileStorage: FileStorage
+    generateId: () => string
 }
 
 export function createDocumentService(opts: ServiceDeps) {
-    const { storageAdapter = new InMemoryStorageAdapter(), fileStorage } = opts || {}
+    const { storageAdapter = new InMemoryStorageAdapter(), fileStorage, generateId } = opts || {}
     documentEventStore.storageAdapter = storageAdapter
 
     const createDocument = createDocumentCommand.register([documentEventStore])
@@ -20,6 +21,7 @@ export function createDocumentService(opts: ServiceDeps) {
     uploadDocumentFromUrlAction.register({
         createDocument: createDocument.run,
         fileStorage,
+        generateId,
     })
     const service = {
         name: 'document',
