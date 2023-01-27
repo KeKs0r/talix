@@ -2,8 +2,11 @@ import { ok } from 'common'
 import { uploadDocumentFromUrlAction, CreateDocumentOutput, CreateDocumentInput } from 'domain-core'
 import { createFileStorage } from 'file-storage'
 import { Hono } from 'hono'
+import { ulidFactory } from 'ulid-workers'
 
 import { Env } from '../env.types'
+
+const ulid = ulidFactory()
 
 export function makeDocumentRoutes(app: Hono<Env>) {
     app.post('/documents/upload-from-url', async (c) => {
@@ -39,6 +42,7 @@ export function makeDocumentRoutes(app: Hono<Env>) {
         const result = await uploadDocumentFromUrlAction.handler(body, {
             createDocument,
             fileStorage,
+            generateId: ulid,
         })
         c.json(result)
     })
