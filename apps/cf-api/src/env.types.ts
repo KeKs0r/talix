@@ -1,4 +1,4 @@
-import { R2Bucket } from '@cloudflare/workers-types'
+import { R2Bucket, Queue } from '@cloudflare/workers-types'
 
 export interface Bindings {
     // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -10,6 +10,8 @@ export interface Bindings {
     //
     // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
     DOCUMENTS_BUCKET: R2Bucket
+
+    EVENT_QUEUE: Queue
 }
 
 export interface Env {

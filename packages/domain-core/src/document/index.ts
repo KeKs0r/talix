@@ -1,6 +1,6 @@
 export { createDocumentService } from './document-service'
 export type { DocumentService } from './document-service'
-export { documentEventStore, DocumentEventStore } from './document-eventstore'
+export { documentEventStore, getDocumentEventStore } from './document-eventstore'
 
 export type {
     DocumentCreatedEventTypeDetail,

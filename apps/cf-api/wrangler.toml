@@ -20,3 +20,12 @@ bindings = [
 [[migrations]]
 tag = "v1" # Should be unique for each entry
 new_classes = ["DocumentEntity"]
+
+[[queues.producers]]
+  queue = "event-queue"
+  binding = "EVENT_QUEUE"
+
+[[queues.consumers]]
+  queue = "event-queue"
+  max_batch_size = 1
+  max_batch_timeout = 1

@@ -1,8 +1,11 @@
 import type { StorageAdapter } from '@castore/core'
-import type { DurableObjectState, DurableObject, Request } from '@cloudflare/workers-types'
-import { createDocumentCommand, DocumentEventStore } from 'domain-core'
+import type { DurableObjectState, Request } from '@cloudflare/workers-types'
+import { createDocumentCommand, getDocumentEventStore } from 'domain-core'
+import type { EventStore } from 'castore-extended'
+import Emittery from 'emittery'
 
 import type { Bindings } from '../env.types'
+import type { ProduceBody } from '../queue/handler'
 
 import { DurableStorageAdapter } from './durable-storage-adapter'
 
@@ -10,12 +13,22 @@ export class DocumentEntity {
     state: DurableObjectState
     env: Bindings
     adapter: StorageAdapter
-    store: DocumentEventStore
+    store: EventStore
+    eventQueue: Queue
     constructor(state: DurableObjectState, env: Bindings) {
         this.state = state
         this.env = env
         this.adapter = new DurableStorageAdapter(state)
-        this.store = new DocumentEventStore(this.adapter)
+        const emitter = new Emittery()
+        this.store = getDocumentEventStore({ storageAdapter: this.adapter, emitter })
+        this.eventQueue = env.EVENT_QUEUE
+        emitter.onAny(async (eventName, event) => {
+            const message: ProduceBody = {
+                type: 'PRODUCE',
+                event,
+            }
+            await this.eventQueue.send(message)
+        })
     }
     async fetch(request: Request) {
         const url = new URL(request.url)

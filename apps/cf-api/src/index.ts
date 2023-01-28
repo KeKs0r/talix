@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
+import { Bindings } from 'hono/dist/types/types'
 
 import { Env } from './env.types'
 import { makeDocumentRoutes } from './services/document-service'
+import { queue } from './queue/handler'
 
 export { DocumentEntity } from './services/durable-store'
 
@@ -19,4 +21,7 @@ app.get('/r2', async (c) => {
 })
 makeDocumentRoutes(app)
 
-export default app
+export default {
+    fetch: app.fetch,
+    queue,
+}
