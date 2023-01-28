@@ -1,73 +1,47 @@
-# Turborepo starter
+# Event Sourcing & CQRS (Kalix Style)
 
-This is an official pnpm starter turborepo.
+-   CQRS mainly splits Read from Write models.
+-   Event Sourcing is used for the Write side, and can feed into the Read Side (views)
+-   This is just a mix of concepts from [castore](https://github.com/castore-dev/castore) & [kalix](https://docs.kalix.io/index.html)
 
-## What's inside?
+In this concept there are 3 main components, and we added one (Actions) as inspired by Kalix
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+-   Commands: is a function that validates input and the current state and publishes events in the success case
+-   Events: are immutable facts that are published by Commands and used to derive the current state
+-   Views: are projections from events that represent the current state (can be just the reduce of events for single entities or SQL like tables to allow joins)
+-   Actions: are just functions that can be called from the outside, and are allowed to use external services.
+    -   Actions can have different triggers (events, http, queues)
 
-### Apps and Packages
+## Events, EventTypes, Reducers, Aggregates & Commands
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+To be honest, the Castore docs make an amazing job to explain this:
+[https://github.com/castore-dev/castore](https://github.com/castore-dev/castore)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Extension and Deviation to Castore
 
-### Utilities
+### Actions
 
-This turborepo has some additional tools already setup for you:
+Actions are the integral concept to make castore a full application framework. Castore itself is unopinionated how commands are called. Or how to "glue" different parts of the application together. This is where the declarative inspiration of Kalix comes in. They introduce actions as the glue between components of the system.
+`Actions are stateless functions that can be triggered in multiple ways`.
+Those triggers are:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+-   events from entities (e.g. run OCR on uploaded documents)
+-   http requests (e.g. create a new user via api)
+-   queues
 
-### Build
+Some of these triggers are only semantical (e.g. trigger when this event happens) and it could under the hood actually be implemented via a queue. But from a developer perspective we mainly care of the semantical:
+e.g. trigger this action when this URL is called, or trigger this action when this event happens.
 
-To build all apps and packages, run the following command:
+### Actions vs Commands
 
-```
-cd my-turborepo
-pnpm run build
-```
+-   Actions can call commands, but not the other way around
+-   Commands can change application state (by creating events), actions only by using commands
+-   Actions can call outside services, commands should be almost syncronous, exept for loading the aggregate.
 
-### Develop
+### Commands in an Actor Model
 
-To develop all apps and packages, run the following command:
+Castore implements persistence in the `EventStore` with a storage adapter. This is just an interface that then calls a "database". There is an in memory implementation as well as one for DynamoDB.
+Inspired by Kalix, I think it makes sense to use the Actor Model, to store the state of an entity. The actor model is implemented in Cloudflare with `DurableObjects`.
+This solves most of the synscronization problems that occur with distributed systems.
 
-```
-cd my-turborepo
-pnpm run dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-pnpm dlx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-pnpm dlx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+In order to make Commands work with DurableObjects, it makes sense to make a class that has all commands for one entity (=aggregate) as interface. And each Entity (not type, think single ID) then gets its own instance (= persistent state).
