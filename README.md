@@ -45,3 +45,142 @@ Inspired by Kalix, I think it makes sense to use the Actor Model, to store the s
 This solves most of the synscronization problems that occur with distributed systems.
 
 In order to make Commands work with DurableObjects, it makes sense to make a class that has all commands for one entity (=aggregate) as interface. And each Entity (not type, think single ID) then gets its own instance (= persistent state).
+
+## E2E Example how this API could look like
+
+Scenario: Send a url to the service, that then creates a document entity, which then is analyzed with OCR and if an expense is detected, creats an expense.
+This is a mix of castore API + How I envision the rest.
+
+### 1. UploadDocumentFromUrlAction
+
+```ts
+export const UploadDocumentFromUrlAction = {
+    // This is simplification, but tells that the action should be exposed under that url
+    httpTrigger: '/documents/upload-from-url',
+    inputSchema: UploadDocumentFromUrlActionSchema
+    handler: async (input: UploadDocumentFromUrlActionInput, { createDocumentCommand }) => {
+        const {url} = input
+       const file = await downloadFile(url)
+       const {key } = await uploadFileToBucket(file)
+       const documentId = generateId()
+       const result = await createDocumentHandler({
+            // Commands are always applied to 1 instance and need the Id
+            aggregateId: documentId,
+            payload: {
+                key
+            }
+       })
+       return result
+    },
+}
+```
+
+### 2. CreateDocumentCommand
+
+```ts
+import {documentCreatedEvent} from './document-created-event'
+/**
+ * Castore uses Classes, I am not sure if I like classes, but just using one here to show
+ * that there can be additional different logic (e.g. ZodCommand vs Command)
+ * Maybe having this customizability makes more sense in middleware, but not sure.
+ */
+export const CreateDocumentCommand = new ZodCommand({
+    payloadSchema: CreateCommandPayloadSchema
+    handler: async (input: CreateCommandInput, documentStore: DocumentEventStore) => {
+        /**
+         * The input is already validated by the ZodCommand class.
+         * But we could also validate here against the state of the current "Documen"
+         * This does not make sense in a "create" scenario though.
+         */
+        const { aggregateId, payload} = command
+        const{ key } = payload
+          const event: DocumentCreatedEventDetails = {
+            aggregateId,
+            version: 1,
+            type: documentCreatedEventType.type,
+            payload: documentCreatedEventType.payloadSchema.parse({ key }),
+        }
+        await documentEventStore.pushEvent(event)
+
+        return { documentId:aggregateId }
+    }
+})
+```
+
+### 3. DocumentCreatedEvent
+
+```ts
+//Again custore use a class (I think for type inference)
+const documentCreatedEvent = new ZodEventType({
+    type: 'DOCUMENTS:DOCUMENT_CREATED',
+    payloadSchema: documentCreatedPayloadSchema,
+})
+export type DocumentCreatedEventDetails = EventDetails<typeof documentCreatedEvent>
+```
+
+### 4. DocumentCreatedEventReducer
+
+```ts
+export const documentReducer: Reducer<DocumentAggregate, DocumentEventDetails> = (
+    documentAggregate,
+    newEvent: DocumentEventDetails
+) => {
+    const { aggregateId, version, timestamp } = newEvent
+
+    switch (newEvent.type) {
+        case 'DOCUMENTS:DOCUMENT_CREATED': {
+            const { name, key } = newEvent.payload
+            return {
+                aggregateId,
+                version,
+                name,
+                key,
+                createdAt: timestamp,
+                status: 'CREATED',
+            }
+        }
+
+        default:
+            return documentAggregate
+    }
+}
+```
+
+### 5. AnalyzeDocumentOnCreationAction
+
+```ts
+const analyzeDocumentOnCreationAction = {
+    /**
+     * This is just declerative, this might be connected in the background in memory,
+     * or on different services via a queue, that retries if things fail etc...
+     */
+    eventTrigger: documentCreatedEventType.type,
+    handler: async (event: DocumentCreatedEventDetails, { createExpenseCommand }) => {
+        const {
+            aggregateId,
+            payload: { key },
+        } = event
+
+        const file = await downloadFileFromBucket(key)
+        const aiResult = await analyzeDocumentWithAi(file)
+
+        if (aiResult.isExpense) {
+            const result = await createExpenseCommand({
+                aggregateId,
+                payload: {
+                    amount: aiResult.amount,
+                    currency: aiResult.currency,
+                    date: aiResult.date,
+                    vendor: aiResult.vendor,
+                },
+            })
+            return result
+        }
+    },
+}
+```
+
+### 6. Rest
+
+Now there is again an Command, Event and reducer etc. for expenses.
+Also I skipped the "model" definition (in the aggregate, which can be a schema or just a type)
