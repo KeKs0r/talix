@@ -29,9 +29,11 @@
     },
     "dependencies": {
         "@castore/core": "^1.9.0",
+        "castore-extended": "workspace:*",
         "cf-gcp-auth": "workspace:*",
         "common": "workspace:*",
         "domain-core": "workspace:*",
+        "emittery": "^1.0.1",
         "file-storage": "workspace:*",
         "hono": "^2.7.4",
         "p-retry": "^5.1.2",

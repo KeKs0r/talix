@@ -17,9 +17,11 @@ importers:
       '@castore/core': ^1.9.0
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
+      castore-extended: workspace:*
       cf-gcp-auth: workspace:*
       common: workspace:*
       domain-core: workspace:*
+      emittery: ^1.0.1
       eslint-config-custom: workspace:*
       file-storage: workspace:*
       hono: ^2.7.4
@@ -35,9 +37,11 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@castore/core': 1.9.0
+      castore-extended: link:../../packages/castore-extended
       cf-gcp-auth: link:../../packages/cf-gcp-auth
       common: link:../../packages/common
       domain-core: link:../../packages/domain-core
+      emittery: 1.0.1
       file-storage: link:../../packages/file-storage
       hono: 2.7.4
       p-retry: 5.1.2
