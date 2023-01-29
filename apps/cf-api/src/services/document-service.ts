@@ -1,6 +1,5 @@
-import { ok } from 'common'
 import { uploadDocumentFromUrlAction } from 'domain-core'
-import { createFileStorage } from 'file-storage'
+import { R2FileStorage } from 'file-storage'
 import { Hono } from 'hono'
 import { ulidFactory } from 'ulid-workers'
 import { createDocumentCommand } from 'domain-core'
@@ -19,7 +18,7 @@ export function makeDocumentRoutes(app: Hono<Env>) {
 
         console.log('Input body', body)
 
-        const fileStorage = createFileStorage(c.env.DOCUMENTS_BUCKET) as any
+        const fileStorage = new R2FileStorage(c.env.DOCUMENTS_BUCKET)
         const result = await uploadDocumentFromUrlAction.handler(body, {
             createDocument,
             fileStorage,

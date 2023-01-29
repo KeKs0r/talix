@@ -1,5 +1,5 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { getMockStorage } from 'file-storage'
+import { MockFileStorage } from 'file-storage'
 import { mockEventStore } from 'castore-extended'
 
 import { documentEventStore } from '../document-eventstore'
@@ -7,7 +7,7 @@ import { createDocumentCommand } from '../document-create-command'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
 
 describe.concurrent('Upload Document From Url', () => {
-    const fileStorage = getMockStorage()
+    const fileStorage = new MockFileStorage()
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [])
 
     beforeEach(() => {

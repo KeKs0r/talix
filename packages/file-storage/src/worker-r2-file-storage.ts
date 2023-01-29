@@ -1,23 +1,24 @@
-import { ok } from 'common'
-import type { R2Bucket, ReadableStream } from '@cloudflare/workers-types'
+import type { R2Bucket, ReadableStream, Blob } from '@cloudflare/workers-types'
 
-export type FileStorage = {
-    put: (key: string, value: ReadableStream<any> | string | Blob) => Promise<{ key: string }>
-    get: (key: string) => Promise<Blob | null>
-}
+import { FileStorage } from './file-storage'
 
-export function createFileStorage(bucket: R2Bucket) {
-    return {
-        put: async (key: string, value: ReadableStream<any> | string | Blob) => {
-            const file = await bucket.put(key, value as any)
-            return {
-                key: file.key,
-            }
-        },
-        get: async (key: string) => {
-            const response = await bucket.get(key)
-            ok(response, `Response not available for ${key}`)
-            return response.blob()
-        },
+export class R2FileStorage extends FileStorage {
+    bucket: R2Bucket
+    constructor(bucket: R2Bucket) {
+        super()
+        this.bucket = bucket
+    }
+    async put(key: string, value: ReadableStream<any> | string | Blob) {
+        const file = await this.bucket.put(key, value as any)
+        return {
+            key: file.key,
+        }
+    }
+    async get(key: string) {
+        const response = await this.bucket.get(key)
+        if (!response) {
+            return null
+        }
+        return response.blob()
     }
 }

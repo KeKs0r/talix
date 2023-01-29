@@ -11,7 +11,6 @@ export function makeCommandConsumer<
     T extends any[] = any[]
 >(command: Command<C, E, $E, I, O, T>, entity: DurableObjectNamespace) {
     return async (input: I): Promise<O> => {
-        console.log('CreateDocumentInput', input)
         const { aggregateId } = input
         let id = entity.idFromName(aggregateId)
         const stub = entity.get(id)
