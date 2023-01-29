@@ -61,7 +61,7 @@ export const UploadDocumentFromUrlAction = {
     handler: async (input: UploadDocumentFromUrlActionInput, { createDocumentCommand }) => {
         const {url} = input
        const file = await downloadFile(url)
-       const {key } = await uploadFileToBucket(file)
+       const { key } = await uploadFileToBucket(file)
        const documentId = generateId()
        const result = await createDocumentHandler({
             // Commands are always applied to 1 instance and need the Id
@@ -78,7 +78,7 @@ export const UploadDocumentFromUrlAction = {
 ### 2. CreateDocumentCommand
 
 ```ts
-import {documentCreatedEvent} from './document-created-event'
+import { documentCreatedEvent } from './document-created-event'
 /**
  * Castore uses Classes, I am not sure if I like classes, but just using one here to show
  * that there can be additional different logic (e.g. ZodCommand vs Command)
@@ -94,7 +94,7 @@ export const CreateDocumentCommand = new ZodCommand({
          */
         const { aggregateId, payload} = command
         const{ key } = payload
-          const event: DocumentCreatedEventDetails = {
+        const event: DocumentCreatedEventDetails = {
             aggregateId,
             version: 1,
             type: documentCreatedEventType.type,
@@ -155,14 +155,19 @@ const analyzeDocumentOnCreationAction = {
      * or on different services via a queue, that retries if things fail etc...
      */
     eventTrigger: documentCreatedEventType.type,
-    handler: async (event: DocumentCreatedEventDetails, { createExpenseCommand }) => {
+    handler: async (event: DocumentCreatedEventDetails, { run,get,/*createExpenseCommand, fileStorage*/ }) => {
         const {
             aggregateId,
             payload: { key },
         } = event
 
-        const file = await downloadFileFromBucket(key)
+        // const file = await downloadFileFromBucket(key)
+        const file = await fileStorage.get(key)
         const aiResult = await analyzeDocumentWithAi(file)
+
+        const fileStorage = get(FileStorage)
+        const result = run(CreateDocumentCommand, {...})
+
 
         if (aiResult.isExpense) {
             const result = await createExpenseCommand({
@@ -184,3 +189,157 @@ const analyzeDocumentOnCreationAction = {
 
 Now there is again an Command, Event and reducer etc. for expenses.
 Also I skipped the "model" definition (in the aggregate, which can be a schema or just a type)
+
+```ts
+
+import {salesforce} from '@talix/trigger
+
+import { createUserCommand } from 'domain/document
+import {fileStorage} from 'domain/file-storage'
+
+const onEmailSignup = new Action<>({
+    on: salesforce.on("Lead.Created")
+    handler: async (event, { run, getService }) => {
+        const { email } = event
+        const upload = await run(fileStorage.put, {
+
+        })
+        const fs = getService(fileStorage)
+        const result = await run(createUserCommand, {
+            email
+        })
+
+
+        return result
+    }
+    handler: async (event, { documentService }) => {
+        const { email } = event
+        const result = await createUser({
+            email
+        })
+        return result
+    }
+})
+
+
+const onEmailSignup = {
+    on: emailSignupEvent.type
+    handler: async (event, { run }) => {
+        const user = run(GetUserQuery, event.user.id)
+        await sendSlackNotification(event.user.firstName)
+    }
+}
+```
+
+```ts
+
+import {...} from 'domain/document
+// app/cf-api
+
+export const documentService = app.createService({
+    name: 'document',
+    actions: {
+        uploadDocumentFromUrl: uploadDocumentFromUrlAction,
+        analyzeDocumentOnCreation: analyzeDocumentOnCreationAction,
+    },
+    commands: {
+        createDocument: createDocumentCommand,
+    },
+    events: {
+        documentCreated: documentCreatedEvent,
+    },
+    queries: {
+        getDocument: getDocumentQuery,
+    },
+    reducers: {
+        document: documentReducer,
+    },
+})
+
+// docmain/document
+export const documentService = {
+    action: {
+
+    }
+    commands: {
+         createDcoument: createDocumentCommand
+    },
+    events: Record<string, Event>
+    queries: Record<string, Query>
+    projections: Record<string, Projections>
+}
+
+const runtime = cloudflareRuntime.use(
+    orchidReporter()
+)
+.register(new CloudflareFileStorage())
+.register(new IdGenerator())
+.create()
+
+
+function create(){
+    const context = {
+        get fileStorage(): {
+            ....
+        }
+    }
+}
+
+const service = runtime.createService(documentService)
+
+
+- Runtime
+- EventSourcingFramework
+- Services (Actions, Commands, Events, Queries, Projections)
+- shared {
+    FileStorage
+    IdGenerator
+}
+
+
+
+// AiService
+
+import {documentService} from 'domain/document
+import {invoiceService} from 'domain/invoice
+
+const onDocumentCreated = {
+on: documentService.events.created.type
+    handler(event, {call}){
+    const invoice = analyzeDocument(event.document)
+    call(invoiceService.command.createInvoice, invoice)
+    }
+}
+
+```
+
+Pure World
+
+-   eventStore.adapter (KV Store)
+-   action.httpTrigger (expose routes)
+-   action.eventTrigger (listen to events, via Queues or PubSub)
+-   ?? Services (e.g. FileStorage)
+
+Where do I need to Inject them?
+Actions:
+
+-   use services: e.g. FileStorage (via get),
+-   call commands (via run)
+    Commands:
+-   need load Data from other entities (e.g. Invoice needs to load its document)
+
+---
+
+User(id#3) {
+command(aggragetId)
+-> eventStore.pushEvent()
+
+    eventStore
+        -> eventStore.adapter.pushEvent(arregateId, event)
+    }
+
+---
+
+```
+
+```

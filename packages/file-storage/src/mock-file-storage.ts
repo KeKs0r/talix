@@ -1,11 +1,12 @@
-import type { FileStorage } from './worker-r2-file-storage'
-export function getMockStorage(): FileStorage {
-    const data: Record<string, any> = {}
-    return {
-        get: async (key: string) => data[key],
-        put: async (key, stream) => {
-            data[key] = stream
-            return { key }
-        },
+import { FileStorage } from './file-storage'
+
+export class MockFileStorage extends FileStorage {
+    data: Record<string, any> = {}
+    async get(key: string) {
+        return this.data[key]
+    }
+    async put(key: string, stream: any) {
+        this.data[key] = stream
+        return { key }
     }
 }
