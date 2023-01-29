@@ -26,13 +26,13 @@ abstract class BaseEntity {
         const emitter = new Emittery()
         this.store = this.getStore({ storageAdapter: this.adapter, emitter })
         this.eventQueue = env.EVENT_QUEUE
-        // emitter.onAny(async (eventName, event) => {
-        //     const message: ProduceBody = {
-        //         type: 'PRODUCE',
-        //         event,
-        //     }
-        //     await this.eventQueue.send(message)
-        // })
+        emitter.onAny(async (eventName, event) => {
+            const message: ProduceBody = {
+                type: 'PRODUCE',
+                event,
+            }
+            await this.eventQueue.send(message)
+        })
     }
     async fetch(request: Request) {
         const url = new URL(request.url)
