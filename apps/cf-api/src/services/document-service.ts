@@ -20,19 +20,13 @@ export function makeDocumentRoutes(app: Hono<Env>) {
             const { documentId } = input
             let id = c.env.DOCUMENT_ENTITY.idFromName(documentId)
             const stub = c.env.DOCUMENT_ENTITY.get(id)
-            const ogReqUrl = new URL(c.req.url)
-            console.log('ogReqUrl', {
-                host: ogReqUrl.host,
-                hostname: ogReqUrl.hostname,
-                href: ogReqUrl.href,
-                origin: ogReqUrl.origin,
-                pathname: ogReqUrl.pathname,
-            })
 
-            const req = new Request(new URL('/create', `https://durableobject`), {
+            const command = encodeURIComponent('DOCUMENTS:CREATE_DOCUMENT')
+            const req = new Request(new URL(`https://durableobject?command=${command}`), {
                 method: 'POST',
                 body: JSON.stringify(input),
             })
+            console.log(stub.id)
             const entityResponse = await stub.fetch(req)
             ok(entityResponse.status === 200, `Entity response status: ${entityResponse.status}`)
             const output = await entityResponse.json<CreateDocumentOutput>()
