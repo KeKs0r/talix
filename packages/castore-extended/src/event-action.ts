@@ -1,44 +1,27 @@
-import { ok } from 'common'
-import { EventDetail } from '@castore/core'
+import { EventType } from '@castore/core'
 
 import { Action } from './action'
 
 export class EventAction<
     Id extends string = string,
-    Event extends EventDetail = EventDetail,
+    Type extends EventType = EventType,
     Context = any
-> {
-    readonly actionId: Id
-    readonly trigger: Event['type']
-    handler: (event: Event, deps: Context) => Promise<void> | void
-    deps?: Context
-    _types?: {
-        Event: Event
-    }
+> extends Action<Id, Event, void, Context> {
+    readonly eventTrigger: Type['type']
     constructor({
         actionId,
-        trigger,
         handler,
+        eventTrigger,
     }: {
         actionId: Id
-        trigger: Event['type']
-        handler: (event: Event, deps: Context) => Promise<void> | void
+        handler: (event: NonNullable<Type['_types']>['detail'], deps: Context) => void
+        eventTrigger: string
     }) {
-        this.actionId = actionId
-        this.trigger = trigger
-        this.handler = handler
-        this.run = this.run.bind(this)
-        this.register = this.register.bind(this)
-    }
-    run(event: Event) {
-        ok(this.deps, 'Can only call run after registering the action dependencies')
-        return this.handler(event, this.deps)
-    }
-    register(deps: Context) {
-        this.deps = deps
+        super({ actionId, handler })
+        this.eventTrigger = eventTrigger
     }
 }
 
-export function isEventAction(action: EventAction | Action): action is EventAction {
-    return Boolean((action as EventAction).trigger)
+export function isEventAction(action: Action): action is EventAction {
+    return Boolean((action as EventAction).eventTrigger)
 }

@@ -14,12 +14,12 @@ preview_bucket_name = 'talix-documents-preview'
 
 [durable_objects]
 bindings = [
-  { name = "DOCUMENT_ENTITY", class_name = "DocumentEntity" } # Binding to our DurableObjectExample class
+  { name = "DURABLE_ENTITY", class_name = "DurableEntity" } # Binding to our DurableObjectExample class
 ]
 
 [[migrations]]
 tag = "v1" # Should be unique for each entry
-new_classes = ["DocumentEntity"]
+new_classes = ["DurableEntity"]
 
 [[queues.producers]]
   queue = "event-queue"
