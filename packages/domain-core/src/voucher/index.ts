@@ -1,5 +1,4 @@
 export { voucherEventStore } from './voucher-eventstore'
-export { createVoucherService } from './voucher-service'
-export type { VoucherService } from './voucher-service'
+export { voucherService } from './voucher-service'
 export { createVoucherCommand } from './voucher-create-command'
 export type { CreateVoucherInput } from './voucher-create-command'
