@@ -1,4 +1,5 @@
-import pRetry from 'p-retry'
+import assert from 'assert'
+
 import { ServiceAccount, getJWTFromServiceAccount } from 'cf-gcp-auth'
 
 import { ExpenseResponse } from './model/document.types'
@@ -20,44 +21,41 @@ function isUrlInput(input: AnalyzeInput): input is UrlInput {
     return Boolean((input as UrlInput).url)
 }
 
-export type DocummentAnalyzer = {
-    analyzeExpense: (input: AnalyzeInput) => Promise<ExpenseResponse>
+export async function analyzeExpense(input: AnalyzeInput) {
+    const [{ base64, type }, token] = await Promise.all([
+        isUrlInput(input) ? fetchFile(input.url) : input,
+        getToken(),
+    ])
+    const request = {
+        rawDocument: {
+            content: base64,
+            mimeType: type,
+        },
+    }
+    const res = await fetch(expenseProcessor, {
+        method: 'POST',
+        body: JSON.stringify(request),
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    return res.json() as Promise<ExpenseResponse>
 }
 
-export function createService(serviceAccount: ServiceAccount): DocummentAnalyzer {
-    let token: Promise<string>
+let token: Promise<string>
 
-    async function getToken() {
-        if (!token) {
-            token = getJWTFromServiceAccount(serviceAccount, {
-                aud: 'https://documentai.googleapis.com/',
-            })
-        }
-        return token
-    }
-
-    async function analyzeExpense(input: AnalyzeInput) {
-        const [{ base64, type }, token] = await Promise.all([
-            isUrlInput(input) ? fetchFile(input.url) : input,
-            getToken(),
-        ])
-        const request = {
-            rawDocument: {
-                content: base64,
-                mimeType: type,
-            },
-        }
-        const res = await fetch(expenseProcessor, {
-            method: 'POST',
-            body: JSON.stringify(request),
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+async function getToken() {
+    if (!token) {
+        token = getJWTFromServiceAccount(getServiceAccount(), {
+            aud: 'https://documentai.googleapis.com/',
         })
-        return res.json() as Promise<ExpenseResponse>
     }
+    return token
+}
 
-    return {
-        analyzeExpense,
-    }
+function getServiceAccount() {
+    const env = process.env.GCP_SERVICE_ACCOUNT_JSON
+    assert(env, 'GCP_SERVICE_ACCOUNT_JSON not available')
+    const sa = JSON.parse(env)
+    return sa
 }

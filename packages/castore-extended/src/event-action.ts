@@ -15,7 +15,7 @@ export class EventAction<
     }: {
         actionId: Id
         handler: (event: NonNullable<Type['_types']>['detail'], deps: Context) => void
-        eventTrigger: string
+        eventTrigger: Type['type']
     }) {
         super({ actionId, handler })
         this.eventTrigger = eventTrigger

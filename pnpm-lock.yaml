@@ -198,6 +198,7 @@ importers:
 
   packages/ocr-document:
     specifiers:
+      '@castore/core': ^1.9.0
       '@types/node': ^18.11.18
       castore-extended: workspace:*
       cf-gcp-auth: workspace:*
@@ -212,6 +213,7 @@ importers:
       typescript: ^4.9.4
       vitest: ^0.25.6
     dependencies:
+      '@castore/core': 1.9.0
       castore-extended: link:../castore-extended
       cf-gcp-auth: link:../cf-gcp-auth
       common: link:../common
