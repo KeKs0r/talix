@@ -6,6 +6,7 @@ account_id = "8f677fd195b2d505617e10661bc8e59d"
 
 workers_dev = true
 
+
 [[r2_buckets]]
 binding = 'DOCUMENTS_BUCKET' # <~ valid JavaScript variable name
 bucket_name = 'talix-documents'
@@ -22,10 +23,10 @@ tag = "v1" # Should be unique for each entry
 new_classes = ["DurableEntity"]
 
 [[queues.producers]]
-  queue = "event-queue"
+  queue = "talix-event-queue"
   binding = "EVENT_QUEUE"
 
 [[queues.consumers]]
-  queue = "event-queue"
+  queue = "talix-event-queue"
   max_batch_size = 1
   max_batch_timeout = 1

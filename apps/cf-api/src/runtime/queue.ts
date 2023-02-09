@@ -22,7 +22,7 @@ export type ConsumeBody = {
 }
 type MessageBody = ProduceBody | ConsumeBody
 
-export async function createQueue(services: Service[]) {
+export function createQueue(services: Service[]) {
     const eventMap = getEventMap(services)
     const actionsById = getActionsById(services)
     return async function processQueue(
