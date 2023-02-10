@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {},
+    "extends": "tsconfig/node.json",
+    "exclude": ["node_modules"],
+    "files": [],
+    "include": ["src", "repl"]
+}
