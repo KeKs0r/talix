@@ -1,31 +1,36 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { MockFileStorage } from 'file-storage'
-import { mockEventStore } from 'castore-extended'
+import { Command, GetCommandInput, mockEventStore } from 'castore-extended'
 
 import { documentEventStore } from '../document-eventstore'
-import { createDocumentCommand } from '../document-create-command'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
+import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
+import { RuntimeDependencies } from '../../runtime-deps'
 
 describe.concurrent('Upload Document From Url', () => {
-    const fileStorage = new MockFileStorage()
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [])
+    function innerRun(
+        command: Command,
+        input: GetCommandInput<Command>,
+        deps: RuntimeDependencies
+    ) {
+        return command.handler(input, [mockedDocumentEventStore], deps)
+    }
+    const deps = makeTestDependencies({
+        innerRun: innerRun as any,
+        generateId: () => '1',
+    })
 
     beforeEach(() => {
         mockedDocumentEventStore.reset()
     })
 
-    createDocumentCommand.register([mockedDocumentEventStore])
-
-    const uploadFromUrl = uploadDocumentFromUrlAction.register({
-        fileStorage,
-        createDocument: createDocumentCommand.run,
-        generateId: () => '1',
-    })
-
     it('Upload Document Command', async () => {
-        const { documentId } = await uploadFromUrl.run({
-            url: 'https://www.laserfocus.io/bitcoin.pdf',
-        })
+        const { documentId } = await uploadDocumentFromUrlAction.handler(
+            {
+                url: 'https://www.laserfocus.io/bitcoin.pdf',
+            },
+            deps
+        )
 
         const { events } = await mockedDocumentEventStore.getEvents(documentId)
 
@@ -54,7 +59,10 @@ describe.concurrent('Upload Document From Url', () => {
 
     it('Upload Document Command fails, if the url is not accessible', async () => {
         expect(
-            uploadFromUrl.run({ url: 'https://www.google.com/i-dont-exist.pdf' })
+            uploadDocumentFromUrlAction.handler(
+                { url: 'https://www.google.com/i-dont-exist.pdf' },
+                deps
+            )
         ).rejects.toThrow('Document could not be fetched')
     })
 })

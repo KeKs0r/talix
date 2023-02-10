@@ -1,5 +1,4 @@
-export { createDocumentService } from './document-service'
-export type { DocumentService } from './document-service'
+export { documentService } from './document-service'
 export { documentEventStore, getDocumentEventStore } from './document-eventstore'
 
 export type {

@@ -106,7 +106,7 @@ export const countersReducer = (
 
 export const counterCreatedAction = new EventAction({
     actionId: 'COUNTER_CREATED_ACTION',
-    trigger: 'COUNTER:COUNTER_CREATED',
+    eventTrigger: 'COUNTER:COUNTER_CREATED',
     handler(event: typeof counterCreatedEvent, deps: (e: typeof counterCreatedEvent) => void) {
         deps(event)
     },

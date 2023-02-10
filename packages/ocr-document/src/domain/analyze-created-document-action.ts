@@ -4,38 +4,28 @@ import {
     documentCreatedEventType,
     DocumentCreatedEventTypeDetail,
     DocumentCreatedPayload,
-    VoucherService,
+    createVoucherCommand,
     CreateVoucherInput,
     DateString,
     createDateString,
 } from 'domain-core'
-import type { FileStorage } from 'file-storage'
 
-import { DocummentAnalyzer } from '../document-ai/analyze-document'
+import { analyzeExpense } from '../document-ai/analyze-document'
 import { parseResponse } from '../document-ai/fetch-file'
 import { ExpenseResponse } from '../document-ai/model/document.types'
 import { getDateEntity } from '../document-ai/model/expense.types'
 
-type AnalzeCreatedDocumentDeps = {
-    fileStorage: FileStorage
-    documentAnalyzer: DocummentAnalyzer
-    createVoucher: VoucherService['commands']['createVoucher']['run']
-}
-
-export const analyzeCreatedDocumentAction = new EventAction({
+export const analyzeCreatedDocumentAction = new EventAction<'OCR:ANALYZE_CREATED_DOCUMENT_ACTION'>({
     actionId: 'OCR:ANALYZE_CREATED_DOCUMENT_ACTION',
-    trigger: documentCreatedEventType.type,
-    handler: async (
-        event: DocumentCreatedEventTypeDetail,
-        { fileStorage, documentAnalyzer, createVoucher }: AnalzeCreatedDocumentDeps
-    ) => {
+    eventTrigger: documentCreatedEventType.type,
+    handler: async (event: DocumentCreatedEventTypeDetail, { fileStorage, run }) => {
         const documentId = event.aggregateId
         const { key } = event.payload as DocumentCreatedPayload
         const file = await fileStorage.get(key)
         ok(file, `Could not find file with key ${key}`)
         const fileInput = await parseResponse(file)
 
-        const prediction = await documentAnalyzer.analyzeExpense(fileInput)
+        const prediction = await analyzeExpense(fileInput)
         const voucherDate = getVoucherDate(prediction)
 
         const input: CreateVoucherInput = {
@@ -44,7 +34,7 @@ export const analyzeCreatedDocumentAction = new EventAction({
             documentId: documentId,
             voucherDate,
         }
-        await createVoucher(input)
+        await run(createVoucherCommand, input)
     },
 })
 

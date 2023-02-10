@@ -1,38 +1,22 @@
-import { ok } from 'common'
+import { EventType } from '@castore/core'
 
 import { EventStore } from './event-store'
-import { EventAction, isEventAction } from './event-action'
+import { EventAction } from './event-action'
 import { Command } from './command'
 import { Action } from './action'
 
+/**
+ * currently the scope of a single service is one aggregate. Maybe we will split the concerns,
+ * so a single service could contain multiple aggregates
+ */
 export interface Service {
     name: string
-    stores?: Record<string, EventStore>
-    actions?: Record<string, EventAction | Action>
-    commands?: Record<string, Command>
-}
-
-export function connectServicesActions(services: Service[]) {
-    const storesByName: Record<string, EventStore> = services.reduce((acc, service) => {
-        return {
-            ...acc,
-            ...service.stores,
-        }
-    }, {})
-    services.forEach((service) =>
-        Object.values(service.actions || {}).forEach((action) => {
-            if (isEventAction(action)) {
-                const eventTrigger = action.trigger
-                const [storeName] = eventTrigger.split(':')
-                const store = storesByName[storeName]
-                ok(
-                    store,
-                    `EventStore ${storeName} not found. Got only ${Object.keys(storesByName).join(
-                        ','
-                    )}`
-                )
-                store.on<NonNullable<(typeof action)['_types']>['Event']>(eventTrigger, action.run)
-            }
-        })
-    )
+    store: EventStore
+    commands?: Array<Command>
+    events?: Array<EventType>
+    /**
+     * Actions are not directly bound to an aggregate root. But lets keep a single
+     * interface for now
+     */
+    actions?: Array<EventAction | Action>
 }

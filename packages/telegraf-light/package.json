@@ -1,0 +1,35 @@
+{
+    "name": "telegraf-light",
+    "version": "0.0.0",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "devDependencies": {
+        "@types/debug": "^4.1.7",
+        "@types/node": "^18.11.18",
+        "eslint-config-custom": "workspace:*",
+        "tsconfig": "workspace:*",
+        "typegram": "^4.3.0",
+        "typescript": "^4.9.4",
+        "vite": "^3.2.4",
+        "vite-node": "^0.27.0",
+        "vitest": "^0.25.6"
+    },
+    "private": true,
+    "engines": {
+        "node": "18"
+    },
+    "scripts": {
+        "type-check": "tsc --noEmit",
+        "lint": "eslint",
+        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run --passWithNoTests",
+        "test:env": "doppler run -- pnpm test",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest .",
+        "test:watch:env": "doppler run -- pnpm test:watch",
+        "repl": "vite-node",
+        "repl:env": "doppler run -- vite-node"
+    },
+    "dependencies": {
+        "debug": "^4.3.4",
+        "p-timeout": "^6.1.0"
+    }
+}

@@ -1,9 +1,3 @@
-# Dependency Overview
+# Local Webhook Tunnel
 
--   _DurableStore_
-
-    -   all commands
-        -   dependencies of those commands
-    -   eventstore
-
--   _Actions_
+https://github.com/cloudflare/workers-sdk/issues/696#issuecomment-1262362688

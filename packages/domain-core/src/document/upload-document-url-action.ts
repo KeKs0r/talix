@@ -3,6 +3,8 @@ import { CommandHandler, Action } from 'castore-extended'
 import { z } from 'zod'
 import type { FileStorage } from 'file-storage'
 
+import { RuntimeDependencies } from '../runtime-deps'
+
 import { createDocumentCommand } from './document-create-command'
 
 type UploadDocumentActionDependencies = {
@@ -22,7 +24,7 @@ export const uploadDocumentFromUrlAction = new Action({
     actionId: 'DOCUMENTS:UPLOAD_DOCUMENT_FROM_URL_ACTION',
     async handler(
         input: UploadDocumentActionInput | unknown,
-        { createDocument, fileStorage, generateId }: UploadDocumentActionDependencies
+        { run, fileStorage, generateId }: RuntimeDependencies
     ) {
         const { fileName, url } = uploadDocumentFromUrlActionSchema.parse(input)
 
@@ -39,7 +41,7 @@ export const uploadDocumentFromUrlAction = new Action({
         ok(bodyStream, `Bodystream not available for ${url}`)
         const fileUrl = await fileStorage.put(key, bodyStream as any)
 
-        await createDocument({
+        await run(createDocumentCommand, {
             aggregateId: id,
             name,
             key: fileUrl.key,

@@ -19,12 +19,13 @@
         "vitest": "^0.25.6"
     },
     "dependencies": {
-        "js-base64": "^3.7.4",
-        "p-retry": "^5.1.2",
-        "cf-gcp-auth": "workspace:*",
+        "@castore/core": "^1.9.0",
         "castore-extended": "workspace:*",
+        "cf-gcp-auth": "workspace:*",
+        "common": "workspace:*",
         "domain-core": "workspace:*",
         "file-storage": "workspace:*",
-        "common": "workspace:*"
+        "js-base64": "^3.7.4",
+        "p-retry": "^5.1.2"
     }
 }

@@ -4,7 +4,6 @@ import {
     EventStore,
     OnEventAlreadyExistsCallback,
 } from '@castore/core'
-import { ok } from 'common'
 
 export class Command<
     C extends string = string,
@@ -35,21 +34,9 @@ export class Command<
             handler,
         })
         this.run = this.run.bind(this)
-        this.register = this.register.bind(this)
     }
     deps?: T
-    eventStores?: $E
-    run(input: I) {
-        ok(
-            this.deps,
-            `Can only call run after registering the action dependencies in ${this.commandId}`
-        )
-        ok(this.eventStores, 'Can only call run after registering the event stores')
-        return this.handler(input, this.eventStores, ...this.deps)
-    }
-    register(eventStores: $E, ...deps: T) {
-        this.eventStores = eventStores
-        this.deps = deps
-        return this
+    run(input: I, deps: T) {
+        return this.handler(input, this.requiredEventStores as any, ...deps)
     }
 }
