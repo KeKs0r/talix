@@ -1,5 +1,5 @@
 import { Message } from '@cloudflare/workers-types'
-import { Action, Service } from 'castore-extended'
+import { Action, Service } from '@chute/core'
 
 import { Bindings } from '../env.types'
 

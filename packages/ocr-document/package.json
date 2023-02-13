@@ -20,7 +20,7 @@
     },
     "dependencies": {
         "@castore/core": "^1.9.0",
-        "castore-extended": "workspace:*",
+        "@chute/core": "workspace:*",
         "cf-gcp-auth": "workspace:*",
         "common": "workspace:*",
         "domain-core": "workspace:*",

@@ -1,4 +1,4 @@
-import { Action } from 'castore-extended'
+import { Action } from '@chute/core'
 import type { Filter, Update } from 'telegraf-light'
 
 export class TelegramAction<

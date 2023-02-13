@@ -1,4 +1,4 @@
-import { Command, GetCommandInput, isEventAction, Service } from 'castore-extended'
+import { Command, GetCommandInput, isEventAction, Service } from '@chute/core'
 import { RuntimeDependencies } from 'domain-core'
 import { FileStorage, R2FileStorage } from 'file-storage'
 import { ulidFactory } from 'ulid-workers'

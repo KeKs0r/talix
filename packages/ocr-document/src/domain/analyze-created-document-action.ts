@@ -1,5 +1,5 @@
 import { ok } from 'common'
-import { EventAction } from 'castore-extended'
+import { EventAction } from '@chute/core'
 import {
     documentCreatedEventType,
     DocumentCreatedEventTypeDetail,

@@ -1,4 +1,4 @@
-import { EventStore } from 'castore-extended'
+import { EventStore } from '@chute/core'
 
 import { emitter } from '../shared/emitter'
 

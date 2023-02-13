@@ -1,5 +1,5 @@
 import { describe, beforeEach, it, expect } from 'vitest'
-import { Command, GetCommandInput, mockEventStore } from 'castore-extended'
+import { Command, GetCommandInput, mockEventStore } from '@chute/core'
 
 import { documentEventStore } from '../document-eventstore'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'

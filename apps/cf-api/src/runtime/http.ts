@@ -1,4 +1,4 @@
-import { HttpAction, isHttpAction, Service } from 'castore-extended'
+import { HttpAction, isHttpAction, Service } from '@chute/core'
 import { Handler, Hono } from 'hono'
 
 import { Env } from '../env.types'

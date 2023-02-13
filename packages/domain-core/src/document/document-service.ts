@@ -1,4 +1,4 @@
-import { Service } from 'castore-extended'
+import { Service } from '@chute/core'
 
 import { createDocumentCommand } from './document-create-command'
 import { documentEventStore } from './document-eventstore'

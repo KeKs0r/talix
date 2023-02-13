@@ -1,4 +1,4 @@
-import { Command, GetCommandInput, GetCommandOutput } from 'castore-extended'
+import { Command, GetCommandInput, GetCommandOutput } from '@chute/core'
 import { MockFileStorage } from 'file-storage'
 
 import { RuntimeDependencies } from '../../runtime-deps'

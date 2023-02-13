@@ -33,6 +33,6 @@
         "common": "workspace:*",
         "domain-core": "workspace:*",
         "telegraf-light": "workspace:*",
-        "castore-extended": "workspace:*"
+        "@chute/core": "workspace:*"
     }
 }
