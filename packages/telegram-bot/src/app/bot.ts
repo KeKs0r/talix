@@ -1,17 +1,10 @@
-import { Telegraf } from 'telegraf'
-import { message } from 'telegraf/filters'
+import { Telegraf, message } from 'telegraf-light'
 
-// import { registerDocumentHandler } from '../handlers/document'
+import { registerDocumentHandler } from '../handlers/document'
 
-import { TELEGRAM_BOT_TOKEN } from './env'
+export function createBot(token: string): { bot: Telegraf } {
+    const bot = new Telegraf(token)
 
-export function createBot(): { bot: Telegraf } {
-    const bot = new Telegraf(TELEGRAM_BOT_TOKEN)
-
-    bot.on(message('text'), async (ctx) => {
-        await ctx.reply(`Hello ${ctx.state.role}`)
-    })
-
-    // registerDocumentHandler(bot, app)
+    registerDocumentHandler(bot)
     return { bot }
 }

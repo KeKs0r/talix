@@ -146,11 +146,6 @@ export class Composer<C extends Context> implements MiddlewareObj<C> {
         return this.use(Composer.drop(predicate))
     }
 
-    /** @deprecated use `Composer::drop` */
-    filter(predicate: Predicate<C>) {
-        return this.use(Composer.filter(predicate))
-    }
-
     private entity<
         T extends 'message' | 'channel_post' | tt.MessageSubType = 'message' | 'channel_post'
     >(

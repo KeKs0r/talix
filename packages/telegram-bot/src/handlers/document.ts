@@ -1,7 +1,6 @@
 import { ok } from 'common'
 // import { DocumentService } from 'domain-core'
-import { Telegraf, Markup } from 'telegraf'
-import { message } from 'telegraf/filters'
+import { Telegraf, Markup, message } from 'telegraf-light'
 
 export function registerDocumentHandler(
     bot: Telegraf
@@ -13,8 +12,9 @@ export function registerDocumentHandler(
         ok(fileName, 'filename missing')
         const url = await ctx.telegram.getFileLink(document.file_id)
         const link = url.href
-        ok(link, 'link missing')
-        ok(false, '@TODO FIX THIS')
+        console.log('url', url)
+        // ok(link, 'link missing')
+        // ok(false, '@TODO FIX THIS')
         // await documentService.commands.createDocument.run({
         //     name: fileName,
         //     key: 'CHANGE ME',

@@ -4,6 +4,7 @@
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "devDependencies": {
+        "@cloudflare/workers-types": "^4.20221111.1",
         "@types/node": "^18.11.18",
         "eslint-config-custom": "workspace:*",
         "tsconfig": "workspace:*",
@@ -29,8 +30,9 @@
         "repl:env": "doppler run -- vite-node"
     },
     "dependencies": {
-        "telegraf": "^4.11.2",
+        "common": "workspace:*",
         "domain-core": "workspace:*",
-        "common": "workspace:*"
+        "telegraf-light": "workspace:*",
+        "castore-extended": "workspace:*"
     }
 }

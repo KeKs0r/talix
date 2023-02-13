@@ -8,7 +8,7 @@ type DistinctKeys<T extends object> = Exclude<UnionKeys<T>, keyof T>
 type Keyed<T extends object, K extends DistinctKeys<T>> = Record<K, {}> &
     Deunionize<Record<K, {}>, T>
 
-export type Filter<U extends Update> = (update: Update) => update is U
+export type Filter<U extends Update = Update> = (update: Update) => update is U
 
 export const message =
     <Ks extends DistinctKeys<Message>[]>(...keys: Ks) =>

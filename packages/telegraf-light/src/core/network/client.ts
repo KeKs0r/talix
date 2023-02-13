@@ -1,5 +1,11 @@
+import debug from 'debug'
+
 import type { Opts, Telegram } from '../types/typegram'
 import { compactOptions } from '../helpers/compact'
+
+import TelegramError from './error'
+
+const d = debug('telegraf:client')
 
 export interface ApiClientOptions {
     apiRoot: string
@@ -53,39 +59,75 @@ export class ApiClient {
         // { signal }: ApiClient.CallApiOptions = {}
     ): Promise<ReturnType<Telegram[M]>> {
         const { token, options } = this
-        return {} as any
-        // if (!token) {
-        //     throw new TelegramError({
-        //         error_code: 401,
-        //         description: 'Bot Token is required',
-        //     })
-        // }
 
-        // debug('HTTP call', method, payload)
+        if (!token) {
+            throw new TelegramError({
+                error_code: 401,
+                description: 'Bot Token is required',
+            })
+        }
+
+        d('HTTP call', method, payload)
 
         // const config: RequestInit = includesMedia(payload)
         //     ? await buildFormDataConfig({ method, ...payload }, options.attachmentAgent)
         //     : await buildJSONConfig(payload)
-        // const apiUrl = new URL(
-        //     `./${options.apiMode}${token}${options.testEnv ? '/test' : ''}/${method}`,
-        //     options.apiRoot
-        // )
-        // config.agent = options.agent
+        const config = buildJSONConfig(payload)
+
+        const apiUrl = new URL(
+            `./${options.apiMode}${token}${options.testEnv ? '/test' : ''}/${method}`,
+            options.apiRoot
+        )
+
         // config.signal = signal
         // config.timeout = 500_000 // ms
-        // const res = await fetch(apiUrl, config).catch(redactToken)
-        // if (res.status >= 500) {
-        //     const errorPayload = {
-        //         error_code: res.status,
-        //         description: res.statusText,
-        //     }
-        //     throw new TelegramError(errorPayload, { method, payload })
-        // }
-        // const data = await res.json()
-        // if (!data.ok) {
-        //     debug('API call failed', data)
-        //     throw new TelegramError(data, { method, payload })
-        // }
-        // return data.result
+        console.log('apiUrl', apiUrl)
+        console.log('Config', config)
+        const res = await fetch(apiUrl, config).catch(redactToken)
+        if (res.status >= 500) {
+            const errorPayload = {
+                error_code: res.status,
+                description: res.statusText,
+            }
+            throw new TelegramError(errorPayload, { method, payload })
+        }
+        const data = await res.json<TelegramApiResponse<ReturnType<Telegram[M]>>>()
+        console.log('data', data)
+        if (!data.ok) {
+            d('API call failed', data)
+            throw new TelegramError(data, { method, payload })
+        }
+        return data.result
     }
 }
+
+function replacer(_: unknown, value: unknown) {
+    if (value == null) return undefined
+    return value
+}
+
+function buildJSONConfig(payload: unknown): RequestInit<RequestInitCfProperties> {
+    return {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload, replacer),
+    }
+}
+
+function redactToken(error: Error): never {
+    error.message = error.message.replace(/\/(bot|user)(\d+):[^/]+\//, '/$1$2:[REDACTED]/')
+    throw error
+}
+
+type SuccessResponse<T> = {
+    ok: true
+    result: T
+}
+
+type ErrorResponse = {
+    ok: false
+    error_code: number
+    description: string
+    parameters?: any //ResponseParameters
+}
+type TelegramApiResponse<T> = SuccessResponse<T> | ErrorResponse
