@@ -1,5 +1,5 @@
 import { basename, ok } from 'common'
-import { CommandHandler, Action } from 'castore-extended'
+import { CommandHandler, Action } from '@chute/core'
 import { z } from 'zod'
 import type { FileStorage } from 'file-storage'
 

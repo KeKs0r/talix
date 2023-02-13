@@ -1,4 +1,4 @@
-import { Service } from 'castore-extended'
+import { Service } from '@chute/core'
 
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'

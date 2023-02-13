@@ -1,4 +1,4 @@
-import { Service } from 'castore-extended'
+import { Service } from '@chute/core'
 
 import { voucherEventStore } from './voucher-eventstore'
 import { createVoucherCommand } from './voucher-create-command'

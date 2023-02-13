@@ -25,7 +25,7 @@
     "dependencies": {
         "@castore/core": "^1.9.0",
         "@castore/zod-event": "^1.9.0",
-        "castore-extended": "workspace:*",
+        "@chute/core": "workspace:*",
         "common": "workspace:*",
         "emittery": "^1.0.1",
         "file-storage": "workspace:*",

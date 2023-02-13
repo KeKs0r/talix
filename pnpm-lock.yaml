@@ -15,9 +15,9 @@ importers:
   apps/cf-api:
     specifiers:
       '@castore/core': ^1.9.0
+      '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
-      castore-extended: workspace:*
       cf-gcp-auth: workspace:*
       common: workspace:*
       domain-core: workspace:*
@@ -38,7 +38,7 @@ importers:
       zod: ^3.20.2
     dependencies:
       '@castore/core': 1.9.0
-      castore-extended: link:../../packages/castore-extended
+      '@chute/core': link:../../packages/chute-core
       cf-gcp-auth: link:../../packages/cf-gcp-auth
       common: link:../../packages/common
       domain-core: link:../../packages/domain-core
@@ -61,7 +61,26 @@ importers:
       vitest: 0.25.8
       wrangler: 2.9.1
 
-  packages/castore-extended:
+  packages/cf-gcp-auth:
+    specifiers:
+      '@types/node': ^18.11.18
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      js-base64: ^3.7.4
+      tsconfig: workspace:*
+      typescript: ^4.9.4
+      vitest: ^0.25.6
+    dependencies:
+      js-base64: 3.7.4
+    devDependencies:
+      '@types/node': 18.11.18
+      eslint: 7.32.0
+      eslint-config-custom: link:../eslint-config-custom
+      tsconfig: link:../tsconfig
+      typescript: 4.9.4
+      vitest: 0.25.8
+
+  packages/chute-core:
     specifiers:
       '@castore/core': ^1.9.0
       '@castore/inmemory-event-storage-adapter': ^1.9.0
@@ -79,25 +98,6 @@ importers:
       emittery: 1.0.1
     devDependencies:
       '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
-      '@types/node': 18.11.18
-      eslint: 7.32.0
-      eslint-config-custom: link:../eslint-config-custom
-      tsconfig: link:../tsconfig
-      typescript: 4.9.4
-      vitest: 0.25.8
-
-  packages/cf-gcp-auth:
-    specifiers:
-      '@types/node': ^18.11.18
-      eslint: ^7.32.0
-      eslint-config-custom: workspace:*
-      js-base64: ^3.7.4
-      tsconfig: workspace:*
-      typescript: ^4.9.4
-      vitest: ^0.25.6
-    dependencies:
-      js-base64: 3.7.4
-    devDependencies:
       '@types/node': 18.11.18
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
@@ -125,9 +125,9 @@ importers:
       '@castore/inmemory-event-storage-adapter': ^1.9.0
       '@castore/test-tools': ^1.9.0
       '@castore/zod-event': ^1.9.0
+      '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
-      castore-extended: workspace:*
       common: workspace:*
       emittery: ^1.0.1
       eslint: ^7.32.0
@@ -140,7 +140,7 @@ importers:
     dependencies:
       '@castore/core': 1.9.0
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
-      castore-extended: link:../castore-extended
+      '@chute/core': link:../chute-core
       common: link:../common
       emittery: 1.0.1
       file-storage: link:../file-storage
@@ -201,8 +201,8 @@ importers:
   packages/ocr-document:
     specifiers:
       '@castore/core': ^1.9.0
+      '@chute/core': workspace:*
       '@types/node': ^18.11.18
-      castore-extended: workspace:*
       cf-gcp-auth: workspace:*
       common: workspace:*
       domain-core: workspace:*
@@ -216,7 +216,7 @@ importers:
       vitest: ^0.25.6
     dependencies:
       '@castore/core': 1.9.0
-      castore-extended: link:../castore-extended
+      '@chute/core': link:../chute-core
       cf-gcp-auth: link:../cf-gcp-auth
       common: link:../common
       domain-core: link:../domain-core
@@ -264,9 +264,9 @@ importers:
 
   packages/telegram-bot:
     specifiers:
+      '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
-      castore-extended: workspace:*
       common: workspace:*
       domain-core: workspace:*
       eslint-config-custom: workspace:*
@@ -277,7 +277,7 @@ importers:
       vite-node: ^0.27.0
       vitest: ^0.25.6
     dependencies:
-      castore-extended: link:../castore-extended
+      '@chute/core': link:../chute-core
       common: link:../common
       domain-core: link:../domain-core
       telegraf-light: link:../telegraf-light

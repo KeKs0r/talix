@@ -1,5 +1,5 @@
 import { StorageAdapter } from '@castore/core'
-import { EventStore } from 'castore-extended'
+import { EventStore } from '@chute/core'
 import Emittery from 'emittery'
 
 import { emitter } from '../shared/emitter'
