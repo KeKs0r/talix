@@ -21,22 +21,15 @@ interface InputFileByPath {
     filename?: string
 }
 interface InputFileByReadableStream {
-    source: NodeJS.ReadableStream
+    source: ReadableStream
     filename?: string
 }
-interface InputFileByBuffer {
-    source: Buffer
-    filename?: string
-}
+
 interface InputFileByURL {
     url: string
     filename?: string
 }
-export type InputFile =
-    | InputFileByPath
-    | InputFileByReadableStream
-    | InputFileByBuffer
-    | InputFileByURL
+export type InputFile = InputFileByPath | InputFileByReadableStream | InputFileByURL
 
 // typegram proxy type setup
 type TelegrafTypegram = Typegram<InputFile>
