@@ -1,13 +1,16 @@
-import { Service } from '@chute/core'
+import { Aggregate, Chute } from '@chute/core'
 
 import { voucherEventStore } from './voucher-eventstore'
 import { createVoucherCommand } from './voucher-create-command'
 import { voucherCreatedEventType } from './voucher-created-event'
 
-export const voucherService: Service = {
+export const voucherAggregate: Aggregate = {
     name: 'VOUCHER',
     store: voucherEventStore,
-    actions: [],
     commands: [createVoucherCommand],
     events: [voucherCreatedEventType],
+}
+
+export function voucherService(app: Chute) {
+    app.registerAggregate(voucherAggregate)
 }

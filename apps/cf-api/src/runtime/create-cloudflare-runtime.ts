@@ -1,4 +1,4 @@
-import { Service } from '@chute/core'
+import { Chute } from '@chute/core'
 
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'
@@ -6,7 +6,7 @@ import { createQueue } from './queue'
 /**
  * Cloudflare Runtime wraps all the with the necessary runtime
  */
-export function createCloudflareRuntime(...services: Service[]) {
+export function createCloudflareRuntime(app: Chute) {
     const hono = createHTTPActions(services)
     const queue = createQueue(services)
     return {
