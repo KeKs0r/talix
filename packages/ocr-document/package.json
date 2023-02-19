@@ -22,7 +22,6 @@
         "@castore/core": "^1.9.0",
         "@chute/core": "workspace:*",
         "cf-gcp-auth": "workspace:*",
-        "common": "workspace:*",
         "domain-core": "workspace:*",
         "file-storage": "workspace:*",
         "js-base64": "^3.7.4",

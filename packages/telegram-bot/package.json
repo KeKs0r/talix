@@ -32,7 +32,6 @@
     "dependencies": {
         "@chute/core": "workspace:*",
         "awilix": "^8.0.0",
-        "common": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
         "telegraf-light": "workspace:*",
