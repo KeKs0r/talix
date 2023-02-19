@@ -21,6 +21,7 @@ importers:
       awilix: ^8.0.0
       cf-gcp-auth: workspace:*
       common: workspace:*
+      diary: ^0.4.3
       domain-core: workspace:*
       emittery: ^1.0.1
       eslint-config-custom: workspace:*
@@ -44,6 +45,7 @@ importers:
       awilix: 8.0.0
       cf-gcp-auth: link:../../packages/cf-gcp-auth
       common: link:../../packages/common
+      diary: 0.4.3
       domain-core: link:../../packages/domain-core
       emittery: 1.0.1
       file-storage: link:../../packages/file-storage
@@ -1576,6 +1578,10 @@ packages:
     dependencies:
       has-property-descriptors: 1.0.0
       object-keys: 1.1.1
+    dev: false
+
+  /diary/0.4.3:
+    resolution: {integrity: sha512-UJSoJkIsD8ha8ti/LXPrbsusYX+cPuEhMndhBIJCtr1u7rTI0eoDbHCOj5OpDSEv1x8UBrUsy0bgjDdUD8S37Q==}
     dev: false
 
   /dir-glob/3.0.1:

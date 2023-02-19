@@ -81,8 +81,8 @@ export class ApiClient {
 
         // config.signal = signal
         // config.timeout = 500_000 // ms
-        console.log('apiUrl', apiUrl)
-        console.log('Config', config)
+        // console.log('apiUrl', apiUrl)
+        // console.log('Config', config)
         const res = await fetch(apiUrl, config).catch(redactToken)
         if (res.status >= 500) {
             const errorPayload = {
