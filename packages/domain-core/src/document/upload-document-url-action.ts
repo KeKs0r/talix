@@ -1,9 +1,10 @@
-import { basename, ok } from 'common'
+import ok from 'tiny-invariant'
 import { CommandHandler, Action } from '@chute/core'
 import { z } from 'zod'
 import type { FileStorage } from 'file-storage'
 
 import { RuntimeDependencies } from '../runtime-deps'
+import { basename } from '../shared/basename'
 
 import { createDocumentCommand } from './document-create-command'
 

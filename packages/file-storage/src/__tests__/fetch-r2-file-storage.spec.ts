@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 
+import ok from 'tiny-invariant'
 import { describe, it, expect } from 'vitest'
-import { ok } from 'common'
 
 import { createFileStorage } from '../fetch-r2-file-storage'
 

@@ -1,4 +1,3 @@
-import { asValue } from 'awilix'
 import { Chute, healthCheckPlugin } from '@chute/core'
 import { documentService, voucherService } from 'domain-core'
 import { telegramPlugin } from 'telegram-bot'

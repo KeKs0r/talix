@@ -143,6 +143,7 @@ importers:
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       file-storage: workspace:*
+      tiny-invariant: ^1.3.1
       tsconfig: workspace:*
       typescript: ^4.9.4
       vitest: ^0.25.6
@@ -154,6 +155,7 @@ importers:
       common: link:../common
       emittery: 1.0.1
       file-storage: link:../file-storage
+      tiny-invariant: 1.3.1
       zod: 3.20.2
     devDependencies:
       '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
@@ -190,6 +192,7 @@ importers:
       aws4fetch: ^1.0.17
       common: workspace:*
       eslint-config-custom: workspace:*
+      tiny-invariant: ^1.3.1
       tsconfig: workspace:*
       typescript: ^4.9.4
       vite: ^3.2.4
@@ -198,6 +201,7 @@ importers:
     dependencies:
       aws4fetch: 1.0.17
       common: link:../common
+      tiny-invariant: 1.3.1
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
       '@types/node': 18.11.18
@@ -221,6 +225,7 @@ importers:
       file-storage: workspace:*
       js-base64: ^3.7.4
       p-retry: ^5.1.2
+      tiny-invariant: ^1.3.1
       tsconfig: workspace:*
       typescript: ^4.9.4
       vitest: ^0.25.6
@@ -233,6 +238,7 @@ importers:
       file-storage: link:../file-storage
       js-base64: 3.7.4
       p-retry: 5.1.2
+      tiny-invariant: 1.3.1
     devDependencies:
       '@types/node': 18.11.18
       eslint: 7.32.0
@@ -279,6 +285,7 @@ importers:
       '@types/node': ^18.11.18
       awilix: ^8.0.0
       common: workspace:*
+      diary: ^0.4.3
       domain-core: workspace:*
       eslint-config-custom: workspace:*
       telegraf-light: workspace:*
@@ -292,6 +299,7 @@ importers:
       '@chute/core': link:../chute-core
       awilix: 8.0.0
       common: link:../common
+      diary: 0.4.3
       domain-core: link:../domain-core
       telegraf-light: link:../telegraf-light
       tiny-invariant: 1.3.1
