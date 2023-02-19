@@ -1,5 +1,5 @@
 import { Chute, HttpAction } from '@chute/core'
-import { asFunction } from 'awilix'
+import { asClass } from 'awilix'
 import { Telegraf } from 'telegraf-light'
 import ok from 'tiny-invariant'
 
@@ -17,19 +17,18 @@ type TelegramPluginOptions = {
 export function telegramPlugin(actions: TelegramAction[], options?: TelegramPluginOptions) {
     const { path = '/telegram/webhook', envKeyName = 'TELEGRAM_BOT_TOKEN' } = options || {}
     return (app: Chute) => {
-        app.container.register(
-            'telegraf',
-            asFunction((cradle: Record<string, string>) => {
-                const apiKey = cradle[envKeyName]
-                ok(apiKey, `Missing ${envKeyName} in environment variables`)
-                return new Telegraf(apiKey)
-            })
-        )
+        app.container.register('telegraf', asClass(Telegraf))
         const webhookAction = new HttpAction({
             actionId: 'telegram:webhook',
             httpPath: path,
-            handler(input, { telegraf }: { telegraf: Telegraf }) {
-                return telegraf.handleUpdate(input)
+            handler(
+                input,
+                cradle: { telegraf: Telegraf; TELEGRAM_BOT_TOKEN: string } & Record<string, any>
+            ) {
+                const telegraf = cradle.telegraf
+                const token = cradle[envKeyName]
+                ok(token, `Missing ${envKeyName} in the environment`)
+                return telegraf.handleUpdate(input, { token })
             },
         })
         app.registerAction(webhookAction)

@@ -15,10 +15,6 @@ export interface Bindings {
     TELEGRAM_BOT_TOKEN: string
 }
 
-declare global {
-    var TELEGRAM_BOT_TOKEN: string
-}
-
 export interface Env {
     Bindings: Bindings
 }
