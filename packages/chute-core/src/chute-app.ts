@@ -22,8 +22,16 @@ export class Chute {
         return this
     }
 
+    /**
+     * @TODO:
+     * This is to split the registration of things + wiring up (plugins)
+     * Otherwise we cant register everything and then run things.
+     * This will be necessary for 2 step plugin initialization
+     */
+    build() {}
+
     registerAggregate(aggregate: Aggregate) {
-        ok(this.aggregates[aggregate.name], `Aggregate '${aggregate.name}' is already registered`)
+        ok(!this.aggregates[aggregate.name], `Aggregate '${aggregate.name}' is already registered`)
         this.aggregates[aggregate.name] = aggregate
 
         const container = this.container
@@ -44,7 +52,7 @@ export class Chute {
     }
 
     registerAction(action: Action) {
-        ok(this.actions[action.actionId], `Action '${action.actionId}' is already registered`)
+        ok(!this.actions[action.actionId], `Action '${action.actionId}' is already registered`)
         this.actions[action.actionId] = action
         return this
     }

@@ -1,4 +1,4 @@
-import { asFunction, asClass } from 'awilix'
+import { asFunction } from 'awilix'
 import { Chute } from '@chute/core'
 import { ulidFactory } from 'ulid-workers'
 
@@ -11,7 +11,7 @@ import { CfStorageAdapter } from './cf-storage-adapter'
  */
 export function createCloudflareRuntime(app: Chute) {
     app.container.register({
-        generateId: asFunction(ulidFactory),
+        generateId: asFunction(() => ulidFactory()),
         storageAdapter: asFunction(({ DURABLE_ENTITY }) => new CfStorageAdapter(DURABLE_ENTITY)),
     })
 

@@ -1,12 +1,17 @@
 import { unstable_dev } from 'wrangler'
 import type { UnstableDevWorker } from 'wrangler'
 import { describe, expect, it, beforeAll, afterAll } from 'vitest'
+import ok from 'tiny-invariant'
 
 describe.skip('Worker', () => {
     let worker: UnstableDevWorker
 
     beforeAll(async () => {
+        ok(process.env['TELEGRAM_BOT_TOKEN'], 'TELEGRAM_BOT_TOKEN is not set in env (beforeAll)')
         worker = await unstable_dev('src/index.ts', {
+            vars: {
+                TELEGRAM_BOT_TOKEN: process.env['TELEGRAM_BOT_TOKEN'],
+            },
             experimental: { disableExperimentalWarning: true },
         })
     }, 20 * 1000)
@@ -15,16 +20,10 @@ describe.skip('Worker', () => {
         await worker.stop()
     })
 
-    it('should return Hello World', async () => {
-        const resp = await worker.fetch('/check')
+    it('Can build app and run health check', async () => {
+        const resp = await worker.fetch('/health-check')
 
-        const text = await resp.text()
-        expect(text).toMatchInlineSnapshot(`"Hello World!"`)
-    })
-
-    it('Can access r2', async () => {
-        const resp = await worker.fetch('/r2')
-        const text = await resp.text()
-        console.log(text)
+        const res = await resp.json()
+        expect(res).toHaveProperty('status', 'ok')
     })
 })

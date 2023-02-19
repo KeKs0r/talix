@@ -1,10 +1,13 @@
+import { enable } from 'diary'
+
 import { createCloudflareRuntime } from './runtime/create-cloudflare-runtime'
 import { DurableEntity } from './runtime/durable-entity'
-import { telegramWebhook } from './telegram/telegram-webhook'
-import { chute } from './app'
+import { makeApp } from './app'
 
-const app = createCloudflareRuntime(chute)
-telegramWebhook(app.hono)
+enable('cf:*')
 
-export default app
+const app = makeApp()
+const runtime = createCloudflareRuntime(app)
+
+export default runtime
 export { DurableEntity }
