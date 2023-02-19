@@ -1,5 +1,3 @@
-import { ok } from 'common'
-
 export class Action<Id extends string = string, Input = any, Output = any, Context = any> {
     readonly actionId: Id
     _types?: {

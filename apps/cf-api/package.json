@@ -35,7 +35,6 @@
         "@chute/core": "workspace:*",
         "awilix": "^8.0.0",
         "cf-gcp-auth": "workspace:*",
-        "common": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
         "emittery": "^1.0.1",

@@ -1,4 +1,4 @@
-import { ok } from 'common'
+import ok from 'tiny-invariant'
 import { EventAction } from '@chute/core'
 import {
     documentCreatedEventType,
