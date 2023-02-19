@@ -33,6 +33,7 @@
     "dependencies": {
         "@castore/core": "^1.9.0",
         "@chute/core": "workspace:*",
+        "awilix": "^8.0.0",
         "cf-gcp-auth": "workspace:*",
         "common": "workspace:*",
         "domain-core": "workspace:*",

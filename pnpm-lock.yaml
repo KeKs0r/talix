@@ -18,6 +18,7 @@ importers:
       '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
+      awilix: ^8.0.0
       cf-gcp-auth: workspace:*
       common: workspace:*
       domain-core: workspace:*
@@ -39,6 +40,7 @@ importers:
     dependencies:
       '@castore/core': 1.9.0
       '@chute/core': link:../../packages/chute-core
+      awilix: 8.0.0
       cf-gcp-auth: link:../../packages/cf-gcp-auth
       common: link:../../packages/common
       domain-core: link:../../packages/domain-core

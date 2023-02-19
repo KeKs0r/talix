@@ -1,10 +1,11 @@
 import ok from 'tiny-invariant'
-import { createContainer, AwilixContainer, asFunction, asClass, asValue } from 'awilix'
+import { createContainer, AwilixContainer, asValue } from 'awilix'
 import { EventType } from '@castore/core'
 
 import { Action } from './action'
 import { Command } from './command'
 import { EventStore } from './event-store'
+import { isEventAction } from './event-action'
 
 export class Chute {
     // plugins: Array<Plugin> = []
@@ -49,6 +50,18 @@ export class Chute {
     }
 
     // dispatch()
+
+    get eventMap() {
+        const eventActions = Object.values(this.actions).filter(isEventAction)
+        const eventMap = eventActions.reduce((acc: Record<string, string[]>, action) => {
+            if (!acc[action.eventTrigger]) {
+                acc[action.eventTrigger] = []
+            }
+            acc[action.eventTrigger].push(action.actionId)
+            return acc
+        }, {})
+        return eventMap
+    }
 }
 
 export interface Aggregate {
