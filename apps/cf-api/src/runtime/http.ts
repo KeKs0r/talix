@@ -1,28 +1,25 @@
-import { HttpAction, isHttpAction, Service } from '@chute/core'
+import { HttpAction, isHttpAction, Chute } from '@chute/core'
 import { Handler, Hono } from 'hono'
 
 import { Env } from '../env.types'
 
-import { bindServices, makeDependencies } from './util'
+import { createScope } from './util'
 
-export function createHTTPActions(services: Service[]) {
+export function createHTTPActions(chute: Chute) {
     const hono = new Hono<Env>()
-
-    services.forEach((service) => {
-        service.actions?.forEach((action) => {
-            if (isHttpAction(action)) {
-                hono.post(action.httpPath, wrapHTTPAction(action, services))
-            }
-        })
+    Object.values(chute.actions).forEach((action) => {
+        if (isHttpAction(action)) {
+            hono.post(action.httpPath, wrapHTTPAction(action, chute))
+        }
     })
     return hono
 }
 
-function wrapHTTPAction(action: HttpAction, services: Service[]): Handler<string, Env> {
+function wrapHTTPAction(action: HttpAction, chute: Chute): Handler<string, Env> {
     return async (c) => {
-        bindServices(services, c.env)
+        const scope = createScope(chute.container, c.env)
         const input = await c.req.json()
-        const result = await action.handler(input, makeDependencies(c.env))
+        const result = await action.handler(input, scope)
         c.json(result)
     }
 }
