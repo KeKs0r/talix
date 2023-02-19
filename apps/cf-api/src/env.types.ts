@@ -12,6 +12,11 @@ export interface Bindings {
     DOCUMENTS_BUCKET: R2Bucket
 
     EVENT_QUEUE: Queue
+    TELEGRAM_BOT_TOKEN: string
+}
+
+declare global {
+    var TELEGRAM_BOT_TOKEN: string
 }
 
 export interface Env {

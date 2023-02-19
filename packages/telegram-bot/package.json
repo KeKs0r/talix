@@ -30,9 +30,11 @@
         "repl:env": "doppler run -- vite-node"
     },
     "dependencies": {
+        "@chute/core": "workspace:*",
+        "awilix": "^8.0.0",
         "common": "workspace:*",
         "domain-core": "workspace:*",
         "telegraf-light": "workspace:*",
-        "@chute/core": "workspace:*"
+        "tiny-invariant": "^1.3.1"
     }
 }

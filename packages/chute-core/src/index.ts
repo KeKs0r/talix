@@ -11,3 +11,5 @@ export { HttpAction, isHttpAction } from './http-action'
 export { EventStore } from './event-store'
 
 export { mockEventStore } from './test-utils/mockEventStore'
+
+export { healthCheckPlugin } from './core-plugins/health-check'
