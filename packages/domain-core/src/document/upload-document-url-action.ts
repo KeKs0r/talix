@@ -1,33 +1,30 @@
 import ok from 'tiny-invariant'
-import { CommandHandler, Action } from '@chute/core'
+import { Action } from '@chute/core'
 import { z } from 'zod'
-import type { FileStorage } from 'file-storage'
+import { diary } from 'diary'
 
-import { RuntimeDependencies } from '../runtime-deps'
+import { RuntimeContext } from '../runtime-deps'
 import { basename } from '../shared/basename'
 
 import { createDocumentCommand } from './document-create-command'
 
-type UploadDocumentActionDependencies = {
-    fileStorage: FileStorage
-    createDocument: CommandHandler<typeof createDocumentCommand>
-    generateId: () => string
-}
+const logger = diary('documents:upload-from-url')
 
 const uploadDocumentFromUrlActionSchema = z.object({
     fileName: z.string().optional(),
+    hash: z.string().optional(),
     url: z.string(),
 })
 
 export type UploadDocumentActionInput = z.infer<typeof uploadDocumentFromUrlActionSchema>
 
 export const uploadDocumentFromUrlAction = new Action({
-    actionId: 'DOCUMENTS:UPLOAD_DOCUMENT_FROM_URL_ACTION',
+    actionId: 'documents:upload-from-url',
     async handler(
-        input: UploadDocumentActionInput | unknown,
-        { run, fileStorage, generateId }: RuntimeDependencies
+        input: UploadDocumentActionInput,
+        { runCommand, fileStorage, generateId }: RuntimeContext
     ) {
-        const { fileName, url } = uploadDocumentFromUrlActionSchema.parse(input)
+        const { fileName, url, hash } = uploadDocumentFromUrlActionSchema.parse(input)
 
         const name = fileName || basename(url)
         const id = generateId()
@@ -42,10 +39,11 @@ export const uploadDocumentFromUrlAction = new Action({
         ok(bodyStream, `Bodystream not available for ${url}`)
         const fileUrl = await fileStorage.put(key, bodyStream as any)
 
-        await run(createDocumentCommand, {
+        await runCommand(createDocumentCommand, {
             aggregateId: id,
             name,
             key: fileUrl.key,
+            hash,
         })
 
         return { documentId: id, key: fileUrl.key }

@@ -1,10 +1,11 @@
 import { Action } from './action'
+import { BaseContext } from './base-context'
 
 export class HttpAction<
     Id extends string = string,
     Input = any,
     Output = any,
-    Context = any,
+    Context extends BaseContext = BaseContext,
     Path extends string = string
 > extends Action<Id, Input, Output, Context> {
     readonly httpPath: Path

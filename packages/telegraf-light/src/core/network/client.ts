@@ -81,8 +81,6 @@ export class ApiClient {
 
         // config.signal = signal
         // config.timeout = 500_000 // ms
-        // console.log('apiUrl', apiUrl)
-        // console.log('Config', config)
         const res = await fetch(apiUrl, config).catch(redactToken)
         if (res.status >= 500) {
             const errorPayload = {
@@ -92,7 +90,6 @@ export class ApiClient {
             throw new TelegramError(errorPayload, { method, payload })
         }
         const data = await res.json<TelegramApiResponse<ReturnType<Telegram[M]>>>()
-        console.log('data', data)
         if (!data.ok) {
             d('API call failed', data)
             throw new TelegramError(data, { method, payload })

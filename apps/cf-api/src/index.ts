@@ -4,7 +4,7 @@ import { createCloudflareRuntime } from './runtime/create-cloudflare-runtime'
 import { DurableEntity } from './runtime/durable-entity'
 import { makeApp } from './app'
 
-enable('cf:*')
+enable('*')
 
 const app = makeApp()
 const runtime = createCloudflareRuntime(app)

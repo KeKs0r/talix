@@ -23,7 +23,7 @@ function wrapHTTPAction(action: HttpAction, chute: Chute): Handler<string, Env> 
     return async (c) => {
         const scope = createHTTPScope(chute.container, c)
         const input = await c.req.json()
-        const result = await action.handler(input, scope.cradle)
+        const result = await chute.runAction(action, input, scope)
         return c.json(result)
     }
 }

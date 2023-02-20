@@ -39,7 +39,7 @@ export function createFileStorage({
                 },
             })
             const r = await file.text()
-            console.log(r)
+            console.log('fetch-r2-file-storage', r)
             return {
                 key,
             }

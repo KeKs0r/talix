@@ -1,22 +1,24 @@
-import { Action } from '@chute/core'
-import type { Filter, Update } from 'telegraf-light'
+import { Action, BaseContext } from '@chute/core'
+import { Filter, NarrowedContext, Context, Telegraf, message } from 'telegraf-light'
 
+const telegraf = new Telegraf()
+telegraf.on(message('document'), (ctx) => {})
+
+export type GetUpdate<F> = F extends Filter<infer U> ? U : never
 export class TelegramAction<
+    F extends Filter = Filter,
     Id extends string = string,
-    Input = any,
-    Output = any,
-    Context = any,
-    U extends Update = Update
-> extends Action<Id, Input, Output, Context> {
-    readonly filter: Filter<U>
+    C extends BaseContext = BaseContext
+> extends Action<Id, NarrowedContext<Context, GetUpdate<F>>, void, C> {
+    readonly filter: F
     constructor({
         actionId,
         handler,
         filter,
     }: {
         actionId: Id
-        handler: (input: Input, deps: Context) => Output
-        filter: Filter<U>
+        filter: F
+        handler: (ctx: NarrowedContext<Context, GetUpdate<F>>, deps: C) => void
     }) {
         super({ actionId, handler })
         this.filter = filter

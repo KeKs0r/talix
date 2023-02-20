@@ -40,7 +40,7 @@ async function callWithHTTP() {
     })
     try {
         const json = await res.json()
-        console.log(json)
+        console.log('document-ai', json)
         await fs.writeFile(
             join(__dirname, './data/document-ai.json'),
             JSON.stringify(json, null, 4)

@@ -30,8 +30,12 @@ const DEFAULT_OPTIONS: TelegrafOptions<Context> = {
     contextType: Context,
 }
 
-type HandleUpdateContext = {
+/**
+ * In original telegraf, the token is required in the constructor
+ */
+type HandleUpdateExtension = {
     token?: string
+    context?: Record<string, any>
 }
 
 export class Telegraf<C extends Context = Context> extends Composer<C> {
@@ -57,9 +61,8 @@ export class Telegraf<C extends Context = Context> extends Composer<C> {
     }
 
     private botInfoCall?: Promise<tg.UserFromGetMe>
-    async handleUpdate(update: tg.Update, env?: HandleUpdateContext) {
+    async handleUpdate(update: tg.Update, context?: Partial<C>, token?: string) {
         if (!this.telegram) {
-            const token = env?.token
             ok(
                 token,
                 'If token is not provided in the constructor, it needs to be provided in the `handleUpdate` call'
@@ -73,6 +76,10 @@ export class Telegraf<C extends Context = Context> extends Composer<C> {
         const TelegrafContext = this.options.contextType
         const ctx = new TelegrafContext(update, this.telegram, this.botInfo)
         Object.assign(ctx, this.context)
+        if (context) {
+            Object.assign(ctx, context)
+        }
+
         try {
             await pTimeout(Promise.resolve(this.middleware()(ctx, anoop)), {
                 milliseconds: this.options.handlerTimeout,
