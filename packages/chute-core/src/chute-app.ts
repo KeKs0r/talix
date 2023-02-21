@@ -1,6 +1,6 @@
 import ok from 'tiny-invariant'
 import { createContainer, AwilixContainer, asValue } from 'awilix'
-import { EventType } from '@castore/core'
+import { EventType, StorageAdapter } from '@castore/core'
 import { diary } from 'diary'
 
 import { Action, GetActionInput } from './action'
@@ -100,8 +100,15 @@ export class Chute<C extends BaseContext = BaseContext> {
         const parentName =
             parentScope?.hasRegistration('parent') && getParentId(parentScope.resolve('parent'))
         logger.info('runCommand', parentName, '->', command.commandId)
+        const eventStores = command.requiredEventStores.map(
+            (store) => scope.resolve(store.eventStoreId) as EventStore
+        )
+        eventStores.forEach((store) => {
+            const storageAdapter = scope.resolve('storageAdapter') as StorageAdapter
+            store.storageAdapter = storageAdapter
+        })
         // @TODO: no idea how to make the cradle type safe
-        const result = await command.handler(input, scope.cradle)
+        const result = await command.handler(input, eventStores, scope.cradle)
         return result
     }
 
