@@ -1,11 +1,12 @@
 import { EventType } from '@castore/core'
 
 import { Action } from './action'
+import { BaseContext } from './base-context'
 
 export class EventAction<
     Id extends string = string,
     Type extends EventType = EventType,
-    Context = any
+    Context extends BaseContext = BaseContext
 > extends Action<Id, Event, void, Context> {
     readonly eventTrigger: Type['type']
     constructor({
