@@ -4,10 +4,11 @@ import { Handler, Hono } from 'hono'
 
 import { Env } from './base-env.types'
 import { createHTTPScope } from './util'
+import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:http')
 
-export function createHTTPActions(chute: Chute) {
+export function createHTTPActions<C extends CFRuntimeContext = CFRuntimeContext>(chute: Chute<C>) {
     const hono = new Hono<Env>()
     Object.values(chute.actions).forEach((action) => {
         if (isHttpAction(action)) {
@@ -18,7 +19,10 @@ export function createHTTPActions(chute: Chute) {
     return hono
 }
 
-function wrapHTTPAction(action: HttpAction, chute: Chute): Handler<Env> {
+function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
+    action: HttpAction,
+    chute: Chute<C>
+): Handler<Env> {
     return async (c) => {
         const scope = createHTTPScope(chute.container, c)
         const input = await c.req.json()

@@ -1,28 +1,15 @@
 import { Message, MessageBatch } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
 import { Action, Chute } from '@chute/core'
+import { diary } from 'diary'
 
 import { Bindings } from './base-env.types'
 import { createScope } from './util'
+import { CFRuntimeContext } from './runtime-context'
 
-/**
- * I am too lazy to implement multiple queues so ONE QUEUE to rule them all
- */
+const logger = diary('chute:cf:queue')
 
-export type ProduceBody = {
-    type: 'PRODUCE'
-    event: any
-}
-
-export type ConsumeBody = {
-    type: 'CONSUME'
-    actionId: string
-    sourceId: string
-    event: any
-}
-type MessageBody = ProduceBody | ConsumeBody
-
-export function createQueue(app: Chute) {
+export function createQueue(app: Chute<CFRuntimeContext>) {
     return async function processQueue(
         batch: MessageBatch<MessageBody>,
         env: Bindings
@@ -30,12 +17,12 @@ export function createQueue(app: Chute) {
         const scope = createScope(app.container, env)
         await Promise.all(
             batch.messages.map(async (message) => {
-                console.log('Message', message)
+                logger.info('Message %o', message)
                 if (isProduceMessage(message)) {
-                    console.log('Starting fanout')
+                    logger.info('Starting fanout')
                     await fanout(message, app, scope)
                 } else if (isConsumeMessage(message)) {
-                    console.log('IsConsumeMessage')
+                    logger.info('IsConsumeMessage')
                     await handleConsume(message, app, scope)
                 } else {
                     throw new MessageTypeNotFound(
@@ -67,7 +54,7 @@ function isConsumeMessage(message: Message<MessageBody>): message is Message<Con
 export async function fanout(
     message: Message<ProduceBody>,
     app: Chute,
-    container: AwilixContainer
+    container: AwilixContainer<CFRuntimeContext>
 ) {
     const targets = app.eventMap[message.body.event.type]
     if (targets) {
@@ -92,13 +79,26 @@ export async function fanout(
 export async function handleConsume(
     message: Message<ConsumeBody>,
     app: Chute,
-    container: AwilixContainer
+    scope: AwilixContainer<CFRuntimeContext>
 ) {
     const { actionId, event } = message.body
-    const action = app.actions[actionId]
-    if (action) {
-        await action.handler(event, container)
+    const action = app.container.resolve(actionId)
+    if (action instanceof Action) {
+        await app.runAction(action, event, scope)
     } else {
-        throw Error(`Could not find action: ${actionId}`)
+        throw Error(`Could not find action: ${actionId}. Found ${typeof action}`)
     }
 }
+
+export type ProduceBody = {
+    type: 'PRODUCE'
+    event: any
+}
+
+export type ConsumeBody = {
+    type: 'CONSUME'
+    actionId: string
+    sourceId: string
+    event: any
+}
+type MessageBody = ProduceBody | ConsumeBody

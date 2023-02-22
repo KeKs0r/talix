@@ -6,11 +6,14 @@ import { R2FileStorage } from 'file-storage'
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'
 import { CfStorageAdapter } from './cf-storage-adapter'
+import { CFRuntimeContext } from './runtime-context'
 
 /**
  * Cloudflare Runtime wraps all the with the necessary runtime
  */
-export function createCloudflareRuntime(app: Chute) {
+export function createCloudflareRuntime<C extends CFRuntimeContext = CFRuntimeContext>(
+    app: Chute<C>
+) {
     app.container.register(
         'generateId',
         asFunction(() => ulidFactory())
