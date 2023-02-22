@@ -6,7 +6,7 @@
     "license": "MIT",
     "scripts": {
         "lint": "eslint",
-        "test": "vitest run",
+        "test": "vitest run --passWithNoTests",
         "test:watch": "vitest",
         "type-check": "tsc --noEmit",
         "repl": "node -r ts-node/register"
