@@ -2,8 +2,8 @@ import ok from 'tiny-invariant'
 import { Action } from '@chute/core'
 import { z } from 'zod'
 import { diary } from 'diary'
+import { RuntimeContext } from '@chute/cf-runtime'
 
-import { RuntimeContext } from '../runtime-deps'
 import { basename } from '../shared/basename'
 
 import { createDocumentCommand } from './document-create-command'

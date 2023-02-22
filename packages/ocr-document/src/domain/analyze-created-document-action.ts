@@ -9,6 +9,7 @@ import {
     DateString,
     createDateString,
 } from 'domain-core'
+import { RuntimeContext } from '@chute/cf-runtime'
 
 import { analyzeExpense } from '../document-ai/analyze-document'
 import { parseResponse } from '../document-ai/fetch-file'
@@ -18,7 +19,10 @@ import { getDateEntity } from '../document-ai/model/expense.types'
 export const analyzeCreatedDocumentAction = new EventAction<'OCR:ANALYZE_CREATED_DOCUMENT_ACTION'>({
     actionId: 'OCR:ANALYZE_CREATED_DOCUMENT_ACTION',
     eventTrigger: documentCreatedEventType.type,
-    handler: async (event: DocumentCreatedEventTypeDetail, { fileStorage, run }) => {
+    handler: async (
+        event: DocumentCreatedEventTypeDetail,
+        { fileStorage, runCommand }: RuntimeContext
+    ) => {
         const documentId = event.aggregateId
         const { key } = event.payload as DocumentCreatedPayload
         const file = await fileStorage.get(key)
@@ -34,7 +38,7 @@ export const analyzeCreatedDocumentAction = new EventAction<'OCR:ANALYZE_CREATED
             documentId: documentId,
             voucherDate,
         }
-        await run(createVoucherCommand, input)
+        await runCommand(createVoucherCommand, input)
     },
 })
 

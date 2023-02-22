@@ -1,8 +1,7 @@
 import { createContainer, asClass, asValue, AwilixContainer } from 'awilix'
-import { Command, GetCommandInput, GetCommandOutput } from '@chute/core'
+import { Command, GetCommandInput } from '@chute/core'
 import { MockFileStorage } from 'file-storage'
-
-import { RuntimeContext } from '../../runtime-deps'
+import { RuntimeContext } from '@chute/cf-runtime'
 
 export function makeTestDependencies(
     overwrite?: Parameters<AwilixContainer['register']>[0]

@@ -11,6 +11,7 @@ import {
     GetLastSnapshotOptions,
     ListSnapshotsOptions,
 } from '@castore/core/dist/types/storageAdapter'
+import type { DurableObjectNamespace } from '@cloudflare/workers-types'
 
 export class CfStorageAdapter implements StorageAdapter {
     objectNamespace: DurableObjectNamespace
@@ -59,11 +60,10 @@ export class CfStorageAdapter implements StorageAdapter {
         const id = this.objectNamespace.idFromName(aggregateId)
         const stub = this.objectNamespace.get(id)
 
-        const req = new Request(new URL(`https://durableobject?method=${method}`), {
+        const result = await stub.fetch(`https://durableobject?method=${method}`, {
             method: body ? 'POST' : 'GET',
             body: body ? JSON.stringify(body) : undefined,
         })
-        const result = await stub.fetch(req)
         const response = await result.json<Response>()
         return response
     }

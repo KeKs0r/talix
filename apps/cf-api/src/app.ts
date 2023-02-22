@@ -1,5 +1,6 @@
 import { Chute, healthCheckPlugin } from '@chute/core'
-import { documentService, RuntimeContext, voucherService } from 'domain-core'
+import { RuntimeContext } from '@chute/cf-runtime'
+import { documentService, voucherService } from 'domain-core'
 import { telegramPlugin, TelegramPluginContext } from 'telegram-bot'
 
 import { Env } from './env.types'

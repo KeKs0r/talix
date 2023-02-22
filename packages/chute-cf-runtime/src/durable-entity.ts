@@ -1,8 +1,8 @@
 import type { EventDetail, EventsQueryOptions } from '@castore/core'
 import type { DurableObjectState, Request } from '@cloudflare/workers-types'
-import { createDocumentCommand, getDocumentEventStore } from 'domain-core'
+import type { DurableObjectListOptions } from '@cloudflare/workers-types'
 
-import type { Bindings } from '../env.types'
+import type { Bindings } from './base-env.types'
 
 export class DurableEntity {
     state: DurableObjectState

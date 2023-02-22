@@ -1,7 +1,6 @@
 import { enable } from 'diary'
+import { createCloudflareRuntime, DurableEntity } from '@chute/cf-runtime'
 
-import { createCloudflareRuntime } from './runtime/create-cloudflare-runtime'
-import { DurableEntity } from './runtime/durable-entity'
 import { makeApp } from './app'
 
 enable('*')

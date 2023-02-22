@@ -31,20 +31,10 @@
         "repl:env": "doppler run -- vite-node"
     },
     "dependencies": {
-        "@castore/core": "^1.9.0",
         "@chute/core": "workspace:*",
-        "awilix": "^8.0.0",
-        "cf-gcp-auth": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
-        "emittery": "^1.0.1",
-        "file-storage": "workspace:*",
-        "hono": "^2.7.4",
-        "p-retry": "^5.1.2",
-        "telegraf": "^4.11.2",
         "telegram-bot": "workspace:*",
-        "tiny-invariant": "^1.3.1",
-        "ulid-workers": "^2.1.0",
-        "zod": "^3.20.2"
+        "@chute/cf-runtime": "workspace:*"
     }
 }

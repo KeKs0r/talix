@@ -1,9 +1,8 @@
-import { Message } from '@cloudflare/workers-types'
+import { Message, MessageBatch } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
 import { Action, Chute } from '@chute/core'
 
-import { Bindings } from '../env.types'
-
+import { Bindings } from './base-env.types'
 import { createScope } from './util'
 
 /**

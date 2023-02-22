@@ -1,0 +1,10 @@
+{
+    "extends": "tsconfig/worker.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true
+    },
+    "exclude": ["node_modules"],
+    "files": [],
+    "include": ["src"]
+}
