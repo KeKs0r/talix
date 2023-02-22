@@ -1,10 +1,10 @@
-import { Message, MessageBatch } from '@cloudflare/workers-types'
+import { Message, MessageBatch, ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
 import { Action, Chute } from '@chute/core'
 import { diary } from 'diary'
 
-import { Bindings } from './base-env.types'
-import { createScope } from './util'
+import { Bindings, Env } from './base-env.types'
+import { createScope } from './scope'
 import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('chute:cf:queue')
@@ -12,9 +12,10 @@ const logger = diary('chute:cf:queue')
 export function createQueue(app: Chute<CFRuntimeContext>) {
     return async function processQueue(
         batch: MessageBatch<MessageBody>,
-        env: Bindings
+        env: Env,
+        ctx: ExecutionContext
     ): Promise<void> {
-        const scope = createScope(app.container, env)
+        const scope = createScope(app, env.Bindings, ctx)
         await Promise.all(
             batch.messages.map(async (message) => {
                 logger.info('Message %o', message)
