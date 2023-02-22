@@ -4,8 +4,6 @@
         "module": "commonjs",
         "esModuleInterop": true
     },
-    "exclude": ["node_modules", "**/*.spec.ts"],
-    "files": [],
-    "include": ["src", "repl"],
-    "references": []
+    "exclude": ["node_modules"],
+    "include": ["vitest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
 }

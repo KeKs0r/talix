@@ -1,9 +1,8 @@
 import { Chute, EventStore } from '@chute/core'
 import { ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer, asValue } from 'awilix'
-import type { Context } from 'hono'
 
-import { Bindings, Env } from './base-env.types'
+import { Bindings } from './base-env.types'
 import { ProduceBody } from './queue'
 import { CFRuntimeContext, RuntimeContext } from './runtime-context'
 
@@ -38,7 +37,7 @@ export function createStorePublisher(
     const execCtx = scope.resolve('execCtx')
     Object.values(app.aggregates).forEach((agg) => {
         const store = app.container.resolve(agg.store.eventStoreId) as EventStore
-        store.emitter.onAny((event) => {
+        store.emitter.onAny((eventName, event) => {
             const message: ProduceBody = {
                 type: 'PRODUCE',
                 event,

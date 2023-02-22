@@ -20,8 +20,9 @@
     },
     "dependencies": {
         "@castore/core": "^1.9.0",
-        "@chute/core": "workspace:*",
         "@chute/cf-runtime": "workspace:*",
+        "@chute/core": "workspace:*",
+        "awilix": "^8.0.0",
         "cf-gcp-auth": "workspace:*",
         "domain-core": "workspace:*",
         "file-storage": "workspace:*",

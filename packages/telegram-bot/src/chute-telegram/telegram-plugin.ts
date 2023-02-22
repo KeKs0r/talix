@@ -46,8 +46,6 @@ export function telegramPlugin(actions: TelegramAction[], options?: TelegramPlug
                 const telegraf = cradle.telegraf
                 const token = cradle.TELEGRAM_BOT_TOKEN
                 ok(token, `Missing TELEGRAM_BOT_TOKEN in the environment`)
-                logger.info('runAction')
-                logger.info((cradle as any)['DOCUMENTS_BUCKET'])
                 await telegraf.handleUpdate(input, { cradle }, token)
                 return { status: 'ok' }
             },
@@ -57,11 +55,9 @@ export function telegramPlugin(actions: TelegramAction[], options?: TelegramPlug
             const bot: Telegraf<TelegrafContext> = app.container.resolve('telegraf')
             bot.on(telegramAction.filter, async (a) => {
                 try {
-                    logger.info('bot.on', a.cradle)
-                    logger.info('app.cradle', app.container.cradle)
                     const cradle = a.cradle
                     ok(cradle, 'Cradle not defined')
-                    logger.info('bot.on', cradle['runAction'])
+                    logger.info(a.updateType, a.update)
                     await cradle.runAction(telegramAction, a)
                 } catch (e) {
                     logger.error(e)

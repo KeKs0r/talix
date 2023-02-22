@@ -25,6 +25,7 @@ function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
 ): Handler<Env> {
     return async (c) => {
         const scope = createScope(chute, c.env, c.executionCtx)
+
         const input = await c.req.json()
         const result = await chute.runAction(action, input, scope)
         return c.json(result)

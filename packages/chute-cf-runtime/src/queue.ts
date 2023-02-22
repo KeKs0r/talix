@@ -3,7 +3,7 @@ import { AwilixContainer } from 'awilix'
 import { Action, Chute } from '@chute/core'
 import { diary } from 'diary'
 
-import { Bindings, Env } from './base-env.types'
+import { Bindings } from './base-env.types'
 import { createScope } from './scope'
 import { CFRuntimeContext } from './runtime-context'
 
@@ -12,10 +12,10 @@ const logger = diary('chute:cf:queue')
 export function createQueue(app: Chute<CFRuntimeContext>) {
     return async function processQueue(
         batch: MessageBatch<MessageBody>,
-        env: Env,
+        env: Bindings,
         ctx: ExecutionContext
     ): Promise<void> {
-        const scope = createScope(app, env.Bindings, ctx)
+        const scope = createScope(app, env, ctx)
         await Promise.all(
             batch.messages.map(async (message) => {
                 logger.info('Message %o', message)
@@ -34,22 +34,6 @@ export function createQueue(app: Chute<CFRuntimeContext>) {
             })
         )
     }
-}
-
-class MessageTypeNotFound extends Error {
-    event: any
-    constructor(message: string, event: any) {
-        super(message)
-        this.event = event
-    }
-}
-
-function isProduceMessage(message: Message<MessageBody>): message is Message<ProduceBody> {
-    return message.body.type === 'PRODUCE'
-}
-
-function isConsumeMessage(message: Message<MessageBody>): message is Message<ConsumeBody> {
-    return message.body.type === 'CONSUME'
 }
 
 export async function fanout(
@@ -72,8 +56,8 @@ export async function fanout(
             })
         )
     } else {
-        console.log('fanout not happening for', message.body.event.type)
-        console.log('only listening to', Object.keys(app.eventMap))
+        logger.info('fanout not happening for', message.body.event.type)
+        logger.info('only listening to', Object.keys(app.eventMap))
     }
 }
 
@@ -89,6 +73,22 @@ export async function handleConsume(
     } else {
         throw Error(`Could not find action: ${actionId}. Found ${typeof action}`)
     }
+}
+
+class MessageTypeNotFound extends Error {
+    event: any
+    constructor(message: string, event: any) {
+        super(message)
+        this.event = event
+    }
+}
+
+function isProduceMessage(message: Message<MessageBody>): message is Message<ProduceBody> {
+    return message.body.type === 'PRODUCE'
+}
+
+function isConsumeMessage(message: Message<MessageBody>): message is Message<ConsumeBody> {
+    return message.body.type === 'CONSUME'
 }
 
 export type ProduceBody = {

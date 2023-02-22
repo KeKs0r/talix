@@ -13,8 +13,8 @@ const logger = diary('chute:app')
 
 export class Chute<C extends BaseContext = BaseContext> {
     // plugins: Array<Plugin> = []
-    aggregates: Record<string, Aggregate> = {}
-    actions: Record<string, Action> = {}
+    registeredAggregates = new Set<string>()
+    registeredActions = new Set<string>()
     container: AwilixContainer<C>
     constructor() {
         this.container = createContainer()
@@ -40,10 +40,15 @@ export class Chute<C extends BaseContext = BaseContext> {
     }
 
     registerAggregate(aggregate: Aggregate) {
-        ok(!this.aggregates[aggregate.name], `Aggregate '${aggregate.name}' is already registered`)
-        this.aggregates[aggregate.name] = aggregate
-
+        ok(
+            !this.registeredAggregates.has(aggregate.name),
+            `Aggregate '${aggregate.name}' is already registered`
+        )
+        logger.debug('registerAggregate', aggregate.name)
+        this.registeredAggregates.add(aggregate.name)
         const container = this.container
+        container.register(aggregate.name, asValue(aggregate))
+
         // aggregate.commands?.forEach((command) => {
         //     container.register(command.commandId, asValue(command))
         // })
@@ -56,8 +61,13 @@ export class Chute<C extends BaseContext = BaseContext> {
     }
 
     registerAction(action: Action) {
-        ok(!this.actions[action.actionId], `Action '${action.actionId}' is already registered`)
-        this.actions[action.actionId] = action
+        ok(
+            !this.registeredActions.has(action.actionId),
+            `Action '${action.actionId}' is already registered`
+        )
+        logger.debug('registerAction', action.actionId)
+        this.registeredActions.add(action.actionId)
+        this.container.register(action.actionId, asValue(action))
         return this
     }
 
@@ -85,7 +95,6 @@ export class Chute<C extends BaseContext = BaseContext> {
         const parentName =
             parentScope?.hasRegistration('parent') && getParentId(parentScope.resolve('parent'))
         logger.info('runAction', parentName, '->', action.actionId)
-        logger.info('runAction', (scope.cradle as any)['DOCUMENTS_BUCKET'])
         const result = await action.handler(input, scope.cradle)
         return result
     }
@@ -110,6 +119,16 @@ export class Chute<C extends BaseContext = BaseContext> {
         // @TODO: no idea how to make the cradle type safe
         const result = await command.handler(input, eventStores, scope.cradle)
         return result
+    }
+
+    get actions(): Array<Action> {
+        const actionIds = Array.from(this.registeredActions)
+        return actionIds.map((actionId) => this.container.resolve(actionId))
+    }
+
+    get aggregates(): Array<Aggregate> {
+        const aggregateNames = Array.from(this.registeredAggregates)
+        return aggregateNames.map((aggregateName) => this.container.resolve(aggregateName))
     }
 
     get eventMap() {

@@ -9,19 +9,19 @@ import {
     DateString,
     createDateString,
 } from 'domain-core'
-import { RuntimeContext } from '@chute/cf-runtime'
 
-import { analyzeExpense } from '../document-ai/analyze-document'
 import { parseResponse } from '../document-ai/fetch-file'
 import { ExpenseResponse } from '../document-ai/model/document.types'
 import { getDateEntity } from '../document-ai/model/expense.types'
 
-export const analyzeCreatedDocumentAction = new EventAction<'OCR:ANALYZE_CREATED_DOCUMENT_ACTION'>({
-    actionId: 'OCR:ANALYZE_CREATED_DOCUMENT_ACTION',
+import { OcrDocumentContext } from './ocr-document-context'
+
+export const analyzeCreatedDocumentAction = new EventAction<'ocr:analyse-uploaded-document'>({
+    actionId: 'ocr:analyse-uploaded-document',
     eventTrigger: documentCreatedEventType.type,
     handler: async (
         event: DocumentCreatedEventTypeDetail,
-        { fileStorage, runCommand }: RuntimeContext
+        { fileStorage, runCommand, documentAnalyzer }: OcrDocumentContext
     ) => {
         const documentId = event.aggregateId
         const { key } = event.payload as DocumentCreatedPayload
@@ -29,7 +29,7 @@ export const analyzeCreatedDocumentAction = new EventAction<'OCR:ANALYZE_CREATED
         ok(file, `Could not find file with key ${key}`)
         const fileInput = await parseResponse(file)
 
-        const prediction = await analyzeExpense(fileInput)
+        const prediction = await documentAnalyzer.analyzeExpense(fileInput)
         const voucherDate = getVoucherDate(prediction)
 
         const input: CreateVoucherInput = {
