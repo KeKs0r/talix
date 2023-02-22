@@ -1,14 +1,23 @@
 import { AwilixContainer, asValue } from 'awilix'
-import { Context } from 'hono'
+import type { Context } from 'hono'
 
 import { Bindings, Env } from './base-env.types'
+import { RuntimeContext } from './runtime-context'
 
-export function createHTTPScope(container: AwilixContainer, ctx: Context<Env, any>) {
-    return createScope(container, ctx.env).register({ req: asValue(ctx.req) })
+type HTTPRuntimeScope = Bindings & RuntimeContext & { req: Context<Env>['req'] }
+
+export function createHTTPScope(
+    container: AwilixContainer<RuntimeContext>,
+    ctx: Context<Env>
+): AwilixContainer<HTTPRuntimeScope> {
+    const scope = createScope(container, ctx.env)
+    const httpScope = scope.register('req', asValue(ctx.req))
+    // I know this is nasty, but imperative APIs are hard to type. Want to expose the correct type
+    return httpScope as unknown as AwilixContainer<HTTPRuntimeScope>
 }
 
-export function createScope(container: AwilixContainer, env: Bindings) {
+export function createScope(container: AwilixContainer<RuntimeContext>, env: Bindings) {
     const entries = Object.entries(env)
     const envContext = Object.fromEntries(entries.map(([key, value]) => [key, asValue(value)]))
-    return container.createScope().register(envContext)
+    return container.createScope<Bindings>().register(envContext)
 }
