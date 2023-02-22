@@ -1,23 +1,19 @@
 import { describe, beforeEach, it, expect } from 'vitest'
+import { asValue } from 'awilix'
 import { Command, GetCommandInput, mockEventStore } from '@chute/core'
 
 import { documentEventStore } from '../document-eventstore'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
-import { RuntimeDependencies } from '../../runtime-deps'
 
 describe.concurrent('Upload Document From Url', () => {
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [])
-    function innerRun(
-        command: Command,
-        input: GetCommandInput<Command>,
-        deps: RuntimeDependencies
-    ) {
+    function runCommand(command: Command, input: GetCommandInput<Command>) {
         return command.handler(input, [mockedDocumentEventStore], deps)
     }
     const deps = makeTestDependencies({
-        innerRun: innerRun as any,
-        generateId: () => '1',
+        runCommand: asValue(runCommand),
+        generateId: asValue(() => '1'),
     })
 
     beforeEach(() => {

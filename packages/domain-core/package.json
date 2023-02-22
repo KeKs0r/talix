@@ -26,6 +26,7 @@
         "@castore/core": "^1.9.0",
         "@castore/zod-event": "^1.9.0",
         "@chute/core": "workspace:*",
+        "awilix": "^8.0.0",
         "diary": "^0.4.3",
         "emittery": "^1.0.1",
         "file-storage": "workspace:*",

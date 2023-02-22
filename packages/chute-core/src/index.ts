@@ -3,7 +3,7 @@ export type { Aggregate } from './chute-app'
 export { Chute } from './chute-app'
 
 export { Command } from './command'
-export type { CommandHandler } from './command'
+export type { CommandHandler, GetCommandInput, GetCommandOutput } from './command'
 export { Action } from './action'
 export { EventAction, isEventAction } from './event-action'
 export { HttpAction, isHttpAction } from './http-action'

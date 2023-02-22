@@ -122,6 +122,7 @@ importers:
       '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
+      awilix: ^8.0.0
       diary: ^0.4.3
       emittery: ^1.0.1
       eslint: ^7.32.0
@@ -136,6 +137,7 @@ importers:
       '@castore/core': 1.9.0
       '@castore/zod-event': 1.9.0_dr5plhbfnicau5f2kow4whrnqi
       '@chute/core': link:../chute-core
+      awilix: 8.0.0
       diary: 0.4.3
       emittery: 1.0.1
       file-storage: link:../file-storage
