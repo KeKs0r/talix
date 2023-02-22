@@ -1,12 +1,14 @@
-import { EventType } from '@castore/core'
+import { $Contravariant, EventType } from '@castore/core'
 
 import { Action } from './action'
+import { BaseContext } from './base-context'
 
 export class EventAction<
     Id extends string = string,
     Type extends EventType = EventType,
-    Context = any
-> extends Action<Id, Event, void, Context> {
+    Context extends BaseContext = BaseContext,
+    $C = $Contravariant<Context, BaseContext>
+> extends Action<Id, Event, void, Context, $C> {
     readonly eventTrigger: Type['type']
     constructor({
         actionId,
@@ -14,7 +16,7 @@ export class EventAction<
         eventTrigger,
     }: {
         actionId: Id
-        handler: (event: NonNullable<Type['_types']>['detail'], deps: Context) => void
+        handler: (event: NonNullable<Type['_types']>['detail'], deps: $C) => void
         eventTrigger: Type['type']
     }) {
         super({ actionId, handler })

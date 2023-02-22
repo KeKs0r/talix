@@ -1,9 +1,9 @@
 import { AwilixContainer, asValue } from 'awilix'
 import { Context } from 'hono'
 
-import { Bindings, Env } from '../env.types'
+import { Bindings, Env } from './base-env.types'
 
-export function createHTTPScope(container: AwilixContainer, ctx: Context<string, Env, any>) {
+export function createHTTPScope(container: AwilixContainer, ctx: Context<Env, any>) {
     return createScope(container, ctx.env).register({ req: asValue(ctx.req) })
 }
 

@@ -4,6 +4,7 @@ import Emittery from 'emittery'
 
 import { EventStore } from '../event-store'
 import { EventAction } from '../event-action'
+import { BaseContext } from '../base-context'
 
 export const pushEventMock = vi.fn()
 export const getEventsMock = vi.fn()
@@ -107,8 +108,11 @@ export const countersReducer = (
 export const counterCreatedAction = new EventAction({
     actionId: 'COUNTER_CREATED_ACTION',
     eventTrigger: 'COUNTER:COUNTER_CREATED',
-    handler(event: typeof counterCreatedEvent, deps: (e: typeof counterCreatedEvent) => void) {
-        deps(event)
+    handler(
+        event: typeof counterCreatedEvent,
+        deps: BaseContext & { spy: (e: typeof counterCreatedEvent) => void }
+    ) {
+        deps.spy(event)
     },
 })
 

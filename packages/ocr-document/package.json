@@ -21,6 +21,7 @@
     "dependencies": {
         "@castore/core": "^1.9.0",
         "@chute/core": "workspace:*",
+        "@chute/cf-runtime": "workspace:*",
         "cf-gcp-auth": "workspace:*",
         "domain-core": "workspace:*",
         "file-storage": "workspace:*",

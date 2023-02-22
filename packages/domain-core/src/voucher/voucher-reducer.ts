@@ -30,7 +30,7 @@ export const voucherReducer: Reducer<VoucherAggregate, VoucherEventDetails> = (
         }
 
         default:
-            console.log('default case')
+            console.log('voucher-reducer', 'default case')
             return voucherAggregate
     }
 }

@@ -14,3 +14,6 @@ export {
 } from './filters'
 
 export type { Update } from './core/types/typegram'
+
+export type { NarrowedContext } from './context'
+export { Context } from './context'

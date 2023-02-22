@@ -1,13 +1,12 @@
 import { unstable_dev } from 'wrangler'
 import type { UnstableDevWorker } from 'wrangler'
 import { describe, expect, it, beforeAll, afterAll } from 'vitest'
-import ok from 'tiny-invariant'
 
 describe.skip('Worker', () => {
     let worker: UnstableDevWorker
 
     beforeAll(async () => {
-        ok(process.env['TELEGRAM_BOT_TOKEN'], 'TELEGRAM_BOT_TOKEN is not set in env (beforeAll)')
+        expect(process.env).toHaveProperty('TELEGRAM_BOT_TOKEN')
         worker = await unstable_dev('src/index.ts', {
             vars: {
                 TELEGRAM_BOT_TOKEN: process.env['TELEGRAM_BOT_TOKEN'],

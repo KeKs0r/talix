@@ -30,7 +30,6 @@ export type FilteredContext<
     : NarrowedContext<Ctx, Guarded<Filter>>
 
 export class Context<U extends Deunionize<tg.Update> = tg.Update> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly state: Record<string | symbol, any> = {}
 
     constructor(
@@ -49,13 +48,6 @@ export class Context<U extends Deunionize<tg.Update> = tg.Update> {
 
     get me() {
         return this.botInfo?.username
-    }
-
-    /**
-     * @deprecated Use ctx.telegram instead
-     */
-    get tg() {
-        return this.telegram
     }
 
     get message() {

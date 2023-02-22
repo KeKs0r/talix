@@ -1,32 +1,29 @@
-import { Command, GetCommandInput, GetCommandOutput } from '@chute/core'
+import { createContainer, asClass, asValue, AwilixContainer } from 'awilix'
+import { Command, GetCommandInput } from '@chute/core'
 import { MockFileStorage } from 'file-storage'
-
-import { RuntimeDependencies } from '../../runtime-deps'
+import { RuntimeContext } from '@chute/cf-runtime'
 
 export function makeTestDependencies(
-    overwrite?: Partial<RuntimeDependencies> & {
-        innerRun<C extends Command>(
-            command: C,
-            input: GetCommandInput<C>,
-            deps: RuntimeDependencies
-        ): GetCommandOutput<C>
+    overwrite?: Parameters<AwilixContainer['register']>[0]
+): RuntimeContext {
+    const container = createContainer<RuntimeContext>()
+    container.register('fileStorage', asClass(MockFileStorage))
+    container.register(
+        'generateId',
+        asValue(() => `${Math.round(Math.random() * 99999999)}`)
+    )
+    function runCommand<C extends Command>(command: C, input: GetCommandInput<C>) {
+        const stores = command.requiredEventStores.map((s) => container.resolve(s.eventStoreId))
+        return command.handler(input, stores, container.cradle)
     }
-): RuntimeDependencies {
-    const fileStorage = new MockFileStorage()
-    const generateId = () => `${Math.round(Math.random() * 99999999)}`
-
-    const deps: any = {
-        fileStorage,
-        generateId,
-        ...overwrite,
+    function runAction() {
+        throw new Error('Not implemented')
+    }
+    container.register('runCommand', asValue(runCommand))
+    container.register('runAction', asValue(runAction))
+    if (overwrite) {
+        container.register(overwrite)
     }
 
-    function run<C extends Command>(command: C, input: GetCommandInput<C>) {
-        return overwrite?.innerRun
-            ? overwrite.innerRun(command, input, deps)
-            : command.run(input, deps)
-    }
-    deps.run = run
-
-    return deps as RuntimeDependencies
+    return container.cradle
 }

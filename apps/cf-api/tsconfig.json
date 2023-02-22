@@ -1,7 +1,7 @@
 {
     "compilerOptions": {},
     "extends": "tsconfig/worker.json",
-    "exclude": ["node_modules"],
+    "exclude": ["node_modules", "repl/archive"],
     "files": [],
     "include": ["src", "repl"],
     "references": []

@@ -2,8 +2,7 @@ import { diary } from 'diary'
 import { HttpAction, isHttpAction, Chute } from '@chute/core'
 import { Handler, Hono } from 'hono'
 
-import { Env } from '../env.types'
-
+import { Env } from './base-env.types'
 import { createHTTPScope } from './util'
 
 const logger = diary('cf:runtime:http')
@@ -19,11 +18,11 @@ export function createHTTPActions(chute: Chute) {
     return hono
 }
 
-function wrapHTTPAction(action: HttpAction, chute: Chute): Handler<string, Env> {
+function wrapHTTPAction(action: HttpAction, chute: Chute): Handler<Env> {
     return async (c) => {
         const scope = createHTTPScope(chute.container, c)
         const input = await c.req.json()
-        const result = await action.handler(input, scope.cradle)
+        const result = await chute.runAction(action, input, scope)
         return c.json(result)
     }
 }

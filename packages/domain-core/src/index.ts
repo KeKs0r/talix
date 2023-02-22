@@ -1,5 +1,4 @@
 export * from './shared/base-schema'
 export { createDateString } from './shared/date.types'
-export type { RuntimeDependencies } from './runtime-deps'
 export * from './document'
 export * from './voucher'
