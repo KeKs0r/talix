@@ -35,6 +35,7 @@
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
         "telegram-bot": "workspace:*",
-        "@chute/cf-runtime": "workspace:*"
+        "@chute/cf-runtime": "workspace:*",
+        "ocr-document": "workspace:*"
     }
 }

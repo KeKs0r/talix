@@ -1,7 +1,6 @@
-import { subtle } from 'crypto'
-
 import { Base64 } from 'js-base64'
 
+// @ts-ignore
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 const extractable = process.env.NODE_ENV === 'test'
 
@@ -43,7 +42,7 @@ export async function getJWTFromServiceAccount(sa: ServiceAccount, { aud }: Toke
     const textEncoder = new TextEncoder()
     const inputArrayBuffer = textEncoder.encode(`${header}.${payload}`)
 
-    const outputArrayBuffer = await subtle.sign(
+    const outputArrayBuffer = await crypto.subtle.sign(
         { name: 'RSASSA-PKCS1-v1_5' },
         privateKey,
         inputArrayBuffer
@@ -66,7 +65,7 @@ export function importPrivateKey(pem: string) {
         },
     }
 
-    return subtle.importKey('pkcs8', buffer, algorithm, extractable, ['sign'])
+    return crypto.subtle.importKey('pkcs8', buffer, algorithm, extractable, ['sign'])
 }
 
 function getPemContent(rawPem: string) {

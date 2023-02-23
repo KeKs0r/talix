@@ -3,7 +3,7 @@ import { HttpAction, isHttpAction, Chute } from '@chute/core'
 import { Handler, Hono } from 'hono'
 
 import { Env } from './base-env.types'
-import { createHTTPScope } from './util'
+import { createScope } from './scope'
 import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:http')
@@ -24,7 +24,8 @@ function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
     chute: Chute<C>
 ): Handler<Env> {
     return async (c) => {
-        const scope = createHTTPScope(chute.container, c)
+        const scope = createScope(chute, c.env, c.executionCtx)
+
         const input = await c.req.json()
         const result = await chute.runAction(action, input, scope)
         return c.json(result)

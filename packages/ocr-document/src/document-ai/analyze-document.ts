@@ -1,5 +1,4 @@
-import assert from 'assert'
-
+import ok from 'tiny-invariant'
 import { ServiceAccount, getJWTFromServiceAccount } from 'cf-gcp-auth'
 
 import { ExpenseResponse } from './model/document.types'
@@ -21,41 +20,40 @@ function isUrlInput(input: AnalyzeInput): input is UrlInput {
     return Boolean((input as UrlInput).url)
 }
 
-export async function analyzeExpense(input: AnalyzeInput) {
-    const [{ base64, type }, token] = await Promise.all([
-        isUrlInput(input) ? fetchFile(input.url) : input,
-        getToken(),
-    ])
-    const request = {
-        rawDocument: {
-            content: base64,
-            mimeType: type,
-        },
+export class DocumentAnalyzer {
+    serviceAccount: ServiceAccount
+    tokenPromise?: Promise<string>
+    constructor({ GCP_SERVICE_ACCOUNT_JSON }: { GCP_SERVICE_ACCOUNT_JSON: string }) {
+        ok(GCP_SERVICE_ACCOUNT_JSON, 'GCP_SERVICE_ACCOUNT_JSON env is required')
+        this.serviceAccount = JSON.parse(GCP_SERVICE_ACCOUNT_JSON)
     }
-    const res = await fetch(expenseProcessor, {
-        method: 'POST',
-        body: JSON.stringify(request),
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-    return res.json() as Promise<ExpenseResponse>
-}
 
-let token: Promise<string>
-
-async function getToken() {
-    if (!token) {
-        token = getJWTFromServiceAccount(getServiceAccount(), {
-            aud: 'https://documentai.googleapis.com/',
+    getToken() {
+        if (!this.tokenPromise) {
+            this.tokenPromise = getJWTFromServiceAccount(this.serviceAccount, {
+                aud: 'https://documentai.googleapis.com/',
+            })
+        }
+        return this.tokenPromise
+    }
+    async analyzeExpense(input: AnalyzeInput) {
+        const [{ base64, type }, token] = await Promise.all([
+            isUrlInput(input) ? fetchFile(input.url) : input,
+            this.getToken(),
+        ])
+        const request = {
+            rawDocument: {
+                content: base64,
+                mimeType: type,
+            },
+        }
+        const res = await fetch(expenseProcessor, {
+            method: 'POST',
+            body: JSON.stringify(request),
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         })
+        return res.json() as Promise<ExpenseResponse>
     }
-    return token
-}
-
-function getServiceAccount() {
-    const env = process.env.GCP_SERVICE_ACCOUNT_JSON
-    assert(env, 'GCP_SERVICE_ACCOUNT_JSON not available')
-    const sa = JSON.parse(env)
-    return sa
 }

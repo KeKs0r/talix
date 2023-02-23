@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import { importPrivateKey } from './get-jwt-from-sa'
 
@@ -16,10 +16,18 @@ oiiTa77QXUhQY12mSKAMn1aUK10GRwIgU/+scWe64dWIkodZRorlYjLtJYsjNikR
 5MjzJijoE1s=
 -----END PRIVATE KEY-----`
 
+/**
+ * This environment thing is tricky, not sure how to
+ */
 describe.concurrent('JWT GCP Auth', () => {
+    beforeAll(() => {
+        // @ts-ignore
+        globalThis.crypto = crypto
+    })
     it('Can generate a token the same way as crypto module', async () => {
         const privKey = await importPrivateKey(sa_private_key)
 
+        const crypto = (globalThis as any).crypto as Crypto
         const asJWK = await crypto.subtle.exportKey('jwk', privKey)
 
         // compare with doing it directly with the crypto module
