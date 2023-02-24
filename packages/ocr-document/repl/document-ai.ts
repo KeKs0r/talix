@@ -1,12 +1,15 @@
 /// <reference lib="dom" />
 import { join } from 'path'
 import fs from 'fs/promises'
+import crypto from 'crypto'
+import { statSync } from 'fs'
 
 import { getJWTFromServiceAccount, ServiceAccount } from 'cf-gcp-auth'
 
-const filePath = join(__dirname, './data/IMG_4723.jpg')
+const filePath = join(__dirname, './data/Rechnung_RE0053.pdf')
 
 async function main() {
+    ;(globalThis as any).crypto = crypto
     await callWithHTTP()
 }
 
@@ -25,10 +28,12 @@ async function callWithHTTP() {
 
     // Convert the image data to a Buffer and base64 encode it.
     const encodedImage = Buffer.from(imageFile).toString('base64')
+
     const request = {
         rawDocument: {
             content: encodedImage,
-            mimeType: 'image/jpeg',
+            // mimeType: 'image/jpeg',
+            mimeType: 'application/pdf',
         },
     }
     const res = await fetch(endpoint, {
@@ -41,10 +46,7 @@ async function callWithHTTP() {
     try {
         const json = await res.json()
         console.log('document-ai', json)
-        await fs.writeFile(
-            join(__dirname, './data/document-ai.json'),
-            JSON.stringify(json, null, 4)
-        )
+        await fs.writeFile(join(__dirname, './data/fivekit.json'), JSON.stringify(json, null, 4))
     } catch (e) {
         console.error(e)
     }

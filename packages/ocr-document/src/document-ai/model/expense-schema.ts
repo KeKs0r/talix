@@ -19,12 +19,13 @@ export const ExpenseFieldNames = z.enum([
     'line_item/amount',
     'line_item/description',
     'line_item/product_code',
+    'line_item/quantity',
 ])
 
 export const BaseEntitySchema = z.object({
     textAnchor: z.unknown(),
     // type: ExpenseFieldNames,
-    mentionText: z.string(),
+    mentionText: z.string().optional(),
     confidence: z.number().min(0).max(1),
     pageAnchor: z.unknown(),
     id: z.string(),
@@ -63,21 +64,13 @@ function isDateEntity(entity: ExpenseEntity): entity is DateEntity {
 export const TextFieldNameSchema = z.enum(['supplier_name', 'supplier_address', 'supplier_city'])
 export const TextEntitySchema = BaseEntitySchema.extend({
     type: TextFieldNameSchema,
-    normalizedValue: z.object({
-        text: z.string(),
-        datetimeValue: z.object({
-            hours: z.number(),
-            minutes: z.number(),
-            seconds: z.number(),
-        }),
-    }),
 })
 
 export const TimeFieldNameSchema = z.enum(['purchase_time'])
 export const TimeEntitySchema = BaseEntitySchema.extend({
     type: TimeFieldNameSchema,
     normalizedValue: z.object({
-        text: z.string(),
+        text: z.string().optional(),
         datetimeValue: z.object({
             hours: z.number(),
             minutes: z.number(),
@@ -111,15 +104,18 @@ export const CurrencyValueEntitySchema = BaseEntitySchema.extend({
 const CurrencyUnitFieldNameSchema = z.enum(['currency'])
 const CurrencyUnitEntitySchema = BaseEntitySchema.extend({
     type: CurrencyUnitFieldNameSchema,
-    normalizedValue: z.object({
-        text: z.literal('EUR').or(z.string()),
-    }),
+    normalizedValue: z
+        .object({
+            text: z.literal('EUR').or(z.string()),
+        })
+        .optional(),
 })
 
 const LineItemFieldNameSchema = z.enum([
     'line_item/description',
     'line_item/amount',
     'line_item/product_code',
+    'line_item/quantity',
 ])
 export const LineItemPropertyEntitySchema = BaseEntitySchema.extend({
     type: LineItemFieldNameSchema,

@@ -11,6 +11,7 @@ import { createDocumentCommand } from './document-create-command'
 const logger = diary('documents:upload-from-url')
 
 const uploadDocumentFromUrlActionSchema = z.object({
+    mimeType: z.string(),
     fileName: z.string().optional(),
     hash: z.string().optional(),
     url: z.string(),
@@ -24,7 +25,7 @@ export const uploadDocumentFromUrlAction = new Action({
         input: UploadDocumentActionInput,
         { runCommand, fileStorage, generateId }: RuntimeContext
     ) {
-        const { fileName, url, hash } = uploadDocumentFromUrlActionSchema.parse(input)
+        const { fileName, url, hash, mimeType } = uploadDocumentFromUrlActionSchema.parse(input)
 
         const name = fileName || basename(url)
         const id = generateId()
@@ -37,7 +38,11 @@ export const uploadDocumentFromUrlAction = new Action({
         }
         const bodyStream = response.body
         ok(bodyStream, `Bodystream not available for ${url}`)
-        const fileUrl = await fileStorage.put(key, bodyStream as any)
+        const fileUrl = await fileStorage.put(key, bodyStream as any, {
+            httpMetadata: {
+                contentType: mimeType,
+            },
+        })
 
         await runCommand(createDocumentCommand, {
             aggregateId: id,

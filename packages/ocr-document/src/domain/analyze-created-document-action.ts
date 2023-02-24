@@ -1,5 +1,6 @@
 import ok from 'tiny-invariant'
 import { EventAction } from '@chute/core'
+import { diary } from 'diary'
 import {
     documentCreatedEventType,
     DocumentCreatedEventTypeDetail,
@@ -10,11 +11,13 @@ import {
     createDateString,
 } from 'domain-core'
 
-import { parseResponse } from '../document-ai/fetch-file'
-import { ExpenseResponseSchema, ExpenseResponse } from '../document-ai/model/document-schema'
+import { ExpenseSuccessResponse, isSuccessResponse } from '../document-ai/model/document-schema'
 import { getDateEntity } from '../document-ai/model/expense-schema'
+import { arrayBufferToBase64 } from '../document-ai/fetch-file'
 
 import { OcrDocumentContext } from './ocr-document-context'
+
+const logger = diary('ocr:analyze-created-document')
 
 export const analyzeCreatedDocumentAction = new EventAction<'ocr:analyse-uploaded-document'>({
     actionId: 'ocr:analyse-uploaded-document',
@@ -27,22 +30,30 @@ export const analyzeCreatedDocumentAction = new EventAction<'ocr:analyse-uploade
         const { key } = event.payload as DocumentCreatedPayload
         const file = await fileStorage.get(key)
         ok(file, `Could not find file with key ${key}`)
-        const fileInput = await parseResponse(file)
+        const buffer = await file.arrayBuffer()
+        const base64 = arrayBufferToBase64(buffer)
+        const type = file.httpMetadata?.contentType
+        ok(type, `Could not find content type for file with key ${key}`)
 
-        const prediction = await documentAnalyzer.analyzeExpense(fileInput)
-        const voucherDate = getVoucherDate(prediction)
+        const prediction = await documentAnalyzer.analyzeExpense({ base64, type })
 
-        const input: CreateVoucherInput = {
-            creditOrDebit: 'DEBIT',
-            vatTaxType: 'EU',
-            documentId: documentId,
-            voucherDate,
+        if (isSuccessResponse(prediction)) {
+            const voucherDate = getVoucherDate(prediction)
+
+            const input: CreateVoucherInput = {
+                creditOrDebit: 'DEBIT',
+                vatTaxType: 'EU',
+                documentId: documentId,
+                voucherDate,
+            }
+            await runCommand(createVoucherCommand, input)
+        } else {
+            logger.warn('Document analysis failed', { documentId })
         }
-        await runCommand(createVoucherCommand, input)
     },
 })
 
-function getVoucherDate(prediction: ExpenseResponse): DateString | undefined {
+function getVoucherDate(prediction: ExpenseSuccessResponse): DateString | undefined {
     const entities = prediction.document.entities
     const entity =
         getDateEntity(entities, 'receipt_date') ||

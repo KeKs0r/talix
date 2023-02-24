@@ -8,9 +8,12 @@
         "lint": "eslint",
         "test": "vitest run --passWithNoTests ",
         "test:watch": "vitest",
-        "type-check": "tsc --noEmit"
+        "type-check": "tsc --noEmit",
+        "repl": "vite-node",
+        "repl:env": "doppler run -- vite-node"
     },
     "devDependencies": {
+        "@cloudflare/workers-types": "^4.20221111.1",
         "@types/node": "^18.11.18",
         "eslint": "^7.32.0",
         "eslint-config-custom": "workspace:*",
@@ -24,6 +27,7 @@
         "@chute/core": "workspace:*",
         "awilix": "^8.0.0",
         "cf-gcp-auth": "workspace:*",
+        "diary": "^0.4.3",
         "domain-core": "workspace:*",
         "file-storage": "workspace:*",
         "js-base64": "^3.7.4",

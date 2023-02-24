@@ -1,7 +1,11 @@
 import ok from 'tiny-invariant'
 import { ServiceAccount, getJWTFromServiceAccount } from 'cf-gcp-auth'
 
-import { ExpenseResponseSchema } from './model/document-schema'
+import {
+    isSuccessResponse,
+    ExpenseSuccessResponseSchema,
+    ExpenseErrorResponse,
+} from './model/document-schema'
 import { fetchFile } from './fetch-file'
 
 const expenseProcessor =
@@ -55,6 +59,9 @@ export class DocumentAnalyzer {
             },
         })
         const json = await res.json()
-        return ExpenseResponseSchema.parse(json)
+        if (isSuccessResponse(json as any)) {
+            return ExpenseSuccessResponseSchema.parse(json)
+        }
+        return ExpenseErrorResponse.parse(json)
     }
 }

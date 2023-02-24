@@ -44,9 +44,9 @@ export function createFileStorage({
                 key,
             }
         },
-        get: async (key: string): Promise<Blob> => {
+        get: async (key: string) => {
             const resp = await client.fetch(`${R2_URL}/${bucketName}/${key}`)
-            return resp.blob() as Blob
+            return resp
         },
     }
 }
