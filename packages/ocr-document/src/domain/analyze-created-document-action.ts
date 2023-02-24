@@ -11,8 +11,8 @@ import {
 } from 'domain-core'
 
 import { parseResponse } from '../document-ai/fetch-file'
-import { ExpenseResponse } from '../document-ai/model/document.types'
-import { getDateEntity } from '../document-ai/model/expense.types'
+import { ExpenseResponseSchema, ExpenseResponse } from '../document-ai/model/document-schema'
+import { getDateEntity } from '../document-ai/model/expense-schema'
 
 import { OcrDocumentContext } from './ocr-document-context'
 

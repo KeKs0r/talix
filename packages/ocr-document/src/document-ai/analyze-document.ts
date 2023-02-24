@@ -1,7 +1,7 @@
 import ok from 'tiny-invariant'
 import { ServiceAccount, getJWTFromServiceAccount } from 'cf-gcp-auth'
 
-import { ExpenseResponse } from './model/document.types'
+import { ExpenseResponseSchema } from './model/document-schema'
 import { fetchFile } from './fetch-file'
 
 const expenseProcessor =
@@ -54,6 +54,7 @@ export class DocumentAnalyzer {
                 Authorization: `Bearer ${token}`,
             },
         })
-        return res.json() as Promise<ExpenseResponse>
+        const json = await res.json()
+        return ExpenseResponseSchema.parse(json)
     }
 }

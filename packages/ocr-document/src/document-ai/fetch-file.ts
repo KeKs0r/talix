@@ -16,6 +16,16 @@ interface PartialBlob {
 export async function parseResponse(blob: PartialBlob) {
     const type = blob.type
     const buffer = await blob.arrayBuffer()
-    const base64 = Buffer.from(buffer).toString('base64')
+    const base64 = arrayBufferToBase64(buffer)
     return { type, base64 }
+}
+
+function arrayBufferToBase64(arrayBuffer: ArrayBuffer) {
+    let binary = ''
+    const bytes = new Uint8Array(arrayBuffer)
+    const len = bytes.byteLength
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i])
+    }
+    return btoa(binary)
 }
