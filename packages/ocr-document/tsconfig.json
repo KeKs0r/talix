@@ -1,5 +1,5 @@
 {
-    "extends": "tsconfig/node.json",
+    "extends": "tsconfig/worker.json",
     "compilerOptions": {
         "module": "commonjs",
         "esModuleInterop": true

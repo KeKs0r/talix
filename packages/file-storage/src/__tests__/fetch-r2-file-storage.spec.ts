@@ -25,7 +25,7 @@ describe.concurrent(
         ;(globalThis as any).crypto = crypto
         it('Can get existing File', async () => {
             const file = await storage.get('rolling-dog.gif')
-            expect(file.type).toBe('image/gif')
+            expect(file.headers.get('content-type')).toBe('image/gif')
         })
 
         it('Can Upload File', async () => {
@@ -34,7 +34,7 @@ describe.concurrent(
                 contentType: 'application/json',
             })
             const file = await storage.get(key)
-            expect(file.type).toBe('application/json')
+            expect(file.headers.get('content-type')).toBe('application/json')
             const content = await file.text()
             expect(content).toBe(JSON.stringify({ hello: 'world' }))
         })

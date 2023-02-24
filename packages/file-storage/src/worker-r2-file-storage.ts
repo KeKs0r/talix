@@ -1,6 +1,6 @@
 import type { R2Bucket, ReadableStream, Blob } from '@cloudflare/workers-types'
 
-import { FileStorage } from './file-storage'
+import { FileStorage, PutOptions } from './file-storage'
 
 export class R2FileStorage extends FileStorage {
     bucket: R2Bucket
@@ -8,8 +8,8 @@ export class R2FileStorage extends FileStorage {
         super()
         this.bucket = bucket
     }
-    async put(key: string, value: ReadableStream<any> | string | Blob) {
-        const file = await this.bucket.put(key, value as any)
+    async put(key: string, value: ReadableStream<any> | string | Blob, options?: PutOptions) {
+        const file = await this.bucket.put(key, value as any, options)
         return {
             key: file.key,
         }
@@ -19,6 +19,6 @@ export class R2FileStorage extends FileStorage {
         if (!response) {
             return null
         }
-        return response.blob()
+        return response
     }
 }

@@ -133,6 +133,15 @@ export class Chute<C extends BaseContext = BaseContext> {
 
     get eventMap() {
         const eventActions = Object.values(this.actions).filter(isEventAction)
+        logger.info(
+            'Actions',
+            this.actions.map((a) => a.actionId)
+        )
+        logger.info(
+            'EventActions',
+            this.actions.filter(isEventAction).map((a) => a.actionId)
+        )
+        logger.info('Registered', this.registeredActions)
         const eventMap = eventActions.reduce((acc: Record<string, string[]>, action) => {
             if (!acc[action.eventTrigger]) {
                 acc[action.eventTrigger] = []

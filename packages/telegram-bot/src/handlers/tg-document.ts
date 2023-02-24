@@ -23,12 +23,18 @@ export const DocumentUploadAction = new TelegramAction({
         logger.info('url', link)
         logger.info('unique id', document.file_unique_id)
         logger.info('file id', document.file_id)
+        logger.info('mime_type', document.mime_type)
+        if (!document.mime_type) {
+            logger.warn('Cant upload without mime_type')
+            await ctx.reply('No mime type on file')
+            return
+        }
 
-        debugger
         const result = await deps.runAction(uploadDocumentFromUrlAction, {
             url: link,
             fileName,
             hash: document.file_unique_id,
+            mimeType: document.mime_type,
         })
         logger.info('result', result)
         await ctx.reply('Document uploaded')

@@ -24,6 +24,7 @@ describe.concurrent('Upload Document From Url', () => {
         const { documentId } = await uploadDocumentFromUrlAction.handler(
             {
                 url: 'https://www.laserfocus.io/bitcoin.pdf',
+                mimeType: 'application/pdf',
             },
             deps
         )
@@ -56,7 +57,7 @@ describe.concurrent('Upload Document From Url', () => {
     it('Upload Document Command fails, if the url is not accessible', async () => {
         expect(
             uploadDocumentFromUrlAction.handler(
-                { url: 'https://www.google.com/i-dont-exist.pdf' },
+                { url: 'https://www.google.com/i-dont-exist.pdf', mimeType: 'application/pdf' },
                 deps
             )
         ).rejects.toThrow('Document could not be fetched')
