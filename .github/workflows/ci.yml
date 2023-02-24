@@ -33,6 +33,7 @@ jobs:
     # deploy:
     #     runs-on: ubuntu-latest
     #     if: ${{ github.event_name  == 'push' }}
+    #     if: ${{ github.ref == 'refs/heads/main' }}
     #     needs: [CI]
     #     environment:
     #         name: deploy
