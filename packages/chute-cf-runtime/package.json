@@ -15,6 +15,7 @@
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20221111.1",
+        "esbuild": "^0.17.10",
         "eslint": "^7.32.0",
         "eslint-config-custom": "workspace:*",
         "miniflare": "^2.12.1",
