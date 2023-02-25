@@ -20,10 +20,8 @@ export function createQueue(app: Chute<CFRuntimeContext>) {
             batch.messages.map(async (message) => {
                 logger.info('Message %o', message)
                 if (isProduceMessage(message)) {
-                    logger.info('Starting fanout')
                     await fanout(message, app, scope)
                 } else if (isConsumeMessage(message)) {
-                    logger.info('IsConsumeMessage')
                     await handleConsume(message, app, scope)
                 } else {
                     throw new MessageTypeNotFound(

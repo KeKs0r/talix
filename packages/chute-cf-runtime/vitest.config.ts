@@ -1,3 +1,17 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config'
 
-export default defineConfig({});
+export default defineConfig({
+    test: {
+        environment: 'miniflare',
+        // Configuration is automatically loaded from `.env`, `package.json` and
+        // `wrangler.toml` files by default, but you can pass any additional Miniflare
+        // API options here:
+        environmentOptions: {
+            modules: true,
+            scriptPath: 'dist/test.js',
+            durableObjects: {
+                DURABLE_ENTITY: 'DurableEntity',
+            },
+        },
+    },
+})

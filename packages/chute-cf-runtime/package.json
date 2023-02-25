@@ -6,8 +6,10 @@
     "license": "MIT",
     "scripts": {
         "lint": "eslint",
-        "test": "vitest run --passWithNoTests",
-        "test:watch": "vitest",
+        "test:build": "esbuild src/__tests__/index.ts --bundle --format=esm --outfile=dist/test.js",
+        "test:run": "NODE_OPTIONS=--experimental-vm-modules vitest run",
+        "test": "pnpm test:build && pnpm test:run",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest",
         "type-check": "tsc --noEmit",
         "repl": "node -r ts-node/register"
     },
@@ -15,9 +17,11 @@
         "@cloudflare/workers-types": "^4.20221111.1",
         "eslint": "^7.32.0",
         "eslint-config-custom": "workspace:*",
+        "miniflare": "^2.12.1",
         "tsconfig": "workspace:*",
         "typescript": "^4.9.4",
-        "vitest": "^0.25.6"
+        "vitest": "^0.25.6",
+        "vitest-environment-miniflare": "^2.12.1"
     },
     "dependencies": {
         "@castore/core": "^1.9.0",
