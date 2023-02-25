@@ -1,6 +1,6 @@
 import { Message, MessageBatch, ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
-import { Action, Chute } from '@chute/core'
+import { Action, Chute, matchEventAction } from '@chute/core'
 import { diary } from 'diary'
 
 import { Bindings } from './base-env.types'
@@ -39,14 +39,14 @@ export async function fanout(
     app: Chute,
     container: AwilixContainer<CFRuntimeContext>
 ) {
-    const targets = app.eventMap[message.body.event.type]
-    if (targets) {
+    const targets = matchEventAction(app, message.body.event.type)
+    if (targets.length) {
         const eventQueue = container.resolve('EVENT_QUEUE')
         await Promise.all(
-            targets.map((actionId) => {
+            targets.map((action) => {
                 const consumeMessage: ConsumeBody = {
                     type: 'CONSUME',
-                    actionId,
+                    actionId: action.actionId,
                     event: message.body.event,
                     sourceId: message.id,
                 }
@@ -55,7 +55,7 @@ export async function fanout(
         )
     } else {
         logger.info('fanout not happening for', message.body.event.type)
-        logger.info('only listening to', Object.keys(app.eventMap))
+        // logger.info('only listening to', Object.keys(app.actions))
     }
 }
 

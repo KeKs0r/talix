@@ -130,27 +130,6 @@ export class Chute<C extends BaseContext = BaseContext> {
         const aggregateNames = Array.from(this.registeredAggregates)
         return aggregateNames.map((aggregateName) => this.container.resolve(aggregateName))
     }
-
-    get eventMap() {
-        const eventActions = Object.values(this.actions).filter(isEventAction)
-        logger.info(
-            'Actions',
-            this.actions.map((a) => a.actionId)
-        )
-        logger.info(
-            'EventActions',
-            this.actions.filter(isEventAction).map((a) => a.actionId)
-        )
-        logger.info('Registered', this.registeredActions)
-        const eventMap = eventActions.reduce((acc: Record<string, string[]>, action) => {
-            if (!acc[action.eventTrigger]) {
-                acc[action.eventTrigger] = []
-            }
-            acc[action.eventTrigger].push(action.actionId)
-            return acc
-        }, {})
-        return eventMap
-    }
 }
 
 export interface Aggregate {
