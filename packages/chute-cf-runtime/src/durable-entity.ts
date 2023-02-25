@@ -1,6 +1,9 @@
 import type { EventDetail, EventsQueryOptions } from '@castore/core'
-import type { DurableObjectState, Request } from '@cloudflare/workers-types'
-import type { DurableObjectListOptions } from '@cloudflare/workers-types'
+import type {
+    DurableObjectState,
+    Request,
+    DurableObjectListOptions,
+} from '@cloudflare/workers-types'
 
 import type { Bindings } from './base-env.types'
 
@@ -18,7 +21,10 @@ export class DurableEntity {
         const method = url.searchParams.get('method')
         switch (method) {
             case 'getEvents': {
-                const options = await request.json<EventsQueryOptions | undefined>()
+                const options =
+                    request.method === 'POST'
+                        ? await request.json<EventsQueryOptions | undefined>()
+                        : undefined
                 return new Response(JSON.stringify(await this.getEvents(options)))
             }
             case 'pushEvent': {
@@ -30,7 +36,10 @@ export class DurableEntity {
         return new Response(`Methodnot found: ${method}`, { status: 404 })
     }
     async pushEvent(eventDetail: EventDetail): Promise<{ event: EventDetail }> {
-        await this.state.storage.put(eventDetail.version, eventDetail)
+        const version: number = eventDetail.version
+        const versionKey = getVersionKey(version)
+        //@TODO: check if version already exists
+        await this.state.storage.put(versionKey, eventDetail)
         return {
             event: eventDetail,
         }
@@ -38,7 +47,7 @@ export class DurableEntity {
     async getEvents(options?: EventsQueryOptions | undefined): Promise<{ events: EventDetail[] }> {
         const listOptions = mapOptions(options)
         const events = await this.state.storage.list<EventDetail>(listOptions)
-        const asArray = Object.values(events).sort((a, b) => a.version - b.version)
+        const asArray = Array.from(events.values()).sort((a, b) => a.version - b.version)
         return {
             events: asArray,
         }
@@ -57,4 +66,8 @@ function mapOptions(
         reverse: options.reverse,
         limit: options.limit,
     }
+}
+
+function getVersionKey(version: number) {
+    return `${version}`.padStart(6, '0')
 }

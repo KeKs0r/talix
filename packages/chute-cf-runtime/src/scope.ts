@@ -1,10 +1,13 @@
 import { Chute, EventStore } from '@chute/core'
 import { ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer, asValue } from 'awilix'
+import { diary } from 'diary'
 
 import { Bindings } from './base-env.types'
 import { ProduceBody } from './queue'
 import { CFRuntimeContext, RuntimeContext } from './runtime-context'
+
+const logger = diary('cf:runtime:scope')
 
 export function createScope(
     app: Chute<CFRuntimeContext>,
@@ -35,9 +38,19 @@ export function createStorePublisher(
 ) {
     const eventQueue = scope.resolve('EVENT_QUEUE')
     const execCtx = scope.resolve('execCtx')
-    Object.values(app.aggregates).forEach((agg) => {
+
+    const emitters = Object.values(app.aggregates).map((agg) => {
         const store = app.container.resolve(agg.store.eventStoreId) as EventStore
-        store.emitter.onAny((eventName, event) => {
+        return store.emitter
+    })
+
+    const uniqueEmitters = Array.from(new Set(emitters))
+
+    /**
+     * @TODO: the emitter should be a singleton on the container
+     */
+    uniqueEmitters.forEach((emitter) => {
+        emitter.onAny((eventName, event) => {
             const message: ProduceBody = {
                 type: 'PRODUCE',
                 event,
