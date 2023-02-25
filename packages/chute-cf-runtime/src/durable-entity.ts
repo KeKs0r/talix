@@ -1,6 +1,9 @@
 import type { EventDetail, EventsQueryOptions } from '@castore/core'
-import type { DurableObjectState, Request } from '@cloudflare/workers-types'
-import type { DurableObjectListOptions } from '@cloudflare/workers-types'
+import type {
+    DurableObjectState,
+    Request,
+    DurableObjectListOptions,
+} from '@cloudflare/workers-types'
 
 import type { Bindings } from './base-env.types'
 
@@ -34,7 +37,9 @@ export class DurableEntity {
     }
     async pushEvent(eventDetail: EventDetail): Promise<{ event: EventDetail }> {
         const version: number = eventDetail.version
-        await this.state.storage.put(version.toString(), eventDetail)
+        const versionKey = getVersionKey(version)
+        //@TODO: check if version already exists
+        await this.state.storage.put(versionKey, eventDetail)
         return {
             event: eventDetail,
         }
@@ -61,4 +66,8 @@ function mapOptions(
         reverse: options.reverse,
         limit: options.limit,
     }
+}
+
+function getVersionKey(version: number) {
+    return `${version}`.padStart(6, '0')
 }
