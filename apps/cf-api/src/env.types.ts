@@ -1,4 +1,4 @@
-import { R2Bucket, Queue } from '@cloudflare/workers-types'
+import { R2Bucket, Queue, D1Database } from '@cloudflare/workers-types'
 
 export interface Bindings {
     // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
@@ -12,6 +12,8 @@ export interface Bindings {
     DOCUMENTS_BUCKET: R2Bucket
 
     EVENT_QUEUE: Queue
+
+    DB: D1Database
     TELEGRAM_BOT_TOKEN: string
 }
 

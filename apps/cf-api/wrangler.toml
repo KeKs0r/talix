@@ -30,3 +30,9 @@ new_classes = ["DurableEntity"]
   queue = "talix-event-queue"
   max_batch_size = 1
   max_batch_timeout = 1
+
+[[ d1_databases ]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "default"
+database_id = "9693008c-5582-4966-a69c-02e5d5429658"
+preview_database_id = "a487f610-4a5f-4562-9d46-7b6c291b5312"
