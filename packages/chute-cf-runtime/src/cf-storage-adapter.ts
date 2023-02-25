@@ -71,7 +71,7 @@ export class CfStorageAdapter implements StorageAdapter {
         const id = this.objectNamespace.idFromName(aggregateId)
         const stub = this.objectNamespace.get(id)
 
-        logger.info('Calling', method, 'for', aggregateId, 'with')
+        logger.info('Calling', method, 'for', aggregateId)
         // logger.info('DurableId', id)
         // logger.info('Body', body)
         const result = await stub.fetch(`https://durableobject?method=${method}`, {
