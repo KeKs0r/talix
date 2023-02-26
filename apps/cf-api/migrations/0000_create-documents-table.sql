@@ -2,9 +2,8 @@
 create table "documents" (
     "aggregateId" varchar(26) unique primary key,
     "version" integer,
-    "name" varchar(255),
-    "key" varchar(255),
-    "status" varchar(80),
     "hash" varchar(80),
-    "createdAt" datetime
+    "data" text
 );
+
+CREATE INDEX idx_hash ON "documents" (hash);

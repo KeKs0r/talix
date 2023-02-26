@@ -30,6 +30,7 @@
         "deploy": "NODE_ENV=production wrangler publish",
         "repl": "vite-node",
         "repl:env": "doppler run -- vite-node",
+        "db:reset:local": "rm -rf .wrangler/state/d1 && pnpm db:migrate:local",
         "db:repl:local": "wrangler d1 execute default --local --file=./repl/repl.sql",
         "db:migrate:local": "wrangler d1 migrations apply default --local"
     },
