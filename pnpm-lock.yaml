@@ -151,6 +151,7 @@ importers:
       '@chute/cf-runtime': workspace:*
       '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
+      '@types/lodash-es': ^4.17.6
       '@types/node': ^18.11.18
       awilix: ^8.0.0
       diary: ^0.4.3
@@ -159,6 +160,7 @@ importers:
       eslint-config-custom: workspace:*
       file-storage: workspace:*
       kysely: ^0.23.4
+      lodash-es: ^4.17.21
       tiny-invariant: ^1.3.1
       tsconfig: workspace:*
       typescript: ^4.9.4
@@ -173,12 +175,14 @@ importers:
       diary: 0.4.3
       emittery: 1.0.1
       file-storage: link:../file-storage
+      lodash-es: 4.17.21
       tiny-invariant: 1.3.1
       zod: 3.20.2
     devDependencies:
       '@castore/inmemory-event-storage-adapter': 1.9.0_@castore+core@1.9.0
       '@castore/test-tools': 1.9.0_@castore+core@1.9.0
       '@cloudflare/workers-types': 4.20221111.1
+      '@types/lodash-es': 4.17.6
       '@types/node': 18.11.18
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
@@ -1507,6 +1511,16 @@ packages:
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: false
+
+  /@types/lodash-es/4.17.6:
+    resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
 
   /@types/ms/0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
@@ -3331,6 +3345,10 @@ packages:
     resolution: {integrity: sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==}
     engines: {node: '>=14'}
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
