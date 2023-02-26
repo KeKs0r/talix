@@ -12,10 +12,10 @@ const documentCreatedMetadataSchema = z.object({
 })
 
 export const documentCreatedEventType = new ZodEventType<
-    'DOCUMENTS:DOCUMENT_CREATED',
+    'document:created',
     typeof documentCreatedPayloadSchema
 >({
-    type: 'DOCUMENTS:DOCUMENT_CREATED',
+    type: 'document:created',
     payloadSchema: documentCreatedPayloadSchema,
     metadataSchema: documentCreatedMetadataSchema,
 })

@@ -2,6 +2,8 @@ import { asFunction } from 'awilix'
 import { Chute } from '@chute/core'
 import { ulidFactory } from 'ulid-workers'
 import { R2FileStorage } from 'file-storage'
+import { Kysely } from 'kysely'
+import { D1Dialect } from 'kysely-d1'
 
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'
@@ -25,6 +27,10 @@ export function createCloudflareRuntime<C extends CFRuntimeContext = CFRuntimeCo
     app.container.register(
         'fileStorage',
         asFunction(({ DOCUMENTS_BUCKET }) => new R2FileStorage(DOCUMENTS_BUCKET))
+    )
+    app.container.register(
+        'kysely',
+        asFunction(({ DB }) => new Kysely({ dialect: new D1Dialect({ database: DB }) }))
     )
 
     const hono = createHTTPActions(app)

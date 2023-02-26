@@ -54,9 +54,13 @@ export class Chute<C extends BaseContext = BaseContext> {
         // })
         container.register(aggregate.store.eventStoreId, asValue(aggregate.store))
 
-        // aggregate.events?.forEach((event) => {
-        //     container.register(event.type, asValue(event))
-        // })
+        aggregate.events?.forEach((event) => {
+            // container.register(event.type, asValue(event))
+            ok(
+                event.type.startsWith(aggregate.name),
+                `${event.type} must start with ${aggregate.name}`
+            )
+        })
         return this
     }
 

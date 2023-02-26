@@ -15,7 +15,7 @@ export function getDocumentEventStore({
     emitter: Emittery
 }) {
     return new EventStore({
-        eventStoreId: 'DOCUMENTS',
+        eventStoreId: 'documentEventStore',
         eventStoreEvents: [documentCreatedEventType],
         reduce: documentReducer,
         emitter,
@@ -24,3 +24,4 @@ export function getDocumentEventStore({
 }
 
 export const documentEventStore = getDocumentEventStore({ emitter })
+export type DocumentEventStore = typeof documentEventStore

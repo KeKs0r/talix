@@ -29,14 +29,15 @@
         "test:watch:env": "doppler run -- pnpm test:watch",
         "deploy": "NODE_ENV=production wrangler publish",
         "repl": "vite-node",
-        "repl:env": "doppler run -- vite-node"
+        "repl:env": "doppler run -- vite-node",
+        "db:repl:local": "wrangler d1 execute default --local --file=./repl/repl.sql",
+        "db:migrate:local": "wrangler d1 migrations apply default --local"
     },
     "dependencies": {
         "@chute/cf-runtime": "workspace:*",
         "@chute/core": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
-        "kysely": "^0.23.4",
         "ocr-document": "workspace:*",
         "telegram-bot": "workspace:*"
     }

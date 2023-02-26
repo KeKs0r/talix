@@ -7,7 +7,8 @@ async function main() {
     })
     const q = db.schema
         .createTable('test')
-        .addColumn('id', 'varchar(26)', (col) => col.primaryKey().unique())
+        .addColumn('id', 'varchar(26)')
+        .addColumn('version', '')
         .addColumn('name', 'varchar(255)')
         .addColumn('key', 'varchar(255)')
         .addColumn('status', 'varchar(80)')
