@@ -4,7 +4,6 @@ import { ulidFactory } from 'ulid-workers'
 import { R2FileStorage } from 'file-storage'
 import { Kysely } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
-import Emittery from 'emittery'
 import { $Contravariant } from '@castore/core'
 
 import { createHTTPActions } from './http'
@@ -20,23 +19,19 @@ export function createCloudflareRuntime<
     C extends CFRuntimeContext = CFRuntimeContext,
     $C = $Contravariant<C, CFRuntimeContext>
 >(app: Chute<C>) {
-    app.container.register(
-        'generateId',
-        asFunction(() => ulidFactory())
-    )
+    app.container.register('generateId', asFunction(() => ulidFactory()).singleton())
     app.container.register(
         'storageAdapter',
-        asFunction(({ DURABLE_ENTITY }) => new CfStorageAdapter(DURABLE_ENTITY))
+        asFunction(({ DURABLE_ENTITY }) => new CfStorageAdapter(DURABLE_ENTITY)).singleton()
     )
     app.container.register(
         'fileStorage',
-        asFunction(({ DOCUMENTS_BUCKET }) => new R2FileStorage(DOCUMENTS_BUCKET))
+        asFunction(({ DOCUMENTS_BUCKET }) => new R2FileStorage(DOCUMENTS_BUCKET)).singleton()
     )
     app.container.register(
         'kysely',
-        asFunction(({ DB }) => new Kysely({ dialect: new D1Dialect({ database: DB }) }))
+        asFunction(({ DB }) => new Kysely({ dialect: new D1Dialect({ database: DB }) })).singleton()
     )
-    app.container.register('emitter', asClass(Emittery).scoped())
 
     app.registerAction(dbCheckAction)
 

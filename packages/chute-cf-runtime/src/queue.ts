@@ -31,6 +31,7 @@ export function createQueue<C extends CFRuntimeContext = CFRuntimeContext>(app: 
                 }
             })
         )
+        ctx.waitUntil(scope.dispose())
     }
 }
 

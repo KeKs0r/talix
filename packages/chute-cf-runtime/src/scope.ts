@@ -1,7 +1,8 @@
 import { Chute } from '@chute/core'
 import { ExecutionContext } from '@cloudflare/workers-types'
-import { AwilixContainer, asValue } from 'awilix'
+import { AwilixContainer, asValue, asFunction } from 'awilix'
 import { diary } from 'diary'
+import Emittery from 'emittery'
 
 import { Bindings } from './base-env.types'
 import { ProduceBody } from './queue'
@@ -15,6 +16,8 @@ export function createScope<C extends CFRuntimeContext = CFRuntimeContext>(
     execCtx: ExecutionContext
 ) {
     const scope = app.container.createScope<C>()
+    const emitter = new Emittery()
+    scope.register('emitter', asValue(emitter))
 
     const entries = Object.entries(env)
     entries.forEach(([key, value]) => {
@@ -25,6 +28,8 @@ export function createScope<C extends CFRuntimeContext = CFRuntimeContext>(
 
     scope.register('execCtx', asValue(execCtx))
 
+    createStorePublisher(scope)
+
     return scope
 }
 
@@ -34,7 +39,6 @@ export function createScope<C extends CFRuntimeContext = CFRuntimeContext>(
  * It is then swallowed in the fanout. This is a bit wasteful, but fine for now.
  */
 export function createStorePublisher<C extends CFRuntimeContext = CFRuntimeContext>(
-    app: Chute<C>,
     scope: AwilixContainer<C>
 ) {
     const eventQueue = scope.resolve('EVENT_QUEUE')

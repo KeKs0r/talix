@@ -50,6 +50,9 @@ function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
         }
         const input = await c.req.json()
         const result = await chute.runAction(action, input, scope)
+
+        c.executionCtx.waitUntil(scope.dispose())
+
         return c.json(result)
     }
 }
