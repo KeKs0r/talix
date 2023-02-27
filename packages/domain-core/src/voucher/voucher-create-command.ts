@@ -34,8 +34,6 @@ export const createVoucherCommand = new Command({
         const { documentId, creditOrDebit, vatTaxType, voucherDate } =
             createVoucherCommandInputSchema.parse(commandInput)
 
-        const events = await documentEventStore.getEvents(documentId)
-
         // Just to check that the document exists
         await documentEventStore.getExistingAggregate(documentId)
 

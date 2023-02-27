@@ -1,10 +1,13 @@
+import { BaseContext } from '../base-context'
 import { Chute } from '../chute-app'
 import { HttpAction } from '../http-action'
 
 type HealthCheckOptions = {
     path?: string
 }
-export function healthCheckPlugin(options?: HealthCheckOptions) {
+export function healthCheckPlugin<C extends BaseContext = BaseContext>(
+    options?: HealthCheckOptions
+) {
     const { path = '/health-check' } = options || {}
     const healthCheckAction = new HttpAction({
         actionId: 'chute:core:health-check',
@@ -13,7 +16,7 @@ export function healthCheckPlugin(options?: HealthCheckOptions) {
             return { status: 'ok' }
         },
     })
-    return (app: Chute) => {
+    return (app: Chute<C>) => {
         app.registerAction(healthCheckAction)
     }
 }
