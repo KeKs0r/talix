@@ -7,10 +7,12 @@ import Emittery from 'emittery'
 
 export function makeTestDependencies(
     overwrite?: Parameters<AwilixContainer['register']>[0]
-): RuntimeContext {
+): AwilixContainer<RuntimeContext & { storageAdapter: InMemoryStorageAdapter }> {
     const container = createContainer<RuntimeContext>()
+
     container.register('emitter', asValue(new Emittery()))
-    container.register('storageAdapter', asClass(InMemoryStorageAdapter))
+    const storageAdapter = new InMemoryStorageAdapter()
+    container.register('storageAdapter', asValue(storageAdapter))
     container.register('fileStorage', asClass(MockFileStorage))
     container.register(
         'generateId',
@@ -33,5 +35,5 @@ export function makeTestDependencies(
         container.register('initialEvents', asValue([]))
     }
 
-    return container.cradle
+    return container as AwilixContainer<RuntimeContext & { storageAdapter: InMemoryStorageAdapter }>
 }
