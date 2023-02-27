@@ -1,11 +1,11 @@
-import type { EventDetail, EventsQueryOptions } from '@castore/core'
+import { eventAlreadyExistsErrorCode, EventDetail, EventsQueryOptions } from '@castore/core'
 import type {
     DurableObjectState,
     Request,
     DurableObjectListOptions,
 } from '@cloudflare/workers-types'
 
-import type { Bindings } from './base-env.types'
+import type { Bindings } from '../base-env.types'
 
 export class DurableEntity {
     state: DurableObjectState
@@ -35,10 +35,18 @@ export class DurableEntity {
         }
         return new Response(`Methodnot found: ${method}`, { status: 404 })
     }
-    async pushEvent(eventDetail: EventDetail): Promise<{ event: EventDetail }> {
+    async pushEvent(
+        eventDetail: EventDetail
+    ): Promise<{ event: EventDetail } | { code: typeof eventAlreadyExistsErrorCode }> {
         const version: number = eventDetail.version
         const versionKey = getVersionKey(version)
-        //@TODO: check if version already exists
+        const exists = await this.state.storage.get(versionKey)
+        if (exists) {
+            return {
+                code: eventAlreadyExistsErrorCode,
+            }
+        }
+
         await this.state.storage.put(versionKey, eventDetail)
         return {
             event: eventDetail,

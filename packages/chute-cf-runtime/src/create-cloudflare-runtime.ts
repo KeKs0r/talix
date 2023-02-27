@@ -8,7 +8,7 @@ import { $Contravariant } from '@castore/core'
 
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'
-import { CfStorageAdapter } from './cf-storage-adapter'
+import { CfStorageAdapter } from './storage/cf-storage-adapter'
 import { CFRuntimeContext } from './runtime-context'
 import { dbCheckAction } from './actions/db-check'
 

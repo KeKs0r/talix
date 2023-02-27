@@ -1,6 +1,6 @@
 import { it, expect } from 'vitest'
 
-import { CfStorageAdapter } from '../cf-storage-adapter'
+import { CfStorageAdapter } from '../storage/cf-storage-adapter'
 
 const describe = setupMiniflareIsolatedStorage()
 describe('CF Storage Adapter', () => {

@@ -1,4 +1,4 @@
-import type {
+import {
     Aggregate,
     EventsQueryOptions,
     ListAggregateIdsOptions,
@@ -6,6 +6,8 @@ import type {
     PushEventContext,
     StorageAdapter,
     EventDetail,
+    isEventAlreadyExistsError,
+    eventAlreadyExistsErrorCode,
 } from '@castore/core'
 import {
     GetLastSnapshotOptions,
@@ -15,6 +17,7 @@ import type { DurableObjectNamespace } from '@cloudflare/workers-types'
 import { diary } from 'diary'
 
 import type { DurableEntity } from './durable-entity'
+import { EventAlreadyExistsError } from './EventAlreadyExists'
 
 const logger = diary('cf:storage-adapter')
 
@@ -44,6 +47,13 @@ export class CfStorageAdapter implements StorageAdapter {
         const response = await (this.callObject(aggregateId, method, eventDetail) as ReturnType<
             DurableEntity['pushEvent']
         >)
+        if (isEventAlreadyExistsResponse(response)) {
+            throw new EventAlreadyExistsError({
+                eventStoreId: context.eventStoreId,
+                aggregateId: aggregateId,
+                version: eventDetail.version,
+            })
+        }
         return response
     }
     async listAggregateIds(
@@ -83,4 +93,10 @@ export class CfStorageAdapter implements StorageAdapter {
         // logger.info('Response', response)
         return response
     }
+}
+
+function isEventAlreadyExistsResponse(
+    resp: unknown
+): resp is { code: typeof eventAlreadyExistsErrorCode } {
+    return (resp as any).code === eventAlreadyExistsErrorCode
 }

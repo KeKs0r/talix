@@ -1,1 +1,1 @@
-export { DurableEntity } from '../durable-entity'
+export { DurableEntity } from '../storage/durable-entity'
