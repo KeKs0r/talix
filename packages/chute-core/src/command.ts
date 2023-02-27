@@ -40,12 +40,15 @@ export class Command<
             onEventAlreadyExists,
             /**
              * @TODO: Had to remove the required evenstores, gonna have to add
-             * this in a different way to its resolved via the container.
+             * this in a different way to its resolved via the
              */
             handler: (input: I, requiredEventStores: $E, ...context: T) =>
                 handler(input, ...context),
         })
         // this.run = this.run.bind(this)
+    }
+    run(input: I, ...context: T): Promise<O> {
+        return this.handler(input, [] as unknown as $E, ...context)
     }
     deps?: T
 }

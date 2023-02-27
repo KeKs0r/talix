@@ -2,11 +2,12 @@ import { describe, beforeEach, it, expect } from 'vitest'
 import { asValue } from 'awilix'
 import { Command, GetCommandInput, mockEventStore } from '@chute/core'
 
-import { documentEventStore } from '../document-eventstore'
+import { createDocumentEventStore } from '../document-eventstore'
 import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 
 describe.concurrent('Upload Document From Url', () => {
+    const documentEventStore = createDocumentEventStore(makeTestDependencies())
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [])
     function runCommand(command: Command, input: GetCommandInput<Command>) {
         return command.handler(input, [mockedDocumentEventStore], deps)

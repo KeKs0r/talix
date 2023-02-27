@@ -26,13 +26,15 @@ type Context = {
 }
 
 export const createVoucherCommand = new Command({
-    commandId: 'VOUCHERS:CREATE_VOUCHER',
+    commandId: 'voucher:cmd:create',
     handler: async (
         commandInput: CreateVoucherInput,
         { generateId, voucherEventStore, documentEventStore }: Context
     ): Promise<Output> => {
         const { documentId, creditOrDebit, vatTaxType, voucherDate } =
             createVoucherCommandInputSchema.parse(commandInput)
+
+        const events = await documentEventStore.getEvents(documentId)
 
         // Just to check that the document exists
         await documentEventStore.getExistingAggregate(documentId)
@@ -57,3 +59,4 @@ export const createVoucherCommand = new Command({
         return { voucherId }
     },
 })
+export type CreateVoucherCommand = typeof createVoucherCommand
