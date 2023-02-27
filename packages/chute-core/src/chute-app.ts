@@ -33,6 +33,7 @@ export class Chute<C extends BaseContext = BaseContext> {
      * Otherwise we cant register everything and then run things.
      * This will be necessary for 2 step plugin initialization
      * ?? why did I think I need 2 step plugin init?
+     * -> for plugins to register stuff and then other plugins can collect the outcome (telegram plugin)
      */
     build() {
         // console.log('chute.build', this.container.resolve('runCommand'))
@@ -124,15 +125,8 @@ export class Chute<C extends BaseContext = BaseContext> {
         const parentName =
             parentScope?.hasRegistration('parent') && getParentId(parentScope.resolve('parent'))
         logger.info('runCommand', parentName, '->', command.commandId)
-        const eventStores = command.requiredEventStores.map(
-            (store) => scope.resolve(store.eventStoreId) as EventStore
-        )
-        eventStores.forEach((store) => {
-            const storageAdapter = scope.resolve('storageAdapter') as StorageAdapter
-            store.storageAdapter = storageAdapter
-        })
-        // @TODO: no idea how to make the cradle type safe
-        const result = await command.handler(input, eventStores, scope.cradle)
+
+        const result = await command.run(input, scope.cradle)
         return result
     }
 
