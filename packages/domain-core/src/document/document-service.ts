@@ -1,20 +1,21 @@
-import { Aggregate, Chute } from '@chute/core'
+import { AggregateService, Chute } from '@chute/core'
+import { RuntimeContext } from '@chute/cf-runtime'
 
 import { createDocumentCommand } from './document-create-command'
-import { documentEventStore } from './document-eventstore'
+import { createDocumentEventStore } from './document-eventstore'
 import { uploadDocumentFromUrlAction } from './upload-document-url-action'
 import { documentCreatedEventType } from './document-created-event'
 import { documentProjection } from './document-projection'
 import { listDocumentActions } from './http-documents-list'
 
-const documentAggregate: Aggregate = {
+const documentAggregate: AggregateService<RuntimeContext> = {
     name: 'document',
-    store: documentEventStore,
+    storeFactory: createDocumentEventStore,
     commands: [createDocumentCommand],
     events: [documentCreatedEventType],
 }
 
-export function documentService(app: Chute) {
+export function documentService<C extends RuntimeContext = RuntimeContext>(app: Chute<C>) {
     app.registerAggregate(documentAggregate)
     app.registerAction(uploadDocumentFromUrlAction)
     app.registerAction(documentProjection)

@@ -79,6 +79,7 @@ importers:
       '@cloudflare/workers-types': ^4.20221111.1
       awilix: ^8.0.0
       diary: ^0.4.3
+      emittery: ^1.0.1
       esbuild: ^0.17.10
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
@@ -97,6 +98,7 @@ importers:
       '@chute/core': link:../chute-core
       awilix: 8.0.0
       diary: 0.4.3
+      emittery: 1.0.1
       file-storage: link:../file-storage
       hono: 3.0.1
       kysely: 0.23.4

@@ -43,6 +43,18 @@ export function telegramPlugin(actions: TelegramAction[], options?: TelegramPlug
             actionId: 'telegram:webhook',
             httpPath: path,
             async handler(input, cradle: T) {
+                console.log('')
+                console.log('')
+                console.log('')
+                console.log('')
+
+                console.log(JSON.stringify(input, null, 4))
+                console.log('')
+                console.log('')
+                console.log('')
+                console.log('')
+                console.log('')
+
                 const telegraf = cradle.telegraf
                 const token = cradle.TELEGRAM_BOT_TOKEN
                 ok(token, `Missing TELEGRAM_BOT_TOKEN in the environment`)

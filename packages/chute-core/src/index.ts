@@ -1,4 +1,4 @@
-export type { Aggregate } from './chute-app'
+export type { AggregateService } from './chute-app'
 
 export { Chute } from './chute-app'
 

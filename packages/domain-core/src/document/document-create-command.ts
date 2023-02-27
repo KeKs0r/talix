@@ -1,10 +1,9 @@
 import z from 'zod'
 import { diary } from 'diary'
-import { tuple } from '@castore/core'
 import { Command } from '@chute/core'
 
-import { documentEventStore } from './document-eventstore'
 import { DocumentCreatedEventTypeDetail, documentCreatedEventType } from './document-created-event'
+import { DocumentEventStore } from './document-eventstore'
 
 const logger = diary('document:cmd:create')
 
@@ -19,10 +18,10 @@ export type CreateDocumentOutput = { aggregateId: string }
 
 export const createDocumentCommand = new Command({
     commandId: 'document:cmd:create',
-    requiredEventStores: tuple(documentEventStore),
+
     handler: async (
         commandInput: CreateDocumentInput,
-        [documentEventStore]
+        { documentEventStore }: { documentEventStore: DocumentEventStore }
     ): Promise<CreateDocumentOutput> => {
         logger.info('input', commandInput)
         const { key, name, contentHash, aggregateId } =

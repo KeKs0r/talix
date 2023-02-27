@@ -1,4 +1,4 @@
-import { Chute, EventStore } from '@chute/core'
+import { Chute } from '@chute/core'
 import { ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer, asValue } from 'awilix'
 import { diary } from 'diary'
@@ -9,22 +9,21 @@ import { CFRuntimeContext, RuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:scope')
 
-export function createScope(
-    app: Chute<CFRuntimeContext>,
+export function createScope<C extends CFRuntimeContext = CFRuntimeContext>(
+    app: Chute<C>,
     env: Bindings,
     execCtx: ExecutionContext
 ) {
-    const scope = app.container.createScope<CFRuntimeContext>()
+    const scope = app.container.createScope<C>()
 
     const entries = Object.entries(env)
-    const envContext = Object.fromEntries(entries.map(([key, value]) => [key, asValue(value)]))
-    scope.register(envContext)
+    entries.forEach(([key, value]) => {
+        scope.register(key, asValue(value))
+    })
 
-    logger.info('Registering Scope', Object.keys(envContext).join(','))
+    logger.info('Registering Scope', Object.keys(env).join(','))
 
     scope.register('execCtx', asValue(execCtx))
-
-    createStorePublisher(app, scope)
 
     return scope
 }
@@ -34,30 +33,19 @@ export function createScope(
  * This publishes every event, even if it does not have consumers
  * It is then swallowed in the fanout. This is a bit wasteful, but fine for now.
  */
-export function createStorePublisher(
-    app: Chute<Bindings & RuntimeContext>,
-    scope: AwilixContainer<Bindings & RuntimeContext>
+export function createStorePublisher<C extends CFRuntimeContext = CFRuntimeContext>(
+    app: Chute<C>,
+    scope: AwilixContainer<C>
 ) {
     const eventQueue = scope.resolve('EVENT_QUEUE')
     const execCtx = scope.resolve('execCtx')
 
-    const emitters = Object.values(app.aggregates).map((agg) => {
-        const store = app.container.resolve(agg.store.eventStoreId) as EventStore
-        return store.emitter
-    })
-
-    const uniqueEmitters = Array.from(new Set(emitters))
-
-    /**
-     * @TODO: the emitter should be a singleton on the container
-     */
-    uniqueEmitters.forEach((emitter) => {
-        emitter.onAny((eventName, event) => {
-            const message: ProduceBody = {
-                type: 'PRODUCE',
-                event,
-            }
-            execCtx.waitUntil(eventQueue.send(message))
-        })
+    const emitter = scope.resolve('emitter')
+    emitter.onAny((eventName, event) => {
+        const message: ProduceBody = {
+            type: 'PRODUCE',
+            event,
+        }
+        execCtx.waitUntil(eventQueue.send(message))
     })
 }

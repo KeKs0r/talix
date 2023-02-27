@@ -29,6 +29,7 @@
         "@chute/core": "workspace:*",
         "awilix": "^8.0.0",
         "diary": "^0.4.3",
+        "emittery": "^1.0.1",
         "file-storage": "workspace:*",
         "hono": "^3.0.1",
         "kysely": "^0.23.4",

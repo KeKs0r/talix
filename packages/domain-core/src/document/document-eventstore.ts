@@ -1,19 +1,10 @@
-import { StorageAdapter } from '@castore/core'
+import type { RuntimeContext } from '@chute/cf-runtime'
 import { EventStore } from '@chute/core'
-import Emittery from 'emittery'
-
-import { emitter } from '../shared/emitter'
 
 import { documentCreatedEventType } from './document-created-event'
 import { documentReducer } from './document-reducer'
 
-export function getDocumentEventStore({
-    storageAdapter,
-    emitter,
-}: {
-    storageAdapter?: StorageAdapter
-    emitter: Emittery
-}) {
+export const createDocumentEventStore = ({ emitter, storageAdapter }: RuntimeContext) => {
     return new EventStore({
         eventStoreId: 'documentEventStore',
         eventStoreEvents: [documentCreatedEventType],
@@ -23,5 +14,4 @@ export function getDocumentEventStore({
     })
 }
 
-export const documentEventStore = getDocumentEventStore({ emitter })
-export type DocumentEventStore = typeof documentEventStore
+export type DocumentEventStore = ReturnType<typeof createDocumentEventStore>

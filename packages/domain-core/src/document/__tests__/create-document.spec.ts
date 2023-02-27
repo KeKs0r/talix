@@ -41,6 +41,7 @@ describe.concurrent('Upload Document From Url', () => {
             payload: {
                 key: 'documents/1-bitcoin.pdf',
                 name: 'bitcoin.pdf',
+                contentHash: '123456',
             },
         })
 

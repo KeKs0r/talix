@@ -1,7 +1,11 @@
+import { BaseContext } from '../base-context'
 import type { Chute } from '../chute-app'
 import { EventAction, isEventAction } from '../event-action'
 
-export function matchEventAction(app: Chute, eventName: string): EventAction[] {
+export function matchEventAction<C extends BaseContext = BaseContext>(
+    app: Chute<C>,
+    eventName: string
+): EventAction[] {
     const eventActions = Object.values(app.actions).filter(isEventAction)
     const matched = eventActions.filter((action) => {
         return matchName(eventName, action.eventTrigger)
