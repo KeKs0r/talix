@@ -8,8 +8,9 @@ import { createDateString } from '../../shared/date.types'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 
 describe.concurrent('Voucher', () => {
-    const voucherEventStore = createVoucherEventStore(makeTestDependencies())
-    const documentEventStore = createDocumentEventStore(makeTestDependencies())
+    const container = makeTestDependencies()
+    const voucherEventStore = createVoucherEventStore(container.cradle)
+    const documentEventStore = createDocumentEventStore(container.cradle)
     const mockedVoucherEventStore = mockEventStore(voucherEventStore, [])
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [
         {
