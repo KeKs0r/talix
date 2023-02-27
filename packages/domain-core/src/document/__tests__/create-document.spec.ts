@@ -25,6 +25,7 @@ describe.concurrent('Upload Document From Url', () => {
             {
                 url: 'https://www.laserfocus.io/bitcoin.pdf',
                 mimeType: 'application/pdf',
+                hash: '123456',
             },
             deps
         )

@@ -64,6 +64,6 @@ describe.concurrent('Upload Document', () => {
                 vatTaxType: 'EU',
                 voucherDate: createDateString(2023, 1, 15),
             })
-        ).rejects.toThrow('Unable to find aggregate dont-exist in event store DOCUMENTS.')
+        ).rejects.toThrow('Unable to find aggregate dont-exist in event store documentEventStore.')
     })
 })
