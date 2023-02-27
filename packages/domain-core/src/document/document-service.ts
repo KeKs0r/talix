@@ -5,6 +5,7 @@ import { documentEventStore } from './document-eventstore'
 import { uploadDocumentFromUrlAction } from './upload-document-url-action'
 import { documentCreatedEventType } from './document-created-event'
 import { documentProjection } from './document-projection'
+import { listDocumentActions } from './http-documents-list'
 
 const documentAggregate: Aggregate = {
     name: 'document',
@@ -17,4 +18,5 @@ export function documentService(app: Chute) {
     app.registerAggregate(documentAggregate)
     app.registerAction(uploadDocumentFromUrlAction)
     app.registerAction(documentProjection)
+    app.registerAction(listDocumentActions)
 }

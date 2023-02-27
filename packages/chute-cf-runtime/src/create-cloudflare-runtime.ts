@@ -9,6 +9,7 @@ import { createHTTPActions } from './http'
 import { createQueue } from './queue'
 import { CfStorageAdapter } from './cf-storage-adapter'
 import { CFRuntimeContext } from './runtime-context'
+import { dbCheckAction } from './actions/db-check'
 
 /**
  * Cloudflare Runtime wraps all the with the necessary runtime
@@ -32,6 +33,8 @@ export function createCloudflareRuntime<C extends CFRuntimeContext = CFRuntimeCo
         'kysely',
         asFunction(({ DB }) => new Kysely({ dialect: new D1Dialect({ database: DB }) }))
     )
+
+    app.registerAction(dbCheckAction)
 
     const hono = createHTTPActions(app)
     const queue = createQueue(app)

@@ -20,6 +20,8 @@ export function createScope(
     const envContext = Object.fromEntries(entries.map(([key, value]) => [key, asValue(value)]))
     scope.register(envContext)
 
+    logger.info('Registering Scope', Object.keys(envContext).join(','))
+
     scope.register('execCtx', asValue(execCtx))
 
     createStorePublisher(app, scope)

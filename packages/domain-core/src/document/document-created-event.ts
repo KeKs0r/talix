@@ -5,6 +5,7 @@ import { EventTypeDetail } from '@castore/core'
 const documentCreatedPayloadSchema = z.object({
     name: z.string(),
     key: z.string(),
+    contentHash: z.string(),
 })
 
 const documentCreatedMetadataSchema = z.object({

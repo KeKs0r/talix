@@ -11,7 +11,7 @@ const logger = diary('document:cmd:create')
 const createDocumentCommandInputSchema = z.object({
     key: z.string(),
     name: z.string().optional(),
-    hash: z.string().optional(),
+    contentHash: z.string(),
     aggregateId: z.string(),
 })
 export type CreateDocumentInput = z.infer<typeof createDocumentCommandInputSchema>
@@ -25,13 +25,18 @@ export const createDocumentCommand = new Command({
         [documentEventStore]
     ): Promise<CreateDocumentOutput> => {
         logger.info('input', commandInput)
-        const { key, name, aggregateId } = createDocumentCommandInputSchema.parse(commandInput)
+        const { key, name, contentHash, aggregateId } =
+            createDocumentCommandInputSchema.parse(commandInput)
 
         const event: DocumentCreatedEventTypeDetail = {
             aggregateId,
             version: 1,
             type: documentCreatedEventType.type,
-            payload: documentCreatedEventType.payloadSchema!.parse({ name: name, key }),
+            payload: documentCreatedEventType.payloadSchema!.parse({
+                name: name,
+                key,
+                contentHash,
+            }),
         }
 
         logger.info('Event', JSON.stringify(event, null, 4))

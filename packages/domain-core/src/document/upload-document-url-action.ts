@@ -38,6 +38,7 @@ export const uploadDocumentFromUrlAction = new Action({
         }
         const bodyStream = response.body
         ok(bodyStream, `Bodystream not available for ${url}`)
+        ok(hash, `Hash not available for ${url}`)
         const fileUrl = await fileStorage.put(key, bodyStream as any, {
             httpMetadata: {
                 contentType: mimeType,
@@ -48,7 +49,7 @@ export const uploadDocumentFromUrlAction = new Action({
             aggregateId: id,
             name,
             key: fileUrl.key,
-            hash,
+            contentHash: hash,
         })
 
         return { documentId: id, key: fileUrl.key }

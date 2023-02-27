@@ -12,8 +12,27 @@ export function createHTTPActions<C extends CFRuntimeContext = CFRuntimeContext>
     const hono = new Hono<Env>()
     Object.values(chute.actions).forEach((action) => {
         if (isHttpAction(action)) {
-            logger.info('Registering HTTP action', action.actionId, 'on', action.httpPath)
-            hono.post(action.httpPath, wrapHTTPAction(action, chute))
+            logger.info(
+                'Registering HTTP action',
+                action.actionId,
+                'on',
+                action.httpPath,
+                action.httpMethod
+            )
+            switch (action.httpMethod) {
+                case 'GET':
+                    return hono.get(action.httpPath, wrapHTTPAction(action, chute))
+                case 'PATCH':
+                    return hono.patch(action.httpPath, wrapHTTPAction(action, chute))
+                case 'PUT':
+                    return hono.put(action.httpPath, wrapHTTPAction(action, chute))
+                case 'DELETE':
+                    return hono.delete(action.httpPath, wrapHTTPAction(action, chute))
+                case 'POST':
+                    return hono.post(action.httpPath, wrapHTTPAction(action, chute))
+                default:
+                    throw new Error('Unknown HTTP method: ' + action.httpMethod)
+            }
         }
     })
     return hono
@@ -25,7 +44,10 @@ function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
 ): Handler<Env> {
     return async (c) => {
         const scope = createScope(chute, c.env, c.executionCtx)
-
+        if (action.httpMethod === 'GET') {
+            const result = await chute.runAction(action, {}, scope)
+            return c.json(result)
+        }
         const input = await c.req.json()
         const result = await chute.runAction(action, input, scope)
         return c.json(result)

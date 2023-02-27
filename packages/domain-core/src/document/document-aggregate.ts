@@ -6,6 +6,6 @@ export interface DocumentAggregate extends Aggregate {
     name: string
     key: string
     status: 'CREATED' | 'ANALYZED'
-    hash: string
+    contentHash: string
     createdAt: DateTimeString
 }

@@ -1,7 +1,7 @@
 import type { Reducer } from '@castore/core'
 
 import { DocumentAggregate } from './document-aggregate'
-import { DocumentCreatedEventTypeDetail } from './document-created-event'
+import { DocumentCreatedEventTypeDetail, documentCreatedEventType } from './document-created-event'
 
 type DocumentEventDetails = DocumentCreatedEventTypeDetail
 
@@ -12,13 +12,14 @@ export const documentReducer: Reducer<DocumentAggregate, DocumentEventDetails> =
     const { aggregateId, version, timestamp } = newEvent
 
     switch (newEvent.type) {
-        case 'DOCUMENTS:DOCUMENT_CREATED': {
-            const { name, key } = newEvent.payload
+        case documentCreatedEventType.type: {
+            const { name, key, contentHash } = newEvent.payload
             return {
                 aggregateId,
                 version,
                 name,
                 key,
+                contentHash,
                 createdAt: timestamp,
                 status: 'CREATED',
             }
