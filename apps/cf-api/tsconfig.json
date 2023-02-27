@@ -3,6 +3,6 @@
     "extends": "tsconfig/worker.json",
     "exclude": ["node_modules", "repl/archive"],
     "files": [],
-    "include": ["src", "repl"],
+    "include": ["src", "repl", "migrations"],
     "references": []
 }

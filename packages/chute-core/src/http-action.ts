@@ -9,17 +9,21 @@ export class HttpAction<
     Path extends string = string
 > extends Action<Id, Input, Output, Context> {
     readonly httpPath: Path
+    readonly httpMethod: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     constructor({
         actionId,
         handler,
         httpPath,
+        httpMethod = 'POST',
     }: {
         actionId: Id
         handler: (input: Input, deps: Context) => Output
         httpPath: Path
+        httpMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     }) {
         super({ actionId, handler })
         this.httpPath = httpPath
+        this.httpMethod = httpMethod
     }
 }
 

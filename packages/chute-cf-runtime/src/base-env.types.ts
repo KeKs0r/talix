@@ -4,6 +4,7 @@ export type Bindings = {
     DURABLE_ENTITY: DurableObjectNamespace
     DOCUMENTS_BUCKET: R2Bucket
     EVENT_QUEUE: Queue
+    DB: D1Database
 }
 
 export type Env = {

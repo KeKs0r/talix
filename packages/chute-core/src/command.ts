@@ -24,28 +24,31 @@ export class Command<
 > extends BaseCommand<C, E, $E, I, O, T> {
     constructor({
         commandId,
-        requiredEventStores,
         eventAlreadyExistsRetries,
         onEventAlreadyExists,
         handler,
     }: {
         commandId: C
-        requiredEventStores: E
         eventAlreadyExistsRetries?: number
         onEventAlreadyExists?: OnEventAlreadyExistsCallback
-        handler: (input: I, eventStores: $E, ...context: T) => Promise<O>
+        handler: (input: I, ...context: T) => Promise<O>
     }) {
         super({
             commandId,
-            requiredEventStores,
+            requiredEventStores: [] as unknown as E,
             eventAlreadyExistsRetries,
             onEventAlreadyExists,
-            handler,
+            /**
+             * @TODO: Had to remove the required evenstores, gonna have to add
+             * this in a different way to its resolved via the
+             */
+            handler: (input: I, requiredEventStores: $E, ...context: T) =>
+                handler(input, ...context),
         })
-        this.run = this.run.bind(this)
+        // this.run = this.run.bind(this)
+    }
+    run(input: I, ...context: T): Promise<O> {
+        return this.handler(input, [] as unknown as $E, ...context)
     }
     deps?: T
-    run(input: I, deps: T) {
-        return this.handler(input, this.requiredEventStores as any, ...deps)
-    }
 }

@@ -1,16 +1,20 @@
 import { describe, beforeEach, it, expect } from 'vitest'
 import { mockEventStore } from '@chute/core'
 
-import { documentEventStore } from '../../document'
-import { voucherEventStore } from '../voucher-eventstore'
+import { createDocumentEventStore, documentCreatedEventType } from '../../document'
+import { createVoucherEventStore } from '../voucher-eventstore'
 import { createVoucherCommand, CreateVoucherInput } from '../voucher-create-command'
 import { createDateString } from '../../shared/date.types'
+import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 
-describe.concurrent('Upload Document', () => {
+describe.concurrent('Voucher', () => {
+    const container = makeTestDependencies()
+    const voucherEventStore = createVoucherEventStore(container.cradle)
+    const documentEventStore = createDocumentEventStore(container.cradle)
     const mockedVoucherEventStore = mockEventStore(voucherEventStore, [])
     const mockedDocumentEventStore = mockEventStore(documentEventStore, [
         {
-            type: 'DOCUMENTS:DOCUMENT_CREATED',
+            type: documentCreatedEventType.type,
             aggregateId: 'i-exist',
             payload: { name: 'i-exist.pdf', key: 'mock/12345-i-exist.pdf' },
         },
@@ -21,11 +25,13 @@ describe.concurrent('Upload Document', () => {
     })
 
     const createVoucher = (input: CreateVoucherInput) =>
-        createVoucherCommand.handler(input, [mockedVoucherEventStore, mockedDocumentEventStore], {
+        createVoucherCommand.run(input, {
             generateId: () => 'voucherId',
+            documentEventStore: mockedDocumentEventStore,
+            voucherEventStore: mockedVoucherEventStore,
         })
 
-    it('Upload Document Command', async () => {
+    it('Create Voucher for existing document', async () => {
         const { voucherId } = await createVoucher({
             documentId: 'i-exist',
             creditOrDebit: 'DEBIT',
@@ -64,6 +70,6 @@ describe.concurrent('Upload Document', () => {
                 vatTaxType: 'EU',
                 voucherDate: createDateString(2023, 1, 15),
             })
-        ).rejects.toThrow('Unable to find aggregate dont-exist in event store DOCUMENTS.')
+        ).rejects.toThrow('Unable to find aggregate dont-exist in event store documentEventStore.')
     })
 })

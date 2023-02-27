@@ -5,6 +5,7 @@ import { EventTypeDetail } from '@castore/core'
 const documentCreatedPayloadSchema = z.object({
     name: z.string(),
     key: z.string(),
+    contentHash: z.string(),
 })
 
 const documentCreatedMetadataSchema = z.object({
@@ -12,10 +13,10 @@ const documentCreatedMetadataSchema = z.object({
 })
 
 export const documentCreatedEventType = new ZodEventType<
-    'DOCUMENTS:DOCUMENT_CREATED',
+    'document:created',
     typeof documentCreatedPayloadSchema
 >({
-    type: 'DOCUMENTS:DOCUMENT_CREATED',
+    type: 'document:created',
     payloadSchema: documentCreatedPayloadSchema,
     metadataSchema: documentCreatedMetadataSchema,
 })

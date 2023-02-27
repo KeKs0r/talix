@@ -1,4 +1,4 @@
-export type { Aggregate } from './chute-app'
+export type { AggregateService } from './chute-app'
 
 export { Chute } from './chute-app'
 
@@ -14,3 +14,5 @@ export { EventStore } from './event-store'
 export { mockEventStore } from './test-utils/mockEventStore'
 
 export { healthCheckPlugin } from './core-plugins/health-check'
+
+export { matchEventAction } from './util/match-event'

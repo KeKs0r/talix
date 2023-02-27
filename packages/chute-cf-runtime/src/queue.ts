@@ -1,6 +1,6 @@
 import { Message, MessageBatch, ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
-import { Action, Chute } from '@chute/core'
+import { Action, Chute, matchEventAction } from '@chute/core'
 import { diary } from 'diary'
 
 import { Bindings } from './base-env.types'
@@ -9,7 +9,7 @@ import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('chute:cf:queue')
 
-export function createQueue(app: Chute<CFRuntimeContext>) {
+export function createQueue<C extends CFRuntimeContext = CFRuntimeContext>(app: Chute<C>) {
     return async function processQueue(
         batch: MessageBatch<MessageBody>,
         env: Bindings,
@@ -31,22 +31,23 @@ export function createQueue(app: Chute<CFRuntimeContext>) {
                 }
             })
         )
+        ctx.waitUntil(scope.dispose())
     }
 }
 
-export async function fanout(
+export async function fanout<C extends CFRuntimeContext = CFRuntimeContext>(
     message: Message<ProduceBody>,
-    app: Chute,
-    container: AwilixContainer<CFRuntimeContext>
+    app: Chute<C>,
+    scope: AwilixContainer<C>
 ) {
-    const targets = app.eventMap[message.body.event.type]
-    if (targets) {
-        const eventQueue = container.resolve('EVENT_QUEUE')
+    const targets = matchEventAction(app, message.body.event.type)
+    if (targets.length) {
+        const eventQueue = scope.resolve('EVENT_QUEUE')
         await Promise.all(
-            targets.map((actionId) => {
+            targets.map((action) => {
                 const consumeMessage: ConsumeBody = {
                     type: 'CONSUME',
-                    actionId,
+                    actionId: action.actionId,
                     event: message.body.event,
                     sourceId: message.id,
                 }
@@ -55,14 +56,14 @@ export async function fanout(
         )
     } else {
         logger.info('fanout not happening for', message.body.event.type)
-        logger.info('only listening to', Object.keys(app.eventMap))
+        // logger.info('only listening to', Object.keys(app.actions))
     }
 }
 
-export async function handleConsume(
+export async function handleConsume<C extends CFRuntimeContext = CFRuntimeContext>(
     message: Message<ConsumeBody>,
-    app: Chute,
-    scope: AwilixContainer<CFRuntimeContext>
+    app: Chute<C>,
+    scope: AwilixContainer<C>
 ) {
     const { actionId, event } = message.body
     const action = app.container.resolve(actionId)

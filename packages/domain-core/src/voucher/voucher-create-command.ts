@@ -1,10 +1,9 @@
 import z from 'zod'
-import { tuple } from '@castore/core'
 import { Command } from '@chute/core'
 
-import { documentEventStore } from '../document'
+import { DocumentEventStore } from '../document/document-eventstore'
 
-import { voucherEventStore } from './voucher-eventstore'
+import { VoucherEventStore } from './voucher-eventstore'
 import {
     voucherCreatedEventType,
     VoucherCreatedEventTypeDetail,
@@ -20,15 +19,17 @@ const createVoucherCommandInputSchema = voucherCreatedPayloadSchema.pick({
 })
 export type CreateVoucherInput = z.infer<typeof createVoucherCommandInputSchema>
 type Output = { voucherId: string }
-type Context = { generateId: () => string }
+type Context = {
+    generateId: () => string
+    voucherEventStore: VoucherEventStore
+    documentEventStore: DocumentEventStore
+}
 
 export const createVoucherCommand = new Command({
-    commandId: 'VOUCHERS:CREATE_VOUCHER',
-    requiredEventStores: tuple(voucherEventStore, documentEventStore),
+    commandId: 'voucher:cmd:create',
     handler: async (
         commandInput: CreateVoucherInput,
-        [voucherEventStore, documentEventStore],
-        { generateId }: Context
+        { generateId, voucherEventStore, documentEventStore }: Context
     ): Promise<Output> => {
         const { documentId, creditOrDebit, vatTaxType, voucherDate } =
             createVoucherCommandInputSchema.parse(commandInput)
@@ -56,3 +57,4 @@ export const createVoucherCommand = new Command({
         return { voucherId }
     },
 })
+export type CreateVoucherCommand = typeof createVoucherCommand

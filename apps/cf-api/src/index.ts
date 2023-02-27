@@ -3,7 +3,7 @@ import { createCloudflareRuntime, DurableEntity } from '@chute/cf-runtime'
 
 import { makeApp } from './app'
 
-enable('cf:storage-adapter')
+enable('*')
 
 const app = makeApp()
 const runtime = createCloudflareRuntime(app)

@@ -4,13 +4,14 @@
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20221111.1",
         "@types/node": "^18.11.18",
+        "better-sqlite3": "8.0.1",
         "eslint-config-custom": "workspace:*",
         "tsconfig": "workspace:*",
         "typescript": "^4.9.4",
         "vite": "^3.2.4",
         "vite-node": "^0.27.0",
         "vitest": "^0.25.8",
-        "wrangler": "^2.10.0"
+        "wrangler": "^2.11.1"
     },
     "private": true,
     "engines": {
@@ -19,7 +20,7 @@
     "scripts": {
         "type-check": "tsc --noEmit",
         "dev:tunnel": "cloudflared tunnel run talix-local-marc",
-        "dev": "wrangler dev --local",
+        "dev": "wrangler dev --local --persist",
         "lint": "eslint",
         "build": "wrangler publish --dry-run --outdir=dist",
         "test": "NODE_OPTIONS=--experimental-vm-modules vitest run",
@@ -28,14 +29,19 @@
         "test:watch:env": "doppler run -- pnpm test:watch",
         "deploy": "NODE_ENV=production wrangler publish",
         "repl": "vite-node",
-        "repl:env": "doppler run -- vite-node"
+        "repl:env": "doppler run -- vite-node",
+        "db:reset:local": "rm -rf .wrangler/state/d1 && pnpm db:migrate:local",
+        "db:repl:local": "wrangler d1 execute default --local --file=./repl/repl.sql",
+        "db:repl": "wrangler d1 execute default --file=./repl/repl.sql",
+        "db:migrate:local": "wrangler d1 migrations apply default --local",
+        "db:migrate": "wrangler d1 migrations apply default"
     },
     "dependencies": {
+        "@chute/cf-runtime": "workspace:*",
         "@chute/core": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
-        "telegram-bot": "workspace:*",
-        "@chute/cf-runtime": "workspace:*",
-        "ocr-document": "workspace:*"
+        "ocr-document": "workspace:*",
+        "telegram-bot": "workspace:*"
     }
 }

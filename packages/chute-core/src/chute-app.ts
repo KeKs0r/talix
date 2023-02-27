@@ -1,12 +1,11 @@
 import ok from 'tiny-invariant'
-import { createContainer, AwilixContainer, asValue } from 'awilix'
+import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 import { EventType, StorageAdapter } from '@castore/core'
 import { diary } from 'diary'
 
 import { Action, GetActionInput } from './action'
 import { Command, GetCommandInput } from './command'
 import { EventStore } from './event-store'
-import { isEventAction } from './event-action'
 import type { BaseContext } from './base-context'
 
 const logger = diary('chute:app')
@@ -33,13 +32,15 @@ export class Chute<C extends BaseContext = BaseContext> {
      * This is to split the registration of things + wiring up (plugins)
      * Otherwise we cant register everything and then run things.
      * This will be necessary for 2 step plugin initialization
+     * ?? why did I think I need 2 step plugin init?
+     * -> for plugins to register stuff and then other plugins can collect the outcome (telegram plugin)
      */
     build() {
         // console.log('chute.build', this.container.resolve('runCommand'))
         return this
     }
 
-    registerAggregate(aggregate: Aggregate) {
+    registerAggregate(aggregate: AggregateService<C>) {
         ok(
             !this.registeredAggregates.has(aggregate.name),
             `Aggregate '${aggregate.name}' is already registered`
@@ -52,11 +53,26 @@ export class Chute<C extends BaseContext = BaseContext> {
         // aggregate.commands?.forEach((command) => {
         //     container.register(command.commandId, asValue(command))
         // })
-        container.register(aggregate.store.eventStoreId, asValue(aggregate.store))
+        const storeName = `${aggregate.storeFactory}`
+        container.register(
+            storeName,
+            asFunction((deps) => {
+                const store = aggregate.storeFactory(deps)
+                ok(
+                    storeName === store.eventStoreId,
+                    `${store.eventStoreId} does not match the aggregate: ${storeName}`
+                )
+                return store
+            })
+        )
 
-        // aggregate.events?.forEach((event) => {
-        //     container.register(event.type, asValue(event))
-        // })
+        aggregate.events?.forEach((event) => {
+            // container.register(event.type, asValue(event))
+            ok(
+                event.type.startsWith(aggregate.name),
+                `${event.type} must start with ${aggregate.name}`
+            )
+        })
         return this
     }
 
@@ -109,15 +125,8 @@ export class Chute<C extends BaseContext = BaseContext> {
         const parentName =
             parentScope?.hasRegistration('parent') && getParentId(parentScope.resolve('parent'))
         logger.info('runCommand', parentName, '->', command.commandId)
-        const eventStores = command.requiredEventStores.map(
-            (store) => scope.resolve(store.eventStoreId) as EventStore
-        )
-        eventStores.forEach((store) => {
-            const storageAdapter = scope.resolve('storageAdapter') as StorageAdapter
-            store.storageAdapter = storageAdapter
-        })
-        // @TODO: no idea how to make the cradle type safe
-        const result = await command.handler(input, eventStores, scope.cradle)
+
+        const result = await command.run(input, scope.cradle)
         return result
     }
 
@@ -126,36 +135,15 @@ export class Chute<C extends BaseContext = BaseContext> {
         return actionIds.map((actionId) => this.container.resolve(actionId))
     }
 
-    get aggregates(): Array<Aggregate> {
+    get aggregates(): Array<AggregateService<C>> {
         const aggregateNames = Array.from(this.registeredAggregates)
         return aggregateNames.map((aggregateName) => this.container.resolve(aggregateName))
     }
-
-    get eventMap() {
-        const eventActions = Object.values(this.actions).filter(isEventAction)
-        logger.info(
-            'Actions',
-            this.actions.map((a) => a.actionId)
-        )
-        logger.info(
-            'EventActions',
-            this.actions.filter(isEventAction).map((a) => a.actionId)
-        )
-        logger.info('Registered', this.registeredActions)
-        const eventMap = eventActions.reduce((acc: Record<string, string[]>, action) => {
-            if (!acc[action.eventTrigger]) {
-                acc[action.eventTrigger] = []
-            }
-            acc[action.eventTrigger].push(action.actionId)
-            return acc
-        }, {})
-        return eventMap
-    }
 }
 
-export interface Aggregate {
+export interface AggregateService<T> {
     name: string
-    store: EventStore
+    storeFactory: (deps: T) => EventStore
     commands?: Array<Command>
     events?: Array<EventType>
 }

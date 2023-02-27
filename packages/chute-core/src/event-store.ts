@@ -37,12 +37,18 @@ export class EventStore<
             await originalPushEvent(event)
             await this.emit(event)
         }
-        const originalGetEvents = this.getEvents
-        this.getEvents = async (...args) => {
-            const r = await originalGetEvents(...args)
-            logger.info(r)
-            return r
-        }
+        // const originalGetEvents = this.getEvents
+        // this.getEvents = async (...args) => {
+        //     const r = await originalGetEvents(...args)
+        //     logger.info(r)
+        //     return r
+        // }
+        // const originalGetAggregate = this.getAggregate
+        // this.getAggregate = async (...args) => {
+        //     const r = await originalGetAggregate(...args)
+        //     logger.info(r)
+        //     return r
+        // }
     }
 
     on<EventType extends E[number]>(
