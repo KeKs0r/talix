@@ -46,7 +46,7 @@ describe.concurrent('Voucher', () => {
         expect(e).toMatchObject({
             aggregateId: 'voucherId',
             version: 1,
-            type: 'VOUCHER:VOUCHER_CREATED',
+            type: 'voucher:voucher_created',
             payload: { documentId: 'i-exist' },
         })
 
