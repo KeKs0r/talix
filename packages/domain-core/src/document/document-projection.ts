@@ -33,11 +33,11 @@ export const documentProjection = new EventAction({
         event,
         {
             kysely,
-            documentEventStore,
+            documentStore,
             DB,
-        }: { DB: D1Database; kysely: Kysely<Database>; documentEventStore: DocumentEventStore }
+        }: { DB: D1Database; kysely: Kysely<Database>; documentStore: DocumentEventStore }
     ) {
-        const { aggregate } = await documentEventStore.getExistingAggregate(event.aggregateId, {
+        const { aggregate } = await documentStore.getExistingAggregate(event.aggregateId, {
             maxVersion: event.version,
         })
 

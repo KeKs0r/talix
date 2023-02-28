@@ -10,9 +10,9 @@ import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 describe.concurrent('Voucher', () => {
     const container = makeTestDependencies()
     const voucherEventStore = createVoucherEventStore(container.cradle)
-    const documentEventStore = createDocumentEventStore(container.cradle)
+    const documentStore = createDocumentEventStore(container.cradle)
     const mockedVoucherEventStore = mockEventStore(voucherEventStore, [])
-    const mockedDocumentEventStore = mockEventStore(documentEventStore, [
+    const mockedDocumentEventStore = mockEventStore(documentStore, [
         {
             type: documentCreatedEventType.type,
             aggregateId: 'i-exist',
@@ -27,8 +27,8 @@ describe.concurrent('Voucher', () => {
     const createVoucher = (input: CreateVoucherInput) =>
         createVoucherCommand.run(input, {
             generateId: () => 'voucherId',
-            documentEventStore: mockedDocumentEventStore,
-            voucherEventStore: mockedVoucherEventStore,
+            documentStore: mockedDocumentEventStore,
+            voucherStore: mockedVoucherEventStore,
         })
 
     it('Create Voucher for existing document', async () => {
@@ -70,6 +70,6 @@ describe.concurrent('Voucher', () => {
                 vatTaxType: 'EU',
                 voucherDate: createDateString(2023, 1, 15),
             })
-        ).rejects.toThrow('Unable to find aggregate dont-exist in event store documentEventStore.')
+        ).rejects.toThrow('Unable to find aggregate dont-exist in event store documentStore.')
     })
 })

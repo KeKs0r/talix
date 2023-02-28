@@ -6,7 +6,7 @@ import { documentReducer } from './document-reducer'
 
 export const createDocumentEventStore = ({ emitter, storageAdapter }: RuntimeContext) => {
     return new EventStore({
-        eventStoreId: 'documentEventStore',
+        eventStoreId: 'documentStore',
         eventStoreEvents: [documentCreatedEventType],
         reduce: documentReducer,
         emitter,
