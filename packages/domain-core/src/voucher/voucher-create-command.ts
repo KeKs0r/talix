@@ -21,21 +21,21 @@ export type CreateVoucherInput = z.infer<typeof createVoucherCommandInputSchema>
 type Output = { voucherId: string }
 type Context = {
     generateId: () => string
-    voucherEventStore: VoucherEventStore
-    documentEventStore: DocumentEventStore
+    voucherStore: VoucherEventStore
+    documentStore: DocumentEventStore
 }
 
 export const createVoucherCommand = new Command({
     commandId: 'voucher:cmd:create',
     handler: async (
         commandInput: CreateVoucherInput,
-        { generateId, voucherEventStore, documentEventStore }: Context
+        { generateId, voucherStore, documentStore }: Context
     ): Promise<Output> => {
         const { documentId, creditOrDebit, vatTaxType, voucherDate } =
             createVoucherCommandInputSchema.parse(commandInput)
 
         // Just to check that the document exists
-        await documentEventStore.getExistingAggregate(documentId)
+        await documentStore.getExistingAggregate(documentId)
 
         const voucherId = generateId()
         const payload: VoucherCreatedPayload = {
@@ -52,7 +52,7 @@ export const createVoucherCommand = new Command({
             payload,
         }
 
-        await voucherEventStore.pushEvent(event)
+        await voucherStore.pushEvent(event)
 
         return { voucherId }
     },

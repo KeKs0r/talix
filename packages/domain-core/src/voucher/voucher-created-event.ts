@@ -15,11 +15,11 @@ export const voucherCreatedPayloadSchema = z.object({
 export type VoucherCreatedPayload = z.infer<typeof voucherCreatedPayloadSchema>
 
 export const voucherCreatedEventType = new ZodEventType<
-    'VOUCHER:VOUCHER_CREATED',
+    'voucher:voucher_created',
     typeof voucherCreatedPayloadSchema,
     VoucherCreatedPayload
 >({
-    type: 'VOUCHER:VOUCHER_CREATED',
+    type: 'voucher:voucher_created',
     payloadSchema: voucherCreatedPayloadSchema,
 })
 export type VoucherCreatedEventDetail = EventDetail<typeof voucherCreatedEventType>

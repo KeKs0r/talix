@@ -13,7 +13,7 @@ describe.concurrent('Upload Document From Url', () => {
             runCommand: asValue(runCommand),
             generateId: asValue(() => '1'),
         })
-        container.register('documentEventStore', asFunction(createDocumentEventStore))
+        container.register('documentStore', asFunction(createDocumentEventStore))
 
         const deps = container.cradle
 
@@ -21,16 +21,16 @@ describe.concurrent('Upload Document From Url', () => {
             return command.run(input, deps)
         }
 
-        const documentEventStore = container.resolve('documentEventStore') as DocumentEventStore
+        const documentStore = container.resolve('documentStore') as DocumentEventStore
         return {
             container,
-            documentEventStore,
+            documentStore,
             runCommand,
         }
     }
 
     it('Upload Document Command', async () => {
-        const { container, documentEventStore } = getFixtures()
+        const { container, documentStore } = getFixtures()
         const { documentId } = await uploadDocumentFromUrlAction.handler(
             {
                 url: 'https://www.laserfocus.io/bitcoin.pdf',
@@ -40,7 +40,7 @@ describe.concurrent('Upload Document From Url', () => {
             container.cradle
         )
 
-        const { events } = await documentEventStore.getEvents(documentId)
+        const { events } = await documentStore.getEvents(documentId)
 
         expect(events).toHaveLength(1)
         const [e] = events
@@ -55,7 +55,7 @@ describe.concurrent('Upload Document From Url', () => {
             },
         })
 
-        const { aggregate } = await documentEventStore.getExistingAggregate(documentId)
+        const { aggregate } = await documentStore.getExistingAggregate(documentId)
 
         expect(aggregate).toMatchObject({
             aggregateId: '1',
@@ -67,7 +67,7 @@ describe.concurrent('Upload Document From Url', () => {
     })
 
     it('Upload Document Command fails, if the url is not accessible', async () => {
-        const { container, documentEventStore } = getFixtures()
+        const { container, documentStore } = getFixtures()
         expect(
             uploadDocumentFromUrlAction.handler(
                 { url: 'https://www.google.com/i-dont-exist.pdf', mimeType: 'application/pdf' },
