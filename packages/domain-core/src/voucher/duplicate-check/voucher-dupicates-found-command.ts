@@ -16,7 +16,7 @@ const voucherDuplicatesFoundPayloadSchema = z.object({
 })
 export type VoucherDuplicatesFoundInput = z.infer<typeof voucherDuplicatesFoundPayloadSchema>
 
-export const createVoucherCommand = new Command({
+export const duplicatesFoundCommand = new Command({
     commandId: 'voucher:cmd:duplicates_found',
     handler: async (
         commandInput: VoucherDuplicatesFoundInput,
