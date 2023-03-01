@@ -21,7 +21,7 @@ export const createDocumentCommand = new Command({
 
     handler: async (
         commandInput: CreateDocumentInput,
-        { documentEventStore }: { documentEventStore: DocumentEventStore }
+        { documentStore }: { documentStore: DocumentEventStore }
     ): Promise<CreateDocumentOutput> => {
         logger.info('input', commandInput)
         const { key, name, contentHash, aggregateId } =
@@ -39,7 +39,7 @@ export const createDocumentCommand = new Command({
         }
 
         logger.info('Event', JSON.stringify(event, null, 4))
-        await documentEventStore.pushEvent(event)
+        await documentStore.pushEvent(event)
 
         return { aggregateId }
     },

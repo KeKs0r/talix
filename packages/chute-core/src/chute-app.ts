@@ -53,7 +53,7 @@ export class Chute<C extends BaseContext = BaseContext> {
         // aggregate.commands?.forEach((command) => {
         //     container.register(command.commandId, asValue(command))
         // })
-        const storeName = `${aggregate.storeFactory}`
+        const storeName = `${aggregate.name}Store`
         container.register(
             storeName,
             asFunction((deps) => {
