@@ -1,11 +1,11 @@
 import { AggregateService, Chute } from '@chute/core'
 import { RuntimeContext } from '@chute/cf-runtime'
 
-import { createDocumentCommand } from './document-create-command'
+import { createDocumentCommand } from './command/document-create-command'
 import { createDocumentEventStore } from './document-eventstore'
-import { uploadDocumentFromUrlAction } from './upload-document-url-action'
+import { uploadDocumentFromUrlAction } from './actions/upload-document-url-action'
 import { documentCreatedEventType } from './document-created-event'
-import { documentProjection } from './document-projection'
+import { documentProjection } from './query/document-projection'
 import { listDocumentActions } from './http-documents-list'
 
 const documentAggregate: AggregateService<RuntimeContext> = {

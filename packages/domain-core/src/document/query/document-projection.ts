@@ -4,10 +4,10 @@ import { diary } from 'diary'
 import { pick } from 'lodash-es'
 import { Aggregate } from '@castore/core'
 
-import type { DocumentEventStore } from './document-eventstore'
-import { DocumentAggregate } from './document-aggregate'
+import type { DocumentEventStore } from '../document-eventstore'
+import { DocumentAggregate } from '../document-aggregate'
 
-interface Database {
+export interface Database {
     documents: SerializedDocument
 }
 

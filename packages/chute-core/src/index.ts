@@ -16,3 +16,6 @@ export { mockEventStore } from './test-utils/mockEventStore'
 export { healthCheckPlugin } from './core-plugins/health-check'
 
 export { matchEventAction } from './util/match-event'
+
+export type { ErrorResponse, Maybe, SuccessResponse } from './util/maybe'
+export { error, success } from './util/maybe'

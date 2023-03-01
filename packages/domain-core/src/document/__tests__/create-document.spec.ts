@@ -3,7 +3,7 @@ import { asFunction, asValue } from 'awilix'
 import { Command, GetCommandInput, mockEventStore } from '@chute/core'
 
 import { createDocumentEventStore, DocumentEventStore } from '../document-eventstore'
-import { uploadDocumentFromUrlAction } from '../upload-document-url-action'
+import { uploadDocumentFromUrlAction } from '../actions/upload-document-url-action'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 import { documentCreatedEventType } from '../document-created-event'
 

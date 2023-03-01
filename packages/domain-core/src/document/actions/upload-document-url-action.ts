@@ -1,14 +1,21 @@
 import ok from 'tiny-invariant'
-import { Action } from '@chute/core'
+import { Action, error, ErrorResponse, Maybe, success, SuccessResponse } from '@chute/core'
 import { z } from 'zod'
 import { diary } from 'diary'
 import { RuntimeContext } from '@chute/cf-runtime'
+import { Kysely } from 'kysely'
 
-import { basename } from '../shared/basename'
-
-import { createDocumentCommand } from './document-create-command'
+import { basename } from '../../shared/basename'
+import { createDocumentCommand } from '../command/document-create-command'
+import { Database } from '../query/document-projection'
+import { queryDocumentByHash } from '../query/document-by-hash'
 
 const logger = diary('documents:upload-from-url')
+
+type Success = { documentId: string; key: string }
+type DocumentNotFoundError = { code: 'DocumentNotFound'; url: string }
+
+type Response = Maybe<Success, DocumentNotFoundError>
 
 const uploadDocumentFromUrlActionSchema = z.object({
     mimeType: z.string(),
@@ -23,8 +30,8 @@ export const uploadDocumentFromUrlAction = new Action({
     actionId: 'documents:upload-from-url',
     async handler(
         input: UploadDocumentActionInput,
-        { runCommand, fileStorage, generateId }: RuntimeContext
-    ) {
+        { runCommand, fileStorage, generateId, ky }: RuntimeContext & { ky: Kysely<Database> }
+    ): Promise<Response> {
         const { fileName, url, hash, mimeType } = uploadDocumentFromUrlActionSchema.parse(input)
 
         const name = fileName || basename(url)
@@ -34,7 +41,10 @@ export const uploadDocumentFromUrlAction = new Action({
 
         const response = await fetch(url)
         if (response.status !== 200) {
-            throw new DocumentNotFoundError(url)
+            return error<DocumentNotFoundError>({
+                code: 'DocumentNotFound',
+                url,
+            })
         }
         const bodyStream = response.body
         ok(bodyStream, `Bodystream not available for ${url}`)
@@ -52,15 +62,6 @@ export const uploadDocumentFromUrlAction = new Action({
             contentHash: hash,
         })
 
-        return { documentId: id, key: fileUrl.key }
+        return success({ documentId: id, key: fileUrl.key })
     },
 })
-
-class DocumentNotFoundError extends Error {
-    url: string
-    constructor(url: string) {
-        super('Document could not be fetched')
-        this.name = 'DocumentNotFoundError'
-        this.url = url
-    }
-}
