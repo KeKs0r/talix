@@ -1,11 +1,11 @@
-import { describe, beforeEach, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { asFunction, asValue } from 'awilix'
-import { Command, GetCommandInput, mockEventStore } from '@chute/core'
+import { Command, GetCommandInput, parse, SuccessResponse } from '@chute/core'
 
 import { createDocumentEventStore, DocumentEventStore } from '../document-eventstore'
 import { uploadDocumentFromUrlAction } from '../actions/upload-document-url-action'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
-import { documentCreatedEventType } from '../document-created-event'
+import { documentCreatedEventType } from '../command/document-created-event'
 
 describe.concurrent('Upload Document From Url', () => {
     function getFixtures() {
@@ -31,7 +31,7 @@ describe.concurrent('Upload Document From Url', () => {
 
     it('Upload Document Command', async () => {
         const { container, documentStore } = getFixtures()
-        const { documentId } = await uploadDocumentFromUrlAction.handler(
+        const response = await uploadDocumentFromUrlAction.handler(
             {
                 url: 'https://www.laserfocus.io/bitcoin.pdf',
                 mimeType: 'application/pdf',
@@ -39,6 +39,9 @@ describe.concurrent('Upload Document From Url', () => {
             },
             container.cradle
         )
+
+        expect(response.success).toBeTruthy()
+        const { documentId } = parse(response)
 
         const { events } = await documentStore.getEvents(documentId)
 

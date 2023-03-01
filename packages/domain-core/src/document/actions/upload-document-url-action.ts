@@ -30,7 +30,7 @@ export const uploadDocumentFromUrlAction = new Action({
     actionId: 'documents:upload-from-url',
     async handler(
         input: UploadDocumentActionInput,
-        { runCommand, fileStorage, generateId, ky }: RuntimeContext & { ky: Kysely<Database> }
+        { runCommand, fileStorage, generateId }: RuntimeContext
     ): Promise<Response> {
         const { fileName, url, hash, mimeType } = uploadDocumentFromUrlActionSchema.parse(input)
 
