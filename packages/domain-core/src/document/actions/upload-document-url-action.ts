@@ -3,12 +3,9 @@ import { Action, error, ErrorResponse, Maybe, success, SuccessResponse } from '@
 import { z } from 'zod'
 import { diary } from 'diary'
 import { RuntimeContext } from '@chute/cf-runtime'
-import { Kysely } from 'kysely'
 
 import { basename } from '../../shared/basename'
 import { createDocumentCommand } from '../command/document-create-command'
-import { Database } from '../query/document-projection'
-import { queryDocumentByHash } from '../query/document-by-hash'
 
 const logger = diary('documents:upload-from-url')
 

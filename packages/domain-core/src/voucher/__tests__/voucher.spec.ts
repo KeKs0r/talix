@@ -1,9 +1,10 @@
 import { describe, beforeEach, it, expect } from 'vitest'
 import { mockEventStore } from '@chute/core'
+import { random } from 'lodash-es'
 
 import { createDocumentEventStore, documentCreatedEventType } from '../../document'
 import { createVoucherEventStore } from '../voucher-eventstore'
-import { createVoucherCommand, CreateVoucherInput } from '../voucher-create-command'
+import { createVoucherCommand, CreateVoucherInput } from '../crud/voucher-create-command'
 import { createDateString } from '../../shared/date.types'
 import { makeTestDependencies } from '../../shared/__test__/make-test-deps'
 
@@ -32,11 +33,13 @@ describe.concurrent('Voucher', () => {
         })
 
     it('Create Voucher for existing document', async () => {
+        const documentHash = random(100000, 999999).toString()
         const { voucherId } = await createVoucher({
             documentId: 'i-exist',
             creditOrDebit: 'DEBIT',
             vatTaxType: 'EU',
             voucherDate: createDateString(2023, 1, 15),
+            documentHash,
         })
 
         const { events } = await mockedVoucherEventStore.getEvents(voucherId)
@@ -47,7 +50,7 @@ describe.concurrent('Voucher', () => {
             aggregateId: 'voucherId',
             version: 1,
             type: 'voucher:voucher_created',
-            payload: { documentId: 'i-exist' },
+            payload: { documentId: 'i-exist', documentHash },
         })
 
         const { aggregate } = await mockedVoucherEventStore.getExistingAggregate(voucherId)
@@ -57,6 +60,7 @@ describe.concurrent('Voucher', () => {
             version: 1,
             status: 'DRAFT',
             documentId: 'i-exist',
+            documentHash,
             items: [],
         })
         expect(aggregate.createdAt).toBeTruthy()
@@ -69,6 +73,7 @@ describe.concurrent('Voucher', () => {
                 creditOrDebit: 'DEBIT',
                 vatTaxType: 'EU',
                 voucherDate: createDateString(2023, 1, 15),
+                documentHash: random(100000, 999999).toString(),
             })
         ).rejects.toThrow('Unable to find aggregate dont-exist in event store documentStore.')
     })

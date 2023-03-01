@@ -11,6 +11,8 @@ export type { BaseContext } from './base-context'
 
 export { EventStore } from './event-store'
 
+export { makeSerializer } from './view-serializer'
+
 export { mockEventStore } from './test-utils/mockEventStore'
 
 export { healthCheckPlugin } from './core-plugins/health-check'

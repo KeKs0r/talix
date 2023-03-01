@@ -2,12 +2,12 @@ import z from 'zod'
 import { ZodEventType } from '@castore/zod-event'
 import { EventDetail, EventTypeDetail } from '@castore/core'
 
-import { DateStringSchema } from '../shared/base-schema'
-
-import { vatTaxTypeSchema, creditOrDebitSchema } from './voucher-aggregate'
+import { DateStringSchema } from '../../shared/base-schema'
+import { vatTaxTypeSchema, creditOrDebitSchema } from '../voucher-aggregate'
 
 export const voucherCreatedPayloadSchema = z.object({
     documentId: z.string(),
+    documentHash: z.string(),
     vatTaxType: vatTaxTypeSchema.optional(),
     creditOrDebit: creditOrDebitSchema.optional(),
     voucherDate: DateStringSchema.optional(),

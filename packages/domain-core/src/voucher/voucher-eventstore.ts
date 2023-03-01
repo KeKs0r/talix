@@ -1,7 +1,7 @@
 import { RuntimeContext } from '@chute/cf-runtime'
 import { EventStore } from '@chute/core'
 
-import { voucherCreatedEventType } from './voucher-created-event'
+import { voucherCreatedEventType } from './crud/voucher-created-event'
 import { voucherReducer } from './voucher-reducer'
 
 export const createVoucherEventStore = ({ emitter, storageAdapter }: RuntimeContext) =>
