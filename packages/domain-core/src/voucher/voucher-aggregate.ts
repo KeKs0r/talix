@@ -14,8 +14,6 @@ export interface VoucherAggregate extends Aggregate {
     status: VoucherStatus
     documentId: string
     documentHash?: string
-    createdAt: DateTimeString
-    updatedAt?: DateTimeString
 
     vatTaxType?: VatTaxType
     voucherDate?: DateTimeString
@@ -28,6 +26,9 @@ export interface VoucherAggregate extends Aggregate {
     duplicates?: DuplicateState
 
     items: VoucherLineItem[]
+
+    createdAt: DateTimeString
+    updatedAt?: DateTimeString
 }
 
 interface DuplicateState {

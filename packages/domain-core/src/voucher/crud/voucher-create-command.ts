@@ -6,7 +6,6 @@ import { VoucherEventStore } from '../voucher-eventstore'
 
 import {
     voucherCreatedEventType,
-    VoucherCreatedEventTypeDetail,
     VoucherCreatedPayload,
     voucherCreatedPayloadSchema,
 } from './voucher-created-event'
@@ -47,12 +46,13 @@ export const createVoucherCommand = new Command({
             documentHash,
         }
 
-        const event: VoucherCreatedEventTypeDetail = {
-            aggregateId: voucherId,
-            version: 1,
-            type: voucherCreatedEventType.type,
-            payload,
-        }
+        const event = voucherCreatedEventType.create(
+            {
+                aggregateId: voucherId,
+                version: 1,
+            },
+            payload
+        )
 
         await voucherStore.pushEvent(event)
 

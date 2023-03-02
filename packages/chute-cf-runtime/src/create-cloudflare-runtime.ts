@@ -1,4 +1,4 @@
-import { asClass, asFunction } from 'awilix'
+import { asFunction } from 'awilix'
 import { Chute } from '@chute/core'
 import { ulidFactory } from 'ulid-workers'
 import { R2FileStorage } from 'file-storage'

@@ -51,4 +51,3 @@ export const duplicatesFoundCommand = new Command({
         }
     },
 })
-export type CreateVoucherCommand = typeof createVoucherCommand

@@ -2,6 +2,10 @@ export type { AggregateService } from './chute-app'
 
 export { Chute } from './chute-app'
 
+export type { EventType, EventTypeDetail, EventTypesDetails } from './event/event-type'
+export type { EventDetail } from './event/event-detail'
+export { ZodEventType } from './event/zod-event-type'
+
 export { Command } from './command'
 export type { CommandHandler, GetCommandInput, GetCommandOutput } from './command'
 export { Action } from './action'
@@ -20,4 +24,4 @@ export { healthCheckPlugin } from './core-plugins/health-check'
 export { matchEventAction } from './util/match-event'
 
 export type { ErrorResponse, Maybe, SuccessResponse } from './util/maybe'
-export { error, success, parse } from './util/maybe'
+export { error, success, warning, parse } from './util/maybe'

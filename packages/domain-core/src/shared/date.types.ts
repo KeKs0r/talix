@@ -1,4 +1,4 @@
-import { DateStringSchema, DateTimeString } from './base-schema'
+import { DateStringSchema, DateTimeString } from '@chute/core/src/schema/base-schema'
 declare global {
     interface Date {
         constructor(input: DateTimeString): Date

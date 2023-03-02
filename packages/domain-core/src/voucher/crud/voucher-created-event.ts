@@ -1,8 +1,7 @@
+import { EventTypeDetail, ZodEventType } from '@chute/core'
 import z from 'zod'
-import { ZodEventType } from '@castore/zod-event'
-import { EventDetail, EventTypeDetail } from '@castore/core'
 
-import { DateStringSchema } from '../../shared/base-schema'
+import { DateStringSchema } from '@chute/core/src/schema/base-schema'
 import { vatTaxTypeSchema, creditOrDebitSchema } from '../voucher-aggregate'
 
 export const voucherCreatedPayloadSchema = z.object({
@@ -22,5 +21,4 @@ export const voucherCreatedEventType = new ZodEventType<
     type: 'voucher:voucher_created',
     payloadSchema: voucherCreatedPayloadSchema,
 })
-export type VoucherCreatedEventDetail = EventDetail<typeof voucherCreatedEventType>
-export type VoucherCreatedEventTypeDetail = EventTypeDetail<typeof voucherCreatedEventType>
+export type VoucherCreatedEventDetail = EventTypeDetail<typeof voucherCreatedEventType>
