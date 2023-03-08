@@ -9,7 +9,7 @@
         "typescript": "^4.9.4",
         "vite": "^3.2.4",
         "vite-node": "^0.27.0",
-        "vitest": "^0.25.6"
+        "vitest": "^0.25.8"
     },
     "main": "./src/index.ts",
     "private": true,
