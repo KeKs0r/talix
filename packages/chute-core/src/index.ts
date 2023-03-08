@@ -13,6 +13,9 @@ export { EventAction, isEventAction } from './event-action'
 export { HttpAction, isHttpAction } from './http-action'
 export type { BaseContext } from './base-context'
 
+export { DateStringSchema, DateTimeStringSchema } from './schema/date-schema'
+export type { DateString, DateTimeString } from './schema/date-schema'
+
 export { EventStore } from './event-store'
 
 export { makeSerializer } from './view-serializer'
@@ -24,4 +27,4 @@ export { healthCheckPlugin } from './core-plugins/health-check'
 export { matchEventAction } from './util/match-event'
 
 export type { ErrorResponse, Maybe, SuccessResponse } from './util/maybe'
-export { error, success, warning, parse } from './util/maybe'
+export { error, success, warning, parse, isSuccess } from './util/maybe'

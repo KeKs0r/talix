@@ -2,9 +2,9 @@ import { subtle } from 'crypto'
 
 import type { Aggregate } from '@castore/core'
 import { z } from 'zod'
+import { DateTimeStringSchema } from '@chute/core'
 
-import { DateString, DateTimeStringSchema } from '@chute/core/src/schema/base-schema'
-import { Currency, CurrencySchema } from '../shared/currency-schema'
+import { CurrencySchema } from '../shared/currency-schema'
 
 export const TransactionSchema = z.object({
     accountId: z.string(),

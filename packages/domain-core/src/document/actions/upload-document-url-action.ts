@@ -10,7 +10,7 @@ import { createDocumentCommand } from '../command/document-create-command'
 const logger = diary('documents:upload-from-url')
 
 type Success = { documentId: string; key: string }
-type DocumentNotFoundError = { code: 'DocumentNotFound'; url: string }
+type DocumentNotFoundError = { code: 'DocumentNotFound'; url: string; message: string }
 
 type Response = Maybe<Success, DocumentNotFoundError>
 
@@ -40,6 +40,7 @@ export const uploadDocumentFromUrlAction = new Action({
         if (response.status !== 200) {
             return error<DocumentNotFoundError>({
                 code: 'DocumentNotFound',
+                message: 'Document not found',
                 url,
             })
         }

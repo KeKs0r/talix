@@ -1,7 +1,7 @@
 import { EventTypeDetail, ZodEventType } from '@chute/core'
 import z from 'zod'
+import { DateStringSchema } from '@chute/core'
 
-import { DateStringSchema } from '@chute/core/src/schema/base-schema'
 import { vatTaxTypeSchema, creditOrDebitSchema } from '../voucher-aggregate'
 
 export const voucherCreatedPayloadSchema = z.object({

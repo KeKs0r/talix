@@ -29,3 +29,10 @@ export const DateStringSchema = z
     .brand('DateString')
 
 export type DateString = z.infer<typeof DateStringSchema>
+
+declare global {
+    interface Date {
+        constructor(input: DateTimeString): Date
+        toISOString(): DateTimeString
+    }
+}

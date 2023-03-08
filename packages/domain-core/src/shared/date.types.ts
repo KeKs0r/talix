@@ -1,10 +1,4 @@
-import { DateStringSchema, DateTimeString } from '@chute/core/src/schema/base-schema'
-declare global {
-    interface Date {
-        constructor(input: DateTimeString): Date
-        toISOString(): DateTimeString
-    }
-}
+import { DateStringSchema } from '@chute/core'
 
 export function createDateString(year: number, month: number, day: number) {
     return DateStringSchema.parse(

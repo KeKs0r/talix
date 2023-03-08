@@ -25,6 +25,12 @@ export type Maybe<
     Warn extends BaseMessage = undefined
 > = SuccessResponse<Success> | PotentialErrorResponse<Err> | PotentialWarningResponse<Warn>
 
+export function isSuccess<Success = unknown>(
+    m: Maybe<Success, unknown, unknown>
+): m is SuccessResponse<Success> {
+    return m.type === 'success'
+}
+
 export function parse<Success>(m: Maybe<Success, unknown, unknown>): Success {
     ok(m.type === 'success', `Expected Response to be success`)
     return m.data

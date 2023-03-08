@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { asFunction, asValue } from 'awilix'
-import { Command, GetCommandInput, parse, SuccessResponse } from '@chute/core'
+import { Command, GetCommandInput, parse, isSuccess } from '@chute/core'
 
 import { createDocumentEventStore, DocumentEventStore } from '../document-eventstore'
 import { uploadDocumentFromUrlAction } from '../actions/upload-document-url-action'
@@ -40,7 +40,7 @@ describe.concurrent('Upload Document From Url', () => {
             container.cradle
         )
 
-        expect(response.success).toBeTruthy()
+        expect(isSuccess(response)).toBeTruthy()
         const { documentId } = parse(response)
 
         const { events } = await documentStore.getEvents(documentId)
