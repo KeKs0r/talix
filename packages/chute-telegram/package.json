@@ -1,0 +1,39 @@
+{
+    "name": "@chute/telegram",
+    "version": "0.0.0",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20221111.1",
+        "@types/node": "^18.11.18",
+        "eslint-config-custom": "workspace:*",
+        "tsconfig": "workspace:*",
+        "typescript": "^4.9.4",
+        "vite": "^3.2.4",
+        "vite-node": "^0.27.0",
+        "vitest": "^0.29.2"
+    },
+    "private": true,
+    "engines": {
+        "node": "18"
+    },
+    "scripts": {
+        "type-check": "tsc --noEmit",
+        "dev": "vite-node src/dev.ts",
+        "dev:env": "doppler run -- vite-node src/dev.ts",
+        "lint": "eslint",
+        "test": "NODE_OPTIONS=--experimental-vm-modules vitest run --passWithNoTests",
+        "test:env": "doppler run -- pnpm test",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules vitest .",
+        "test:watch:env": "doppler run -- pnpm test:watch",
+        "repl": "vite-node",
+        "repl:env": "doppler run -- vite-node"
+    },
+    "dependencies": {
+        "@chute/core": "workspace:*",
+        "awilix": "^8.0.0",
+        "diary": "^0.4.3",
+        "grammy": "^1.14.1",
+        "tiny-invariant": "^1.3.1"
+    }
+}
