@@ -1,7 +1,10 @@
 import type { Reducer } from '@castore/core'
 
 import { DocumentAggregate } from './document-aggregate'
-import { DocumentCreatedEventTypeDetail, documentCreatedEventType } from './document-created-event'
+import {
+    DocumentCreatedEventTypeDetail,
+    documentCreatedEventType,
+} from './command/document-created-event'
 
 type DocumentEventDetails = DocumentCreatedEventTypeDetail
 

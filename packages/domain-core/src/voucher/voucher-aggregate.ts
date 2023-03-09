@@ -13,8 +13,7 @@ type CreditOrDebit = z.infer<typeof creditOrDebitSchema>
 export interface VoucherAggregate extends Aggregate {
     status: VoucherStatus
     documentId: string
-    createdAt: DateTimeString
-    updatedAt?: DateTimeString
+    documentHash?: string
 
     vatTaxType?: VatTaxType
     voucherDate?: DateTimeString
@@ -24,7 +23,17 @@ export interface VoucherAggregate extends Aggregate {
     supplierAddress?: string
     predictions?: any
 
+    duplicates?: DuplicateState
+
     items: VoucherLineItem[]
+
+    createdAt: DateTimeString
+    updatedAt?: DateTimeString
+}
+
+interface DuplicateState {
+    didRun: boolean
+    duplicates: string[]
 }
 
 export interface VoucherLineItem {

@@ -1,12 +1,11 @@
 import z from 'zod'
 import { Command } from '@chute/core'
 
-import { DocumentEventStore } from '../document/document-eventstore'
+import { DocumentEventStore } from '../../document/document-eventstore'
+import { VoucherEventStore } from '../voucher-eventstore'
 
-import { VoucherEventStore } from './voucher-eventstore'
 import {
     voucherCreatedEventType,
-    VoucherCreatedEventTypeDetail,
     VoucherCreatedPayload,
     voucherCreatedPayloadSchema,
 } from './voucher-created-event'
@@ -14,6 +13,7 @@ import {
 const createVoucherCommandInputSchema = voucherCreatedPayloadSchema.pick({
     creditOrDebit: true,
     documentId: true,
+    documentHash: true,
     vatTaxType: true,
     voucherDate: true,
 })
@@ -31,7 +31,7 @@ export const createVoucherCommand = new Command({
         commandInput: CreateVoucherInput,
         { generateId, voucherStore, documentStore }: Context
     ): Promise<Output> => {
-        const { documentId, creditOrDebit, vatTaxType, voucherDate } =
+        const { documentId, creditOrDebit, vatTaxType, voucherDate, documentHash } =
             createVoucherCommandInputSchema.parse(commandInput)
 
         // Just to check that the document exists
@@ -43,14 +43,16 @@ export const createVoucherCommand = new Command({
             creditOrDebit,
             vatTaxType,
             voucherDate,
+            documentHash,
         }
 
-        const event: VoucherCreatedEventTypeDetail = {
-            aggregateId: voucherId,
-            version: 1,
-            type: voucherCreatedEventType.type,
-            payload,
-        }
+        const event = voucherCreatedEventType.create(
+            {
+                aggregateId: voucherId,
+                version: 1,
+            },
+            payload
+        )
 
         await voucherStore.pushEvent(event)
 

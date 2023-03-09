@@ -2,8 +2,8 @@ import { AggregateService, Chute } from '@chute/core'
 import { RuntimeContext } from '@chute/cf-runtime'
 
 import { createVoucherEventStore } from './voucher-eventstore'
-import { createVoucherCommand } from './voucher-create-command'
-import { voucherCreatedEventType } from './voucher-created-event'
+import { createVoucherCommand } from './crud/voucher-create-command'
+import { voucherCreatedEventType } from './crud/voucher-created-event'
 
 export const voucherAggregate: AggregateService<RuntimeContext> = {
     name: 'voucher',

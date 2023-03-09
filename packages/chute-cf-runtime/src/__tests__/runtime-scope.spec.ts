@@ -1,5 +1,5 @@
-import { Chute, HttpAction } from '@chute/core'
 import { describe, expect, it, vi } from 'vitest'
+import { Chute, HttpAction } from '@chute/core'
 import Emittery from 'emittery'
 
 import { createCloudflareRuntime } from '../create-cloudflare-runtime'

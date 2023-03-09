@@ -1,5 +1,5 @@
 import ok from 'tiny-invariant'
-import { EventAction } from '@chute/core'
+import { DateString, EventAction } from '@chute/core'
 import { diary } from 'diary'
 import {
     documentCreatedEventType,
@@ -7,7 +7,6 @@ import {
     DocumentCreatedPayload,
     createVoucherCommand,
     CreateVoucherInput,
-    DateString,
     createDateString,
 } from 'domain-core'
 
@@ -27,7 +26,7 @@ export const analyzeCreatedDocumentAction = new EventAction<'ocr:analyse-uploade
         { fileStorage, runCommand, documentAnalyzer }: OcrDocumentContext
     ) => {
         const documentId = event.aggregateId
-        const { key } = event.payload as DocumentCreatedPayload
+        const { key, contentHash } = event.payload as DocumentCreatedPayload
         const file = await fileStorage.get(key)
         ok(file, `Could not find file with key ${key}`)
         const buffer = await file.arrayBuffer()
@@ -45,6 +44,7 @@ export const analyzeCreatedDocumentAction = new EventAction<'ocr:analyse-uploade
                 vatTaxType: 'EU',
                 documentId: documentId,
                 voucherDate,
+                documentHash: contentHash,
             }
             await runCommand(createVoucherCommand, input)
         } else {
