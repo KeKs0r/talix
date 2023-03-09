@@ -1,19 +1,22 @@
 import ok from 'tiny-invariant'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
-import { EventType, StorageAdapter } from '@castore/core'
+import { EventType } from '@castore/core'
 import { diary } from 'diary'
 
 import { Action, GetActionInput } from './action'
 import { Command, GetCommandInput } from './command'
 import { EventStore } from './event-store'
 import type { BaseContext } from './base-context'
+import { Registry, BaseRegistryMap } from './registry'
 
 const logger = diary('chute:app')
 
-export class Chute<C extends BaseContext = BaseContext> {
+export class Chute<
+    C extends BaseContext = BaseContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+> {
     // plugins: Array<Plugin> = []
-    registeredAggregates = new Set<string>()
-    registeredActions = new Set<string>()
+    registry: Registry<C, R> = new Registry<C, R>()
     container: AwilixContainer<C>
     constructor() {
         this.container = createContainer()
@@ -21,7 +24,7 @@ export class Chute<C extends BaseContext = BaseContext> {
         this.container.register('runAction', asValue(this.runAction.bind(this)))
     }
 
-    registerPlugin(plugin: Plugin<C>) {
+    registerPlugin(plugin: Plugin<C, R>) {
         plugin(this)
         // this.plugins.push(plugin)
         return this
@@ -40,14 +43,18 @@ export class Chute<C extends BaseContext = BaseContext> {
         return this
     }
 
+    register = this.registry.register.bind(this.registry)
+    getOfType = this.registry.get.bind(this.registry)
+
     registerAggregate(aggregate: AggregateService<C>) {
         ok(
-            !this.registeredAggregates.has(aggregate.name),
+            !this.container.hasRegistration(aggregate.name),
             `Aggregate '${aggregate.name}' is already registered`
         )
         logger.debug('registerAggregate', aggregate.name)
-        this.registeredAggregates.add(aggregate.name)
+
         const container = this.container
+        this.register('aggregate', aggregate)
         container.register(aggregate.name, asValue(aggregate))
 
         // aggregate.commands?.forEach((command) => {
@@ -78,11 +85,11 @@ export class Chute<C extends BaseContext = BaseContext> {
 
     registerAction(action: Action) {
         ok(
-            !this.registeredActions.has(action.actionId),
+            !this.container.hasRegistration(action.actionId),
             `Action '${action.actionId}' is already registered`
         )
         logger.debug('registerAction', action.actionId)
-        this.registeredActions.add(action.actionId)
+        this.register('action', action)
         this.container.register(action.actionId, asValue(action))
         return this
     }
@@ -131,13 +138,11 @@ export class Chute<C extends BaseContext = BaseContext> {
     }
 
     get actions(): Array<Action> {
-        const actionIds = Array.from(this.registeredActions)
-        return actionIds.map((actionId) => this.container.resolve(actionId))
+        return this.getOfType('action')
     }
 
     get aggregates(): Array<AggregateService<C>> {
-        const aggregateNames = Array.from(this.registeredAggregates)
-        return aggregateNames.map((aggregateName) => this.container.resolve(aggregateName))
+        return this.getOfType('aggregate')
     }
 }
 
@@ -148,7 +153,10 @@ export interface AggregateService<T> {
     events?: Array<EventType>
 }
 
-type Plugin<C extends BaseContext = BaseContext> = (chute: Chute<C>) => void
+type Plugin<
+    C extends BaseContext = BaseContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+> = (chute: Chute<C, R>) => void
 
 function getParentId(parent?: Command | Action) {
     if (parent instanceof Command) {
