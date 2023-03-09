@@ -1,5 +1,5 @@
 import ok from 'tiny-invariant'
-import { EventAction } from '@chute/core'
+import { DateString, EventAction } from '@chute/core'
 import { diary } from 'diary'
 import {
     documentCreatedEventType,
@@ -7,7 +7,6 @@ import {
     DocumentCreatedPayload,
     createVoucherCommand,
     CreateVoucherInput,
-    DateString,
     createDateString,
 } from 'domain-core'
 
