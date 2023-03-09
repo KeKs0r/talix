@@ -71,11 +71,11 @@ describe.concurrent('Upload Document From Url', () => {
 
     it('Upload Document Command fails, if the url is not accessible', async () => {
         const { container, documentStore } = getFixtures()
-        expect(
-            uploadDocumentFromUrlAction.handler(
-                { url: 'https://www.google.com/i-dont-exist.pdf', mimeType: 'application/pdf' },
-                container.cradle
-            )
-        ).rejects.toThrow('Document could not be fetched')
+        const result = await uploadDocumentFromUrlAction.handler(
+            { url: 'https://www.google.com/i-dont-exist.pdf', mimeType: 'application/pdf' },
+            container.cradle
+        )
+        expect(result).toHaveProperty('type', 'error')
+        expect(result).toHaveProperty('error.message', 'Document not found')
     })
 })

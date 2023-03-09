@@ -9,13 +9,11 @@ it('Creates a Deterministic Transaction Id', async () => {
         name: 'name',
         reference: 'reference',
     })
-    console.log(a)
-    console.log(
-        await createHash({
-            amount: 3,
-            date: new Date('2022-01-01').toISOString(),
-            name: 'name',
-            reference: 'reference',
-        })
-    )
+    const b = await createHash({
+        amount: 3,
+        date: new Date('2022-01-01').toISOString(),
+        name: 'name',
+        reference: 'reference',
+    })
+    expect(a).toEqual(b)
 })
