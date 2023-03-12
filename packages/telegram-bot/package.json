@@ -31,6 +31,7 @@
     },
     "dependencies": {
         "@chute/core": "workspace:*",
+        "@chute/telegram": "workspace:*",
         "awilix": "^8.0.0",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",

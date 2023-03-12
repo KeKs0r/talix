@@ -384,6 +384,7 @@ importers:
   packages/telegram-bot:
     specifiers:
       '@chute/core': workspace:*
+      '@chute/telegram': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
       '@types/node': ^18.11.18
       awilix: ^8.0.0
@@ -399,6 +400,7 @@ importers:
       vitest: ^0.29.2
     dependencies:
       '@chute/core': link:../chute-core
+      '@chute/telegram': link:../chute-telegram
       awilix: 8.0.0
       diary: 0.4.3
       domain-core: link:../domain-core

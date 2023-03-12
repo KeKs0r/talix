@@ -3,6 +3,8 @@ import { asFunction } from 'awilix'
 import { Bot, Composer, Context } from 'grammy/web'
 import { diary } from 'diary'
 
+import { FileUrlPluginFlavor, fileUrlMiddleware } from './util-ctx-file-url'
+
 const logger = diary('telegram:plugin')
 
 type TelegramPluginOptions = {
@@ -14,6 +16,10 @@ export type TelegramPluginContext = {
     TELEGRAM_BOT_TOKEN: string
 }
 type FullTelegramPluginContext = TelegramPluginContext & BaseContext
+
+export type BotContext = Context & {
+    cradle: FullTelegramPluginContext
+} & FileUrlPluginFlavor
 
 export function telegramPlugin(options?: TelegramPluginOptions) {
     const { path = '/telegram/webhook' } = options || {}
@@ -33,12 +39,7 @@ export function telegramPlugin(options?: TelegramPluginOptions) {
             httpPath: path,
             async handler(input, cradle: T) {
                 const { TELEGRAM_BOT_TOKEN } = cradle
-                const bot = new Bot(TELEGRAM_BOT_TOKEN)
-                //@TODO: Register the CRADLE on the context
-                const listeners = app.getForTag('telegram')
-                listeners.forEach((listener: any) => {
-                    bot.use(listener)
-                })
+                const bot = await createBot(TELEGRAM_BOT_TOKEN, app, cradle)
                 await bot.handleUpdate(input)
                 return { status: 'ok' }
             },
@@ -47,4 +48,28 @@ export function telegramPlugin(options?: TelegramPluginOptions) {
         return app
     }
     return registerTelegram
+}
+
+async function createBot<T extends FullTelegramPluginContext = FullTelegramPluginContext>(
+    token: string,
+    chute: Chute<T>,
+    scope: T
+) {
+    const bot = new Bot<BotContext>(token)
+
+    bot.use((ctx, next) => {
+        ctx.cradle = scope
+        return next()
+    })
+    bot.use(fileUrlMiddleware(token))
+
+    const listeners = chute.getForTag('telegram')
+    listeners.forEach((listener: any) => {
+        bot.use(listener)
+    })
+    /**
+     * @TODO: Provide the config directly, so we dont need to pull
+     */
+    await bot.init()
+    return bot
 }
