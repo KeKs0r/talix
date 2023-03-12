@@ -1,4 +1,4 @@
-import { Chute } from '@chute/core'
+import { BaseRegistryMap, Chute } from '@chute/core'
 import { ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer, asValue, asFunction } from 'awilix'
 import { diary } from 'diary'
@@ -6,15 +6,14 @@ import Emittery from 'emittery'
 
 import { Bindings } from './base-env.types'
 import { ProduceBody } from './queue'
-import { CFRuntimeContext, RuntimeContext } from './runtime-context'
+import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:scope')
 
-export function createScope<C extends CFRuntimeContext = CFRuntimeContext>(
-    app: Chute<C>,
-    env: Bindings,
-    execCtx: ExecutionContext
-) {
+export function createScope<
+    C extends CFRuntimeContext = CFRuntimeContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+>(app: Chute<C, R>, env: Bindings, execCtx: ExecutionContext) {
     const scope = app.container.createScope<C>()
     const emitter = new Emittery()
     scope.register('emitter', asValue(emitter))

@@ -1,5 +1,5 @@
 import { diary } from 'diary'
-import { HttpAction, isHttpAction, Chute } from '@chute/core'
+import { HttpAction, isHttpAction, Chute, BaseRegistryMap } from '@chute/core'
 import { Handler, Hono } from 'hono'
 
 import { Env } from './base-env.types'
@@ -8,7 +8,10 @@ import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:http')
 
-export function createHTTPActions<C extends CFRuntimeContext = CFRuntimeContext>(chute: Chute<C>) {
+export function createHTTPActions<
+    C extends CFRuntimeContext = CFRuntimeContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+>(chute: Chute<C, R>) {
     const hono = new Hono<Env>()
     Object.values(chute.actions).forEach((action) => {
         if (isHttpAction(action)) {
@@ -38,10 +41,10 @@ export function createHTTPActions<C extends CFRuntimeContext = CFRuntimeContext>
     return hono
 }
 
-function wrapHTTPAction<C extends CFRuntimeContext = CFRuntimeContext>(
-    action: HttpAction,
-    chute: Chute<C>
-): Handler<Env> {
+function wrapHTTPAction<
+    C extends CFRuntimeContext = CFRuntimeContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+>(action: HttpAction, chute: Chute<C, R>): Handler<Env> {
     return async (c) => {
         const scope = createScope(chute, c.env, c.executionCtx)
         if (action.httpMethod === 'GET') {

@@ -11,7 +11,7 @@ type Context = RuntimeContext & Env['Bindings'] & TelegramPluginContext
 
 export function makeApp() {
     const chute = new Chute<Context>()
-    const chute1 = chute
+    return chute
         .registerPlugin(telegramPlugin())
         .registerPlugin(telegramBot())
         .registerPlugin(documentService)
