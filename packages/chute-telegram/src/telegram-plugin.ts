@@ -26,7 +26,7 @@ export function telegramPlugin(options?: TelegramPluginOptions) {
             asFunction(({ TELEGRAM_BOT_TOKEN }) => new Bot(TELEGRAM_BOT_TOKEN)).singleton()
         )
 
-        const upgraded = app.registerType<Composer<Context>>('telegram')
+        const upgraded = app.registerType<Composer<Context>, 'telegram'>('telegram')
 
         const webhookAction = new HttpAction({
             actionId: 'telegram:webhook',

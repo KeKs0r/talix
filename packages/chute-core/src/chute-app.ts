@@ -24,10 +24,11 @@ export class Chute<
         this.container.register('runAction', asValue(this.runAction.bind(this)))
     }
 
-    registerPlugin(plugin: Plugin<C, R>) {
-        plugin(this)
+    registerPlugin<C2 extends C = C, R2 extends R = R>(
+        plugin: Plugin<C, R, C2, R2>
+    ): Chute<C2, R2> {
+        return plugin(this)
         // this.plugins.push(plugin)
-        return this
     }
 
     /**
@@ -43,8 +44,15 @@ export class Chute<
         return this
     }
 
-    register = this.registry.register.bind(this.registry)
+    registerOfType = this.registry.register.bind(this.registry)
     getOfType = this.registry.get.bind(this.registry)
+
+    /** This is a noop, that just helps with fluent api & type safety */
+    registerType<Service, Type extends string = string>(
+        type: Type
+    ): Chute<C, R & Record<Type, Service>> {
+        return this as Chute<C, R & Record<Type, Service>>
+    }
 
     registerAggregate(aggregate: AggregateService<C>) {
         ok(
@@ -54,7 +62,7 @@ export class Chute<
         logger.debug('registerAggregate', aggregate.name)
 
         const container = this.container
-        this.register('aggregate', aggregate)
+        this.registerOfType('aggregate', aggregate)
         container.register(aggregate.name, asValue(aggregate))
 
         // aggregate.commands?.forEach((command) => {
@@ -89,7 +97,7 @@ export class Chute<
             `Action '${action.actionId}' is already registered`
         )
         logger.debug('registerAction', action.actionId)
-        this.register('action', action)
+        this.registerOfType('action', action)
         this.container.register(action.actionId, asValue(action))
         return this
     }
@@ -153,10 +161,12 @@ export interface AggregateService<T> {
     events?: Array<EventType>
 }
 
-type Plugin<
+export type Plugin<
     C extends BaseContext = BaseContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
-> = (chute: Chute<C, R>) => void
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>,
+    C2 extends C = C,
+    R2 extends R = R
+> = (chute: Chute<C, R>) => Chute<C2, R2>
 
 function getParentId(parent?: Command | Action) {
     if (parent instanceof Command) {
