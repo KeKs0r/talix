@@ -1,11 +1,15 @@
 import { $Contravariant } from '@castore/core'
+
 import { Action } from './action'
 import { BaseContext } from './base-context'
 import { AggregateService } from './chute-app'
 
-export type BaseRegistryMap<C extends BaseContext = BaseContext> = {
+export type BaseRegistryMap<
+    C extends BaseContext = BaseContext,
+    $C = $Contravariant<C, BaseContext>
+> = {
     action: Action
-    aggregate: AggregateService<C>
+    aggregate: AggregateService<$C>
 }
 
 export class Registry<

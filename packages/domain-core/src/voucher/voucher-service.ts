@@ -1,4 +1,4 @@
-import { AggregateService, Chute } from '@chute/core'
+import { AggregateService, BaseRegistryMap, Chute } from '@chute/core'
 import { RuntimeContext } from '@chute/cf-runtime'
 
 import { createVoucherEventStore } from './voucher-eventstore'
@@ -12,6 +12,9 @@ export const voucherAggregate: AggregateService<RuntimeContext> = {
     events: [voucherCreatedEventType],
 }
 
-export function voucherService<C extends RuntimeContext = RuntimeContext>(app: Chute<C>) {
-    app.registerAggregate(voucherAggregate)
+export function voucherService<
+    C extends RuntimeContext = RuntimeContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+>(app: Chute<C, R>) {
+    return app.registerAggregate(voucherAggregate)
 }

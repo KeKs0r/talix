@@ -1,4 +1,4 @@
-import { AggregateService, Chute } from '@chute/core'
+import { $Contravariant, AggregateService, BaseRegistryMap, Chute } from '@chute/core'
 import { RuntimeContext } from '@chute/cf-runtime'
 
 import { createDocumentCommand } from './command/document-create-command'
@@ -15,9 +15,13 @@ const documentAggregate: AggregateService<RuntimeContext> = {
     events: [documentCreatedEventType],
 }
 
-export function documentService<C extends RuntimeContext = RuntimeContext>(app: Chute<C>) {
-    app.registerAggregate(documentAggregate)
-    app.registerAction(uploadDocumentFromUrlAction)
-    app.registerAction(documentProjection)
-    app.registerAction(listDocumentActions)
+export function documentService<
+    C extends RuntimeContext = RuntimeContext,
+    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
+>(chute: Chute<C, R>) {
+    return chute
+        .registerAggregate(documentAggregate)
+        .registerAction(uploadDocumentFromUrlAction)
+        .registerAction(documentProjection)
+        .registerAction(listDocumentActions)
 }

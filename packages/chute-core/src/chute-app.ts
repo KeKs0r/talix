@@ -1,6 +1,6 @@
 import ok from 'tiny-invariant'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
-import { EventType } from '@castore/core'
+import { EventType, $Contravariant } from '@castore/core'
 import { diary } from 'diary'
 
 import { Action, GetActionInput } from './action'

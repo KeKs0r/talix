@@ -11,12 +11,12 @@ type Context = RuntimeContext & Env['Bindings'] & TelegramPluginContext
 
 export function makeApp() {
     const chute = new Chute<Context>()
-    const chute1 = chute.registerPlugin(telegramPlugin())
-    const chute2 = chute1
+    const chute1 = chute
+        .registerPlugin(telegramPlugin())
         .registerPlugin(telegramBot())
-        // .registerPlugin(documentService)
-        // .registerPlugin(voucherService)
-        // .registerPlugin(ocrService)
-        // .registerPlugin(healthCheckPlugin())
+        .registerPlugin(documentService)
+        .registerPlugin(voucherService)
+        .registerPlugin(ocrService)
+        .registerPlugin(healthCheckPlugin())
         .build()
 }
