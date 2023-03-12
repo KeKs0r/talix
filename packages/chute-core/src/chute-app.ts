@@ -1,32 +1,27 @@
 import ok from 'tiny-invariant'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
-import { EventType, $Contravariant } from '@castore/core'
+import { EventType } from '@castore/core'
 import { diary } from 'diary'
 
 import { Action, GetActionInput } from './action'
 import { Command, GetCommandInput } from './command'
 import { EventStore } from './event-store'
 import type { BaseContext } from './base-context'
-import { Registry, BaseRegistryMap } from './registry'
 
 const logger = diary('chute:app')
 
-export class Chute<
-    C extends BaseContext = BaseContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
-> {
-    // plugins: Array<Plugin> = []
-    registry: Registry<C, R> = new Registry<C, R>()
+export class Chute<C extends BaseContext = BaseContext> {
     container: AwilixContainer<C>
+    registry = new Map()
     constructor() {
         this.container = createContainer()
         this.container.register('runCommand', asValue(this.runCommand.bind(this)))
         this.container.register('runAction', asValue(this.runAction.bind(this)))
+        this.registerTag('action')
+        this.registerTag('aggregate')
     }
 
-    registerPlugin<C2 extends C = C, R2 extends R = R>(
-        plugin: Plugin<C, R, C2, R2>
-    ): Chute<C2, R2> {
+    registerPlugin<C2 extends C = C>(plugin: Plugin<C, C2>): Chute<C2> {
         return plugin(this)
         // this.plugins.push(plugin)
     }
@@ -44,14 +39,17 @@ export class Chute<
         return this
     }
 
-    registerOfType = this.registry.register.bind(this.registry)
-    getOfType = this.registry.get.bind(this.registry)
+    registerTagged<T = any>(tag: string, service: T) {
+        ok(this.registry.has(tag), `Tag ${tag} is not registered`)
+        this.registry.get(tag).push(service)
+    }
+    getForTag(tag: string) {
+        return this.registry.get(tag)
+    }
 
-    /** This is a noop, that just helps with fluent api & type safety */
-    registerType<Service, Type extends string = string>(
-        type: Type
-    ): Chute<C, R & Record<Type, Service>> {
-        return this as Chute<C, R & Record<Type, Service>>
+    registerTag(tag: string) {
+        ok(!this.registry.has(tag), `Tag '${tag}' is already registered`)
+        this.registry.set(tag, [])
     }
 
     registerAggregate(aggregate: AggregateService<C>) {
@@ -62,7 +60,7 @@ export class Chute<
         logger.debug('registerAggregate', aggregate.name)
 
         const container = this.container
-        this.registerOfType('aggregate', aggregate)
+        this.registerTagged('aggregate', aggregate)
         container.register(aggregate.name, asValue(aggregate))
 
         // aggregate.commands?.forEach((command) => {
@@ -97,7 +95,7 @@ export class Chute<
             `Action '${action.actionId}' is already registered`
         )
         logger.debug('registerAction', action.actionId)
-        this.registerOfType('action', action)
+        this.registerTagged('action', action)
         this.container.register(action.actionId, asValue(action))
         return this
     }
@@ -146,11 +144,11 @@ export class Chute<
     }
 
     get actions(): Array<Action> {
-        return this.getOfType('action')
+        return this.getForTag('action')
     }
 
     get aggregates(): Array<AggregateService<C>> {
-        return this.getOfType('aggregate')
+        return this.getForTag('aggregate')
     }
 }
 
@@ -161,12 +159,9 @@ export interface AggregateService<T> {
     events?: Array<EventType>
 }
 
-export type Plugin<
-    C extends BaseContext = BaseContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>,
-    C2 extends C = C,
-    R2 extends R = R
-> = (chute: Chute<C, R>) => Chute<C2, R2>
+export type Plugin<C extends BaseContext = BaseContext, C2 extends C = C> = (
+    chute: Chute<C>
+) => Chute<C2>
 
 function getParentId(parent?: Command | Action) {
     if (parent instanceof Command) {

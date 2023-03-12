@@ -1,5 +1,5 @@
 import { asFunction } from 'awilix'
-import { BaseRegistryMap, Chute } from '@chute/core'
+import { Chute } from '@chute/core'
 import { ulidFactory } from 'ulid-workers'
 import { R2FileStorage } from 'file-storage'
 import { Kysely } from 'kysely'
@@ -15,11 +15,9 @@ import { dbCheckAction } from './actions/db-check'
 /**
  * Cloudflare Runtime wraps all the with the necessary runtime
  */
-export function createCloudflareRuntime<
-    C extends CFRuntimeContext = CFRuntimeContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>,
-    $C = $Contravariant<C, CFRuntimeContext>
->(app: Chute<C, R>) {
+export function createCloudflareRuntime<C extends CFRuntimeContext = CFRuntimeContext>(
+    app: Chute<C>
+) {
     app.container.register('generateId', asFunction(() => ulidFactory()).singleton())
     app.container.register(
         'storageAdapter',

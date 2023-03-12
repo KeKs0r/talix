@@ -2,7 +2,6 @@ export type { AggregateService } from './chute-app'
 
 export { Chute } from './chute-app'
 export type { Plugin } from './chute-app'
-export type { BaseRegistryMap } from './registry'
 
 export type { EventType, EventTypeDetail, EventTypesDetails } from './event/event-type'
 export type { EventDetail } from './event/event-detail'

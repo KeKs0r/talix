@@ -1,6 +1,6 @@
 import { Message, MessageBatch, ExecutionContext } from '@cloudflare/workers-types'
 import { AwilixContainer } from 'awilix'
-import { Action, BaseRegistryMap, Chute, matchEventAction } from '@chute/core'
+import { Action, Chute, matchEventAction } from '@chute/core'
 import { diary } from 'diary'
 
 import { Bindings } from './base-env.types'
@@ -9,10 +9,7 @@ import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('chute:cf:queue')
 
-export function createQueue<
-    C extends CFRuntimeContext = CFRuntimeContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
->(app: Chute<C, R>) {
+export function createQueue<C extends CFRuntimeContext = CFRuntimeContext>(app: Chute<C>) {
     return async function processQueue(
         batch: MessageBatch<MessageBody>,
         env: Bindings,
@@ -38,10 +35,11 @@ export function createQueue<
     }
 }
 
-export async function fanout<
-    C extends CFRuntimeContext = CFRuntimeContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
->(message: Message<ProduceBody>, app: Chute<C, R>, scope: AwilixContainer<C>) {
+export async function fanout<C extends CFRuntimeContext = CFRuntimeContext>(
+    message: Message<ProduceBody>,
+    app: Chute<C>,
+    scope: AwilixContainer<C>
+) {
     const targets = matchEventAction(app, message.body.event.type)
     if (targets.length) {
         const eventQueue = scope.resolve('EVENT_QUEUE')
@@ -62,10 +60,11 @@ export async function fanout<
     }
 }
 
-export async function handleConsume<
-    C extends CFRuntimeContext = CFRuntimeContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
->(message: Message<ConsumeBody>, app: Chute<C, R>, scope: AwilixContainer<C>) {
+export async function handleConsume<C extends CFRuntimeContext = CFRuntimeContext>(
+    message: Message<ConsumeBody>,
+    app: Chute<C>,
+    scope: AwilixContainer<C>
+) {
     const { actionId, event } = message.body
     const action = app.container.resolve(actionId)
     if (action instanceof Action) {
