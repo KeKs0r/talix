@@ -1,5 +1,5 @@
-import { BaseContext, Chute, Plugin, $Contravariant } from '@chute/core'
-import { Composer, Context } from 'grammy'
+import { BaseContext, Chute } from '@chute/core'
+import { Composer } from 'grammy'
 
 import documentUpload from './handlers/document-upload'
 
