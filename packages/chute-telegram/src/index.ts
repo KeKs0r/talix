@@ -1,1 +1,2 @@
-export { TelegramPluginContext, telegramPlugin } from './telegram-plugin'
+export { telegramPlugin } from './telegram-plugin'
+export type { TelegramPluginContext } from './telegram-plugin'
