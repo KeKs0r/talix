@@ -26,7 +26,7 @@ export function telegramPlugin(options?: TelegramPluginOptions) {
             asFunction(({ TELEGRAM_BOT_TOKEN }) => new Bot(TELEGRAM_BOT_TOKEN)).singleton()
         )
 
-        const upgraded = app.registerType<Composer<Context>, 'telegram'>('telegram')
+        app.registerTag('telegram')
 
         const webhookAction = new HttpAction({
             actionId: 'telegram:webhook',
@@ -35,15 +35,16 @@ export function telegramPlugin(options?: TelegramPluginOptions) {
                 const { TELEGRAM_BOT_TOKEN } = cradle
                 const bot = new Bot(TELEGRAM_BOT_TOKEN)
                 //@TODO: Register the CRADLE on the context
-                const listeners = upgraded.getOfType('telegram')
-                listeners.forEach((listener) => {
+                const listeners = app.getForTag('telegram')
+                listeners.forEach((listener: any) => {
                     bot.use(listener)
                 })
                 await bot.handleUpdate(input)
                 return { status: 'ok' }
             },
         })
-        return upgraded.registerAction(webhookAction)
+        app.registerAction(webhookAction)
+        return app
     }
     return registerTelegram
 }

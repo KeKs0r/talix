@@ -39,6 +39,10 @@ export class Chute<C extends BaseContext = BaseContext> {
         return this
     }
 
+    /**
+     * @TODO: naming for these tags vs normal register etc. is not great.
+     * Maybe we add it to a register(name, service, tags[]) and decorate awilix with it
+     */
     registerTagged<T = any>(tag: string, service: T) {
         ok(this.registry.has(tag), `Tag ${tag} is not registered`)
         this.registry.get(tag).push(service)
