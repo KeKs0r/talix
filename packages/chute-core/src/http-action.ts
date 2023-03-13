@@ -10,7 +10,7 @@ export class HttpAction<
     Context extends BaseContext = BaseContext,
     Path extends string = string,
     $C = $Contravariant<Context, BaseContext>
-> extends Action<Id, Input, Output, Context> {
+> extends Action<Id, Input, Output, Context, $C> {
     readonly httpPath: Path
     readonly httpMethod: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     constructor({
