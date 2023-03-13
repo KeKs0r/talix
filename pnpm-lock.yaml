@@ -51,39 +51,6 @@ importers:
       vitest: 0.29.2
       wrangler: 2.12.0
 
-  packages/_telegram-bot:
-    specifiers:
-      '@chute/core': workspace:*
-      '@cloudflare/workers-types': ^4.20221111.1
-      '@types/node': ^18.11.18
-      awilix: ^8.0.0
-      diary: ^0.4.3
-      domain-core: workspace:*
-      eslint-config-custom: workspace:*
-      telegraf-light: workspace:*
-      tiny-invariant: ^1.3.1
-      tsconfig: workspace:*
-      typescript: ^4.9.4
-      vite: ^3.2.4
-      vite-node: ^0.27.0
-      vitest: ^0.29.2
-    dependencies:
-      '@chute/core': link:../chute-core
-      awilix: 8.0.0
-      diary: 0.4.3
-      domain-core: link:../domain-core
-      telegraf-light: link:../telegraf-light
-      tiny-invariant: 1.3.1
-    devDependencies:
-      '@cloudflare/workers-types': 4.20221111.1
-      '@types/node': 18.11.18
-      eslint-config-custom: link:../eslint-config-custom
-      tsconfig: link:../tsconfig
-      typescript: 4.9.4
-      vite: 3.2.5_@types+node@18.11.18
-      vite-node: 0.27.3_@types+node@18.11.18
-      vitest: 0.29.2
-
   packages/cf-gcp-auth:
     specifiers:
       '@cloudflare/workers-types': ^4.20221111.1
@@ -187,8 +154,11 @@ importers:
 
   packages/chute-telegram:
     specifiers:
+      '@chute/cf-runtime': workspace:*
       '@chute/core': workspace:*
       '@cloudflare/workers-types': ^4.20221111.1
+      '@grammyjs/conversations': ^1.1.1
+      '@grammyjs/storage-cloudflare': ^2.1.4
       '@types/node': ^18.11.18
       awilix: ^8.0.0
       diary: ^0.4.3
@@ -201,7 +171,10 @@ importers:
       vite-node: ^0.27.0
       vitest: ^0.29.2
     dependencies:
+      '@chute/cf-runtime': link:../chute-cf-runtime
       '@chute/core': link:../chute-core
+      '@grammyjs/conversations': 1.1.1_grammy@1.14.1
+      '@grammyjs/storage-cloudflare': 2.1.4
       awilix: 8.0.0
       diary: 0.4.3
       grammy: 1.14.1
@@ -350,37 +323,6 @@ importers:
       typescript: 4.9.4
       vitest: 0.29.2
 
-  packages/telegraf-light:
-    specifiers:
-      '@cloudflare/workers-types': ^4.20221111.1
-      '@types/debug': ^4.1.7
-      '@types/node': ^18.11.18
-      debug: ^4.3.4
-      eslint-config-custom: workspace:*
-      p-timeout: ^6.1.0
-      tiny-invariant: ^1.3.1
-      tsconfig: workspace:*
-      typegram: ^4.3.0
-      typescript: ^4.9.4
-      vite: ^3.2.4
-      vite-node: ^0.27.0
-      vitest: ^0.29.2
-    dependencies:
-      debug: 4.3.4
-      p-timeout: 6.1.0
-      tiny-invariant: 1.3.1
-    devDependencies:
-      '@cloudflare/workers-types': 4.20221111.1
-      '@types/debug': 4.1.7
-      '@types/node': 18.11.18
-      eslint-config-custom: link:../eslint-config-custom
-      tsconfig: link:../tsconfig
-      typegram: 4.3.0
-      typescript: 4.9.4
-      vite: 3.2.5_@types+node@18.11.18
-      vite-node: 0.27.3_@types+node@18.11.18
-      vitest: 0.29.2
-
   packages/telegram-bot:
     specifiers:
       '@chute/core': workspace:*
@@ -503,6 +445,17 @@ packages:
   /@cloudflare/workers-types/4.20221111.1:
     resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}
     dev: true
+
+  /@deno/shim-deno-test/0.4.0:
+    resolution: {integrity: sha512-oYWcD7CpERZy/TXMTM9Tgh1HD/POHlbY9WpzmAk+5H8DohcxG415Qws8yLGlim3EaKBT2v3lJv01x4G0BosnaQ==}
+    dev: false
+
+  /@deno/shim-deno/0.11.0:
+    resolution: {integrity: sha512-z5FRYleehfz1Z0Wp9jilB98cJRGV2HYiLN0FZu1/xwLrQk+hk5VaNKp1nEoyGrUM4MLruTlnhEbqHJwxfnbPLw==}
+    dependencies:
+      '@deno/shim-deno-test': 0.4.0
+      which: 2.0.2
+    dev: false
 
   /@esbuild-plugins/node-globals-polyfill/0.1.1_esbuild@0.16.3:
     resolution: {integrity: sha512-MR0oAA+mlnJWrt1RQVQ+4VYuRJW/P2YmRTv1AsplObyvuBMnPHiizUF95HHYiSsMGLhyGtWufaq2XQg6+iurBg==}
@@ -1150,6 +1103,24 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /@grammyjs/conversations/1.1.1_grammy@1.14.1:
+    resolution: {integrity: sha512-cgNvxIXaZT1eVw1ygdjCMvOY9m2Hk5iAwVjpjKSYpBSOyTBUV30/c0SEvCl+wVgTQpmd5m5E8WLfGMT4k4bdug==}
+    engines: {node: ^12.20.0 || >=14.13.1}
+    peerDependencies:
+      grammy: ^1.10.0
+    dependencies:
+      '@grammyjs/types': 2.12.1
+      debug: 4.3.4
+      grammy: 1.14.1
+      o-son: 1.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@grammyjs/storage-cloudflare/2.1.4:
+    resolution: {integrity: sha512-LWN9y2VcajjKbqkZhcO2kDnEXrT4AEEeVzeXPX64HaR9aw80VRye/qOnAQ8MGda+qlAtcObp5Z8ftJ7P9FBiwQ==}
+    dev: false
+
   /@grammyjs/types/2.12.1:
     resolution: {integrity: sha512-1hO6esfdo42mSvyArPHrlgSY/fgerTuVNAbSD5ZKHS/w5ZyrkA4pRp3VHK2XE3fm9/uMBT/39i8pPvx0+Kbxjg==}
     dev: false
@@ -1411,12 +1382,6 @@ packages:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
     dev: true
 
-  /@types/debug/4.1.7:
-    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
-    dependencies:
-      '@types/ms': 0.7.31
-    dev: true
-
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: false
@@ -1429,10 +1394,6 @@ packages:
 
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
-    dev: true
-
-  /@types/ms/0.7.31:
-    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
   /@types/node/18.11.18:
@@ -3561,6 +3522,12 @@ packages:
       validate-npm-package-name: 4.0.0
     dev: true
 
+  /o-son/1.0.1:
+    resolution: {integrity: sha512-u3X+gVI4BalcHsFe75miy3UxG3pNcJzXDCS8N5eJLlYY1EdiUC8amUsbXMWlAqJUKJgGTM9OBqAuxvTUACKs2g==}
+    dependencies:
+      '@deno/shim-deno': 0.11.0
+    dev: false
+
   /object-assign/4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -3663,11 +3630,6 @@ packages:
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
-    dev: false
-
-  /p-timeout/6.1.0:
-    resolution: {integrity: sha512-s0y6Le9QYGELLzNpFIt6h8B2DHTVUDLStvxtvRMSKNKeuNVVWby2dZ+pIJpW4/pWr5a3s8W85wBNtc0ZA+lzCg==}
-    engines: {node: '>=14.16'}
     dev: false
 
   /parent-module/1.0.1:
@@ -4391,10 +4353,6 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.10
     dev: false
-
-  /typegram/4.3.0:
-    resolution: {integrity: sha512-pS4STyOZoJ++Mwa9GPMTNjOwEzMkxFfFt1By6IbMOJfheP0utMP/H1ga6J9R4DTjAYBr0UDn4eQg++LpWBvcAg==}
-    dev: true
 
   /typescript/4.9.4:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}

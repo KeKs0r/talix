@@ -4,7 +4,6 @@ import { ulidFactory } from 'ulid-workers'
 import { R2FileStorage } from 'file-storage'
 import { Kysely } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
-import { $Contravariant } from '@castore/core'
 
 import { createHTTPActions } from './http'
 import { createQueue } from './queue'
@@ -20,6 +19,7 @@ export function createCloudflareRuntime<C extends CFRuntimeContext = CFRuntimeCo
 ) {
     app.container.register('generateId', asFunction(() => ulidFactory()).singleton())
     app.container.register(
+        // this is for chute itself
         'storageAdapter',
         asFunction(({ DURABLE_ENTITY }) => new CfStorageAdapter(DURABLE_ENTITY)).singleton()
     )

@@ -7,6 +7,11 @@ account_id = "8f677fd195b2d505617e10661bc8e59d"
 workers_dev = true
 
 
+kv_namespaces = [
+{ binding = "SESSION_STORAGE", id = "f8831fadebe04f5f985ddf91236cf5f2" }
+]
+
+
 [[r2_buckets]]
 binding = 'DOCUMENTS_BUCKET' # <~ valid JavaScript variable name
 bucket_name = 'talix-documents'

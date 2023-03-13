@@ -30,7 +30,10 @@
         "repl:env": "doppler run -- vite-node"
     },
     "dependencies": {
+        "@chute/cf-runtime": "workspace:*",
         "@chute/core": "workspace:*",
+        "@grammyjs/conversations": "^1.1.1",
+        "@grammyjs/storage-cloudflare": "^2.1.4",
         "awilix": "^8.0.0",
         "diary": "^0.4.3",
         "grammy": "^1.14.1",

@@ -1,9 +1,12 @@
-import { BaseContext, Chute, HttpAction } from '@chute/core'
+import { type Chute, HttpAction } from '@chute/core'
 import { asFunction } from 'awilix'
-import { Bot, Composer, Context } from 'grammy/web'
+import { Bot, session, Context, SessionFlavor } from 'grammy/web'
+import { KvAdapter } from '@grammyjs/storage-cloudflare'
 import { diary } from 'diary'
+import { CFRuntimeContext } from '@chute/cf-runtime'
+import { type ConversationFlavor, conversations } from '@grammyjs/conversations'
 
-import { FileUrlPluginFlavor, fileUrlMiddleware } from './util-ctx-file-url'
+import { type FileUrlPluginFlavor, fileUrlMiddleware } from './util-ctx-file-url'
 
 const logger = diary('telegram:plugin')
 
@@ -15,11 +18,14 @@ export type TelegramPluginContext = {
     telegram: Bot
     TELEGRAM_BOT_TOKEN: string
 }
-type FullTelegramPluginContext = TelegramPluginContext & BaseContext
+type FullTelegramPluginContext = TelegramPluginContext & CFRuntimeContext
 
-export type BotContext = Context & {
+type BotContext = Context & {
     cradle: FullTelegramPluginContext
-} & FileUrlPluginFlavor
+} & FileUrlPluginFlavor &
+    ConversationFlavor &
+    SessionFlavor<unknown>
+export default BotContext
 
 export function telegramPlugin(options?: TelegramPluginOptions) {
     const { path = '/telegram/webhook' } = options || {}
@@ -57,6 +63,18 @@ async function createBot<T extends FullTelegramPluginContext = FullTelegramPlugi
 ) {
     const bot = new Bot<BotContext>(token)
 
+    const sessionKvNamespace = scope.SESSION_STORAGE
+
+    bot.use(
+        session<{}, BotContext>({
+            storage: new KvAdapter(sessionKvNamespace),
+            initial() {
+                // return empty object for now
+                return {}
+            },
+        })
+    )
+    bot.use(conversations())
     bot.use((ctx, next) => {
         ctx.cradle = scope
         return next()
