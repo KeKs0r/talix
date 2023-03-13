@@ -1,5 +1,5 @@
 {
-    "name": "telegram-bot",
+    "name": "_telegram-bot",
     "version": "0.0.0",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
@@ -31,11 +31,10 @@
     },
     "dependencies": {
         "@chute/core": "workspace:*",
-        "@chute/telegram": "workspace:*",
         "awilix": "^8.0.0",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
-        "grammy": "^1.14.1",
+        "telegraf-light": "workspace:*",
         "tiny-invariant": "^1.3.1"
     }
 }

@@ -5,6 +5,7 @@ import { analyzeCreatedDocumentAction } from './domain/analyze-created-document-
 import { DocumentAnalyzer } from './document-ai/analyze-document'
 
 export function ocrService<C extends BaseContext = BaseContext>(app: Chute<C>) {
-    app.registerAction(analyzeCreatedDocumentAction)
     app.container.register('documentAnalyzer', asClass(DocumentAnalyzer))
+    app.registerAction(analyzeCreatedDocumentAction)
+    return app
 }

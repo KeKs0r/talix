@@ -39,6 +39,7 @@
     "dependencies": {
         "@chute/cf-runtime": "workspace:*",
         "@chute/core": "workspace:*",
+        "@chute/telegram": "workspace:*",
         "diary": "^0.4.3",
         "domain-core": "workspace:*",
         "ocr-document": "workspace:*",

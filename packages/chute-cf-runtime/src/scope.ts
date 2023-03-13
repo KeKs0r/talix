@@ -6,7 +6,7 @@ import Emittery from 'emittery'
 
 import { Bindings } from './base-env.types'
 import { ProduceBody } from './queue'
-import { CFRuntimeContext, RuntimeContext } from './runtime-context'
+import { CFRuntimeContext } from './runtime-context'
 
 const logger = diary('cf:runtime:scope')
 

@@ -13,5 +13,5 @@ export const voucherAggregate: AggregateService<RuntimeContext> = {
 }
 
 export function voucherService<C extends RuntimeContext = RuntimeContext>(app: Chute<C>) {
-    app.registerAggregate(voucherAggregate)
+    return app.registerAggregate(voucherAggregate)
 }

@@ -7,27 +7,23 @@ import { Action, GetActionInput } from './action'
 import { Command, GetCommandInput } from './command'
 import { EventStore } from './event-store'
 import type { BaseContext } from './base-context'
-import { Registry, BaseRegistryMap } from './registry'
 
 const logger = diary('chute:app')
 
-export class Chute<
-    C extends BaseContext = BaseContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
-> {
-    // plugins: Array<Plugin> = []
-    registry: Registry<C, R> = new Registry<C, R>()
+export class Chute<C extends BaseContext = BaseContext> {
     container: AwilixContainer<C>
+    registry = new Map()
     constructor() {
         this.container = createContainer()
         this.container.register('runCommand', asValue(this.runCommand.bind(this)))
         this.container.register('runAction', asValue(this.runAction.bind(this)))
+        this.registerTag('action')
+        this.registerTag('aggregate')
     }
 
-    registerPlugin(plugin: Plugin<C, R>) {
-        plugin(this)
+    registerPlugin<C2 extends C = C>(plugin: Plugin<C, C2>): Chute<C2> {
+        return plugin(this)
         // this.plugins.push(plugin)
-        return this
     }
 
     /**
@@ -43,8 +39,22 @@ export class Chute<
         return this
     }
 
-    register = this.registry.register.bind(this.registry)
-    getOfType = this.registry.get.bind(this.registry)
+    /**
+     * @TODO: naming for these tags vs normal register etc. is not great.
+     * Maybe we add it to a register(name, service, tags[]) and decorate awilix with it
+     */
+    registerTagged<T = any>(tag: string, service: T) {
+        ok(this.registry.has(tag), `Tag ${tag} is not registered`)
+        this.registry.get(tag).push(service)
+    }
+    getForTag(tag: string) {
+        return this.registry.get(tag)
+    }
+
+    registerTag(tag: string) {
+        ok(!this.registry.has(tag), `Tag '${tag}' is already registered`)
+        this.registry.set(tag, [])
+    }
 
     registerAggregate(aggregate: AggregateService<C>) {
         ok(
@@ -54,7 +64,7 @@ export class Chute<
         logger.debug('registerAggregate', aggregate.name)
 
         const container = this.container
-        this.register('aggregate', aggregate)
+        this.registerTagged('aggregate', aggregate)
         container.register(aggregate.name, asValue(aggregate))
 
         // aggregate.commands?.forEach((command) => {
@@ -89,7 +99,7 @@ export class Chute<
             `Action '${action.actionId}' is already registered`
         )
         logger.debug('registerAction', action.actionId)
-        this.register('action', action)
+        this.registerTagged('action', action)
         this.container.register(action.actionId, asValue(action))
         return this
     }
@@ -138,11 +148,11 @@ export class Chute<
     }
 
     get actions(): Array<Action> {
-        return this.getOfType('action')
+        return this.getForTag('action')
     }
 
     get aggregates(): Array<AggregateService<C>> {
-        return this.getOfType('aggregate')
+        return this.getForTag('aggregate')
     }
 }
 
@@ -153,10 +163,9 @@ export interface AggregateService<T> {
     events?: Array<EventType>
 }
 
-type Plugin<
-    C extends BaseContext = BaseContext,
-    R extends BaseRegistryMap<C> = BaseRegistryMap<C>
-> = (chute: Chute<C, R>) => void
+export type Plugin<C extends BaseContext = BaseContext, C2 extends C = C> = (
+    chute: Chute<C>
+) => Chute<C2>
 
 function getParentId(parent?: Command | Action) {
     if (parent instanceof Command) {

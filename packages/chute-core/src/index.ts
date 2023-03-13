@@ -1,6 +1,7 @@
 export type { AggregateService } from './chute-app'
 
 export { Chute } from './chute-app'
+export type { Plugin } from './chute-app'
 
 export type { EventType, EventTypeDetail, EventTypesDetails } from './event/event-type'
 export type { EventDetail } from './event/event-detail'
@@ -28,3 +29,5 @@ export { matchEventAction } from './util/match-event'
 
 export type { ErrorResponse, Maybe, SuccessResponse } from './util/maybe'
 export { error, success, warning, parse, isSuccess } from './util/maybe'
+
+export type { $Contravariant } from '@castore/core'

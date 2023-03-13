@@ -17,6 +17,6 @@ export function healthCheckPlugin<C extends BaseContext = BaseContext>(
         },
     })
     return (app: Chute<C>) => {
-        app.registerAction(healthCheckAction)
+        return app.registerAction(healthCheckAction)
     }
 }
