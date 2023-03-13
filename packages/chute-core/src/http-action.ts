@@ -1,3 +1,5 @@
+import { $Contravariant } from '@castore/core'
+
 import { Action } from './action'
 import { BaseContext } from './base-context'
 
@@ -6,7 +8,8 @@ export class HttpAction<
     Input = any,
     Output = any,
     Context extends BaseContext = BaseContext,
-    Path extends string = string
+    Path extends string = string,
+    $C = $Contravariant<Context, BaseContext>
 > extends Action<Id, Input, Output, Context> {
     readonly httpPath: Path
     readonly httpMethod: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
@@ -17,7 +20,7 @@ export class HttpAction<
         httpMethod = 'POST',
     }: {
         actionId: Id
-        handler: (input: Input, deps: Context) => Output
+        handler: (input: Input, deps: $C) => Output
         httpPath: Path
         httpMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     }) {
