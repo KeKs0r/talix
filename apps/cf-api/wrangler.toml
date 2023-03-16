@@ -8,7 +8,7 @@ workers_dev = true
 
 
 kv_namespaces = [
-{ binding = "SESSION_STORAGE", id = "f8831fadebe04f5f985ddf91236cf5f2" }
+  { binding = "SESSION_STORAGE", id = "f8831fadebe04f5f985ddf91236cf5f2", preview_id = "f8831fadebe04f5f985ddf91236cf5f2" }
 ]
 
 

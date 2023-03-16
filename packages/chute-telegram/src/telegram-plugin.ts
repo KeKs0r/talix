@@ -23,7 +23,7 @@ type FullTelegramPluginContext = TelegramPluginContext & CFRuntimeContext
 type BotContext = Context & {
     cradle: FullTelegramPluginContext
 } & FileUrlPluginFlavor &
-    ConversationFlavor &
+    // ConversationFlavor &
     SessionFlavor<unknown>
 export default BotContext
 
@@ -74,7 +74,7 @@ async function createBot<T extends FullTelegramPluginContext = FullTelegramPlugi
             },
         })
     )
-    bot.use(conversations())
+    // bot.use(conversations())
     bot.use((ctx, next) => {
         ctx.cradle = scope
         return next()
